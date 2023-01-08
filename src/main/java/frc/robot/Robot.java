@@ -4,9 +4,12 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -15,10 +18,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  // Setup motor controllers
+  // On the dev board:
+  // Device ID 9 is "TurrentTalon", ID 11 is "FeederTalon"
+  private final TalonSRX m_talon = new TalonSRX(9);
+  private final XboxController m_controller = new XboxController(0);
+  private final Timer m_timer = new Timer();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -26,9 +31,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
   }
 
   /**
@@ -53,22 +55,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+    m_timer.reset();
+    m_timer.start();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
+    if (m_timer.get() < 2.0) {
+      m_talon.set(ControlMode.PercentOutput, 0.1);
+    } else {
+      m_talon.set(ControlMode.PercentOutput, 0.0);
     }
   }
 
@@ -78,7 +75,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    // Set xbox left stick Y axis to control controller percent output
+    m_talon.set(ControlMode.PercentOutput, m_controller.getLeftY());
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
