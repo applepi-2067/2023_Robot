@@ -31,7 +31,7 @@ Code for FRC 2067's 2023 Robot for the game [Charged Up](https://youtu.be/0zpfls
 
 * Download and Install the [latest WPIlib 2023 release](https://github.com/wpilibsuite/allwpilib/releases)
   
-  * If you're on Windows, download the `.iso` file (e.g. `WPILib_Windows-2023.1.1.iso`).
+  * If you're not on Windows, download the `.iso` file (e.g. `WPILib_Windows-2023.1.1.iso`).
   * While connected to the internet, open the ISO
     * run the `WPILibInstaller.exe` file
     * follow the on-screen instructions, to install vscode for your user
