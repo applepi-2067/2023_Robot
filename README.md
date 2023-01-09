@@ -60,7 +60,8 @@ Code for FRC 2067's 2023 Robot for the game [Charged Up](https://youtu.be/0zpfls
 
 ## Clone this repo to your desktop
 The following steps will authorize vscode to access your github account through OAuth.
-This is in place of setting up ssh keys. If you'd rather do that, feel free to do so.
+This is in place of setting up ssh keys. If you'd rather do that, feel free to do so.     
+Similar steps to what we're doing [are covered here](https://adamtheautomator.com/visual-studio-code-github-setup/#Cloning_a_GitHub_Repository) if the below isn't clear enough.
 
   * Open the `2023 WPILib VS Code` link (on your desktop?)
   * Click the `Source Control` tab on the right ( Ctrl+Shift+G )
@@ -68,6 +69,8 @@ This is in place of setting up ssh keys. If you'd rather do that, feel free to d
     * This will open the `Command Palette` at the top middle. You will come to know this VS Code feature well...
     * Click the `Clone from GitHub` option
     * Follow the on-screen steps to authorize vscode to access your github account
+
+  * Choose the `applepi-2067/2023_Robot` project
 
   * Choose a directory to clone the project into that you will remember (e.g. Documents\FRC\)
     a new subdirectory for the project will be created
