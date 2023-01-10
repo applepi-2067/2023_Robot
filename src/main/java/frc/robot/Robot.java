@@ -4,7 +4,11 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -15,6 +19,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
+  private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(0);
+  private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(1);
+  private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
+  private final XboxController m_driverController = new XboxController(0);
+  
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
@@ -30,7 +39,6 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
   }
-
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
@@ -74,11 +82,26 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    /* factory default values */
+    m_leftMotor.configFactoryDefault();
+    m_rightMotor.configFactoryDefault();
+
+    /* flip values so robot moves forward when stick-forward/LEDs-green */
+    m_leftMotor.setInverted(false); // <<<<<< Adjust this
+    m_rightMotor.setInverted(true); // <<<<<< Adjust this
+  }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    m_robotDrive.arcadeDrive(m_driverController.getLeftY(), m_driverController.getLeftX());
+
+    /* hold down btn1 to print stick values */
+    // if (_joystick.getRawButton(1)) {
+    //   System.out.println("xSpeed:" + xSpeed + "    zRotation:" + zRotation);
+    // }
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
