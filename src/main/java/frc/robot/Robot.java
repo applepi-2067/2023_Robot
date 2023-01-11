@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-  private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(0);
-  private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(1);
+  private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(1);
+  private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(2);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
   private final XboxController m_driverController = new XboxController(0);
   
