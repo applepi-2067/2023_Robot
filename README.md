@@ -15,7 +15,7 @@ Code for FRC 2067's 2023 Robot for the game [Charged Up](https://youtu.be/0zpfls
     * [CTRE TalonFX motor controller code examples](https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java%20Talon%20FX%20(Falcon%20500)) ([motion magic](https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java%20Talon%20FX%20(Falcon%20500)/MotionMagic), [velocity](https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java%20Talon%20FX%20(Falcon%20500)/VelocityClosedLoop) control)
       * [Closed loop primer](https://v5.docs.ctr-electronics.com/en/stable/ch16_ClosedLoop.html)
       * [MotionMagic parameters / Pheonix Tuner](https://youtu.be/1b0BAV2jBd8) video
-      * [CTRE Documentation](https://v5.docs.ctr-electronics.com/en/stable/ch13_MC.html)
+      * [CTRE Documentation](https://v5.docs.ctr-electronics.com/en/stable/index.html)
     * [REV SPARK-MAX motor controller code examples](https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java) ([position](https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java/Position%20Closed%20Loop%20Control) control, [velocity](https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java/Velocity%20Closed%20Loop%20Control) control)
       * [REV SPARK-MAX documentation](https://docs.revrobotics.com/sparkmax/)
     * [Photonlib](https://docs.photonvision.org/en/latest/docs/programming/photonlib/adding-vendordep.html)
