@@ -1,4 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
+ // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
   private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(1);
   private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(2);
+  private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(deviceNumber:3);
+  private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(deviceNumber:4);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
   private final XboxController m_driverController = new XboxController(0);
   
@@ -95,7 +97,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    m_robotDrive.arcadeDrive(m_driverController.getLeftY(), m_driverController.getLeftX());
+    m_robotDrive.arcadeDrive(m_driverController.getLeftY()/2.0, m_driverController.getLeftX()/2.0);
 
     /* hold down btn1 to print stick values */
     // if (_joystick.getRawButton(1)) {
