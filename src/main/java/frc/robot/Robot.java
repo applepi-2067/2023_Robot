@@ -40,6 +40,14 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+
+    /* factory default values */
+    m_leftMotor.configFactoryDefault();
+    m_rightMotor.configFactoryDefault();
+
+    /* flip values so robot moves forward when stick-forward/LEDs-green */
+    m_leftMotor.setInverted(false); // <<<<<< Adjust this
+    m_rightMotor.setInverted(true); // <<<<<< Adjust this
   }
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -85,13 +93,7 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    /* factory default values */
-    m_leftMotor.configFactoryDefault();
-    m_rightMotor.configFactoryDefault();
 
-    /* flip values so robot moves forward when stick-forward/LEDs-green */
-    m_leftMotor.setInverted(false); // <<<<<< Adjust this
-    m_rightMotor.setInverted(true); // <<<<<< Adjust this
   }
 
   /** This function is called periodically during operator control. */
