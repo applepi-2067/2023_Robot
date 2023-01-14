@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
   private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(1);
   private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(2);
-  private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(deviceNumber:3);
-  private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(deviceNumber:4);
+  private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(3);
+  private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(4);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
   private final XboxController m_driverController = new XboxController(0);
   
@@ -44,10 +44,16 @@ public class Robot extends TimedRobot {
     /* factory default values */
     m_leftMotor.configFactoryDefault();
     m_rightMotor.configFactoryDefault();
+    m_leftMotorFollower.configFactoryDefault();
+    m_rightMotorFollower.configFactoryDefault();
+
+    //the .follow method tells the secondary motors to follow the commands of their respective motors
+    m_leftMotorFollower.follow(m_leftMotor);
+    m_rightMotorFollower.follow(m_rightMotor);
 
     /* flip values so robot moves forward when stick-forward/LEDs-green */
-    m_leftMotor.setInverted(false); // <<<<<< Adjust this
-    m_rightMotor.setInverted(true); // <<<<<< Adjust this
+    m_rightMotor.setInverted(true);
+    m_rightMotorFollower.setInverted(true);
   }
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
