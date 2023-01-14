@@ -105,12 +105,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    // Divide stick inputs by 2 to limit acceleration and top speed
     m_robotDrive.arcadeDrive(m_driverController.getLeftY()/2.0, m_driverController.getRightX()/2.0, true);
-
-    /* hold down btn1 to print stick values */
-    // if (_joystick.getRawButton(1)) {
-    //   System.out.println("xSpeed:" + xSpeed + "    zRotation:" + zRotation);
-    // }
   }
 
   /** This function is called once when the robot is disabled. */
