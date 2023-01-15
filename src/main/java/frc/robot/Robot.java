@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -36,7 +39,7 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   @Override
-  public void robotInit() {
+  public void robotInit() { 
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -54,7 +57,67 @@ public class Robot extends TimedRobot {
     /* flip values so robot moves forward when stick-forward/LEDs-green */
     m_rightMotor.setInverted(true);
     m_rightMotorFollower.setInverted(true);
+
+
+    //enable motion magic
+    configMotionMagic(m_leftMotor);
+    configMotionMagic(m_rightMotor);
   }
+
+  public void configMotionMagic(WPI_TalonFX _talon) { 
+
+    /* Factory default hardware to prevent unexpected behavior */
+    _talon.configFactoryDefault();
+
+    /* Configure Sensor Source for Pirmary PID */
+    _talon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, Constants.kPIDLoopIdx,
+        Constants.kTimeoutMs);
+
+    /* set deadband to super small 0.001 (0.1 %).
+      The default deadband is 0.04 (4 %) */
+    _talon.configNeutralDeadband(0.001, Constants.kTimeoutMs);
+
+    /**
+     * Configure Talon FX Output and Sensor direction accordingly Invert Motor to
+     * have green LEDs when driving Talon Forward / Requesting Postiive Output Phase
+     * sensor to have positive increment when driving Talon Forward (Green LED)
+     */
+    _talon.setSensorPhase(false);
+    _talon.setInverted(false);
+    /*
+      * Talon FX does not need sensor phase set for its integrated sensor
+      * This is because it will always be correct if the selected feedback device is integrated sensor (default value)
+      * and the user calls getSelectedSensor* to get the sensor's position/velocity.
+      * 
+      * https://phoenix-documentation.readthedocs.io/en/latest/ch14_MCSensor.html#sensor-phase
+      */
+        // _talon.setSensorPhase(true);
+
+    /* Set relevant frame periods to be at least as fast as periodic rate */
+    _talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.kTimeoutMs);
+    _talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.kTimeoutMs);
+
+    /* Set the peak and nominal outputs */
+    _talon.configNominalOutputForward(0, Constants.kTimeoutMs);
+    _talon.configNominalOutputReverse(0, Constants.kTimeoutMs);
+    _talon.configPeakOutputForward(1, Constants.kTimeoutMs);
+    _talon.configPeakOutputReverse(-1, Constants.kTimeoutMs);
+
+    /* Set Motion Magic gains in slot0 - see documentation */
+    _talon.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
+    _talon.config_kF(Constants.kSlotIdx, Constants.kGains.kF, Constants.kTimeoutMs);
+    _talon.config_kP(Constants.kSlotIdx, Constants.kGains.kP, Constants.kTimeoutMs);
+    _talon.config_kI(Constants.kSlotIdx, Constants.kGains.kI, Constants.kTimeoutMs);
+    _talon.config_kD(Constants.kSlotIdx, Constants.kGains.kD, Constants.kTimeoutMs);
+
+    /* Set acceleration and vcruise velocity - see documentation */
+    _talon.configMotionCruiseVelocity(4000, Constants.kTimeoutMs);
+    _talon.configMotionAcceleration(400, Constants.kTimeoutMs);
+
+    /* Zero the sensor once on robot boot up */
+    _talon.setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
+  }
+
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
@@ -105,8 +168,16 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // Divide stick inputs by 2 to limit acceleration and top speed
-    m_robotDrive.arcadeDrive(m_driverController.getLeftY()/2.0, m_driverController.getRightX()/2.0, true);
+    if (m_driverController.getAButton()) {
+      //rotate wheel two revolutions
+      double targetPos = 2 * 2048 * 10.0;
+			m_rightMotor.set(TalonFXControlMode.MotionMagic, targetPos);
+
+
+    } else {
+      // Divide stick inputs by 2 to limit acceleration and top speed
+      m_robotDrive.arcadeDrive(m_driverController.getLeftY()/2.0, m_driverController.getRightX()/2.0, true);
+    }
   }
 
   /** This function is called once when the robot is disabled. */
