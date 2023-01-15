@@ -50,6 +50,10 @@ public class Robot extends TimedRobot {
     m_leftMotorFollower.configFactoryDefault();
     m_rightMotorFollower.configFactoryDefault();
 
+    //enable motion magic
+    configMotionMagic(m_leftMotor);
+    configMotionMagic(m_rightMotor);
+
     //the .follow method tells the secondary motors to follow the commands of their respective motors
     m_leftMotorFollower.follow(m_leftMotor);
     m_rightMotorFollower.follow(m_rightMotor);
@@ -57,18 +61,10 @@ public class Robot extends TimedRobot {
     /* flip values so robot moves forward when stick-forward/LEDs-green */
     m_rightMotor.setInverted(true);
     m_rightMotorFollower.setInverted(true);
-
-
-    //enable motion magic
-    configMotionMagic(m_leftMotor);
-    configMotionMagic(m_rightMotor);
   }
 
   public void configMotionMagic(WPI_TalonFX _talon) { 
-
-    /* Factory default hardware to prevent unexpected behavior */
-    _talon.configFactoryDefault();
-
+    
     /* Configure Sensor Source for Pirmary PID */
     _talon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, Constants.kPIDLoopIdx,
         Constants.kTimeoutMs);
