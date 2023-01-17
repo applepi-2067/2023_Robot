@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
 
   public void configMotionMagic(WPI_TalonFX _talon) { 
     
-    /* Configure Sensor Source for Pirmary PID */
+    /* Configure Sensor Source for Primary PID */
     _talon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, Constants.kPIDLoopIdx,
         Constants.kTimeoutMs);
 
