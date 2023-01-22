@@ -64,6 +64,7 @@ public class Robot extends TimedRobot {
       pigeon.getYawPitchRoll(ypr);
       System.out.println("Pigeon Yaw is: " + ypr[0]);
     }
+    pigeonLoopCount++;
 
     Logger.updateEntries();
   }
