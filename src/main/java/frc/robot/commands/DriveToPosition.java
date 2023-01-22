@@ -41,7 +41,12 @@ public class DriveToPosition extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        double inchesError = m_driveTrain.getDistanceTraveled() - m_inches;
+        if ((inchesError < m_acceptableErrorInches) && (inchesError > m_acceptableErrorInches)) {
+            return false;
+        } else {
+            return true;
+        }
         // return (climber.getPositionInches() < (inches + acceptableErrorInches) &&
         // climber.getPositionInches() > (inches - acceptableErrorInches));
     }
