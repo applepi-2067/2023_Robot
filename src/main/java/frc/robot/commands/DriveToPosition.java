@@ -42,10 +42,10 @@ public class DriveToPosition extends CommandBase {
     @Override
     public boolean isFinished() {
         double inchesError = m_driveTrain.getDistanceTraveled() - m_inches;
-        if ((inchesError < m_acceptableErrorInches) && (inchesError > m_acceptableErrorInches)) {
-            return false;
-        } else {
+        if ((inchesError < m_acceptableErrorInches) && (inchesError > -m_acceptableErrorInches)) {
             return true;
+        } else {
+            return false;
         }
         // return (climber.getPositionInches() < (inches + acceptableErrorInches) &&
         // climber.getPositionInches() > (inches - acceptableErrorInches));
