@@ -92,6 +92,14 @@ Pivoting this platorm allows placing game pieces at scoring locations when the c
   * Sensors:
     * 🤷‍♀️ 2x end of travel limit switches. 
 
+### Vision
+
+Container for interacting with camera based sensor(s)
+
+  * Sensors:
+    * 1x photonvision camera
+    * 🤷‍♀️ 1x Limelight?
+
 ## Getting Started
 
 ### Software installation
