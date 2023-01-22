@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -19,6 +20,10 @@ import io.github.oblarg.oblog.Logger;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+
+  // Pidgeon instance vars
+  private PigeonIMU pigeon = new PigeonIMU(11);
+  private int pigeonLoopCount = 0;
 
   /**
    * This function is run when the robot is first started up
@@ -51,6 +56,14 @@ public class Robot extends TimedRobot {
     // This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    // Pidgeon
+    if (pigeonLoopCount > 10) {
+      pigeonLoopCount = 0;
+      double[] ypr = new double[3];
+      pigeon.getYawPitchRoll(ypr);
+      System.out.println("Pigeon Yaw is: " + ypr[0]);
+    }
 
     Logger.updateEntries();
   }
