@@ -23,7 +23,74 @@ Code for FRC 2067's 2023 Robot for the game [Charged Up](https://youtu.be/0zpfls
 
 ## Robot Subsystem Descriptions
 
-  TBD
+![robot subsystems](./img/robot.jpg)
+
+### Drivetrain
+
+The motors that move the robot chassis around the field.
+
+  * Actuators:
+    * 2x TalonFX motor controllers (right)
+    * 2x TalonFX motor controllers (left)
+
+  * Sensors:
+    * Pigeon IMU for measuring robot heading and pitch
+
+### Intake (not pictured)
+
+Mounted at the front of the chassis, for game piece acquisition from the floor.
+
+  * Actuators:
+    * 🤷‍♀️ 1x TalonFX motor controller to pull in game pieces
+    * 1x DoubleSolenoid for raise/lower
+
+  * Sensors: 
+    * 🤷‍♀️ 1x Discrete input for game piece detection
+
+### Arm
+
+Telescoping assembly. Extend to move game pieces away from chassis.
+
+  * Actuators:
+    * 1x TalonFX motor controller
+
+  * Sensors: 
+    * 1x hall effect sensor for zero position / full retract
+
+### Claw
+
+Game piece manipulator mounted on the arm
+
+* Actuators:
+
+  * 2x SparkMAX motor controllers
+  * 1x Solenoid (open/close)
+
+* Sensors: 
+
+  * 🤷‍♀️ 1x Discrete input for game piece detection
+
+### Shoulder
+
+mechanism used to raise/lower arm assembly.  
+Brings game pieces to appropriate elevation for scoring
+
+  * Actuators:
+    * 1x SparkMax Motor controller to rasie/lower arm
+
+  * Sensors: 
+    * 2x Discrete Inputs for end of travel in either direction
+
+### Waist
+
+A rotating platorm on which the arm assembly sits.  
+Pivoting this platorm allows placing game pieces at scoring locations when the chassis isn't perfectly aligned.
+
+  * Actuators:
+    * 1x SparkMAX motor controller for rotating the assembly
+
+  * Sensors:
+    * 🤷‍♀️ 2x end of travel limit switches. 
 
 ## Getting Started
 
