@@ -9,36 +9,39 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import frc.robot.Constants.OperatorConstants.*;
+
 public class DriveTrain extends SubsystemBase {
   /** Creates a new DriveTrain. */
-  private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(1);
-  private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(2);
-  private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(3);
-  private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(4);
+  private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(MOTOR_LEFT_1_ID);
+  private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(MOTOR_RIGHT_1_ID);
+  private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(MOTOR_LEFT_2_ID);
+  private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(MOTOR_RIGHT_2_ID);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
   
   public DriveTrain() {
-    /* factory default values */
-    m_leftMotor.configFactoryDefault(); //what's up?
+    // Set values to factory default.
+    m_leftMotor.configFactoryDefault();
     m_rightMotor.configFactoryDefault();
     m_leftMotorFollower.configFactoryDefault();
     m_rightMotorFollower.configFactoryDefault();
 
-    //the .follow method tells the secondary motors to follow the commands of their respective motors
+    // Make back motors follow front motor commands.
     m_leftMotorFollower.follow(m_leftMotor);
     m_rightMotorFollower.follow(m_rightMotor);
 
-    /* flip values so robot moves forward when stick-forward/LEDs-green */
+    // Invert right motors so that positive values make robot move forward.
     m_rightMotor.setInverted(true);
     m_rightMotorFollower.setInverted(true);
   }
   
+  // Move the robot forward with some rotation.
   public void arcadeDrive(double fwd, double rot) {
     m_robotDrive.arcadeDrive(fwd, rot);
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    // This method will be called once per scheduler run.
   }
 }
