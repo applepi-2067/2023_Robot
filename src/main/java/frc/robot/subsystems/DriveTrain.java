@@ -25,8 +25,8 @@ public class DriveTrain extends SubsystemBase {
   // Move these constants later to consts file
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
-  public static final double GEAR_RATIO = (50.0 / 10.0) * (38.0 / 28.0);
-  public static final double WHEEL_DIAMETER = 4.0;
+  public static final double GEAR_RATIO = 10.0;
+  public static final double WHEEL_DIAMETER = 6.0;
   public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI; // inches
   public static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
   public static final double DEGREES_PER_REV = 360.0;
