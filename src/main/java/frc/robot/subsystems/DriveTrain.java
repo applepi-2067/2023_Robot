@@ -9,14 +9,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.CANDeviceIDs;;
 
 public class DriveTrain extends SubsystemBase {
   /** Creates a new DriveTrain. */
-  private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(OperatorConstants.MOTOR_LEFT_1_ID);
-  private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(OperatorConstants.MOTOR_RIGHT_1_ID);
-  private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(OperatorConstants.MOTOR_LEFT_2_ID);
-  private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(OperatorConstants.MOTOR_RIGHT_2_ID);
+  private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(CANDeviceIDs.MOTOR_LEFT_1_ID);
+  private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(CANDeviceIDs.MOTOR_RIGHT_1_ID);
+  private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(CANDeviceIDs.MOTOR_LEFT_2_ID);
+  private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(CANDeviceIDs.MOTOR_RIGHT_2_ID);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
   
   public DriveTrain() {
