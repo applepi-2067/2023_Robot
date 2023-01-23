@@ -17,10 +17,10 @@ public class Drivetrain extends SubsystemBase {
   /** Creates a new DriveTrain. */
   private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDevices.MOTOR_LEFT_1_ID);
   private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(Constants.CANDevices.MOTOR_RIGHT_1_ID);
-  // private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDevices.MOTOR_LEFT_2_ID);
-  // private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDevices.MOTOR_RIGHT_2_ID);
+  private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDevices.MOTOR_LEFT_2_ID);
+  private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDevices.MOTOR_RIGHT_2_ID);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
-  
+
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
   public static final double GEAR_RATIO = 10.0;
@@ -36,24 +36,22 @@ public class Drivetrain extends SubsystemBase {
     m_robotDrive.setSafetyEnabled(false);
     m_leftMotor.configFactoryDefault();
     m_rightMotor.configFactoryDefault();
-    //m_leftMotorFollower.configFactoryDefault();
-    //m_rightMotorFollower.configFactoryDefault();
+    m_leftMotorFollower.configFactoryDefault();
+    m_rightMotorFollower.configFactoryDefault();
 
     // Make back motors follow front motor commands.
-    //m_leftMotorFollower.follow(m_leftMotor);
-    //m_rightMotorFollower.follow(m_rightMotor);  
-
-    
-    
+    m_leftMotorFollower.follow(m_leftMotor);
+    m_rightMotorFollower.follow(m_rightMotor);
 
     // Set motion magic related parameters
     configMotionMagic(m_leftMotor);
     configMotionMagic(m_rightMotor);
-    
+
     // Invert right motors so that positive values make robot move forward.
-    // MotionMagic resets the inversion on the motors, so the .setInversion method should come AFTER the configMotionMagic
+    // MotionMagic resets the inversion on the motors, so the .setInversion method
+    // should come AFTER the configMotionMagic
     m_rightMotor.setInverted(true);
-    //m_rightMotorFollower.setInverted(true);
+    m_rightMotorFollower.setInverted(true);
   }
 
   // Move the robot forward with some rotation.
@@ -83,10 +81,10 @@ public class Drivetrain extends SubsystemBase {
   public void resetEncoders() {
     m_leftMotor.getSensorCollection().setIntegratedSensorPosition(0, Constants.Drivetrain.kTimeoutMs);
     m_rightMotor.getSensorCollection().setIntegratedSensorPosition(0, Constants.Drivetrain.kTimeoutMs);
-    
+
     m_leftMotor.setSelectedSensorPosition(0.0);
     m_rightMotor.setSelectedSensorPosition(0.0);
-}
+  }
 
   /**
    * 
