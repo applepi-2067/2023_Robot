@@ -2,17 +2,17 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.drivetrain;
 
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveToPosition extends CommandBase {
-    private static DriveTrain m_driveTrain;
+    private static Drivetrain m_driveTrain;
     private static double m_inches;
     private static double m_acceptableErrorInches = 0.1;
 
-    public DriveToPosition(DriveTrain driveTrain, double inch) {
+    public DriveToPosition(Drivetrain driveTrain, double inch) {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(driveTrain);
         m_driveTrain = driveTrain;
