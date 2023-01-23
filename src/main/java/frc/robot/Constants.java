@@ -31,7 +31,7 @@ public final class Constants {
     public static final int MOTOR_LEFT_2_ID = 3;
     public static final int MOTOR_RIGHT_2_ID = 4;
 
-    public static final int MOTOR_WAIST_ID = 0;
+    public static final int MOTOR_WAIST_ID = 5;
   }
 
   public static class Drivetrain {

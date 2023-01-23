@@ -29,8 +29,6 @@ public class Robot extends TimedRobot {
     // Instantiate the RobotContainer. Perform all our button bindings,
     // and put the autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
-    Logger.configureLoggingAndConfig(this, false);
   }
 
   /**
