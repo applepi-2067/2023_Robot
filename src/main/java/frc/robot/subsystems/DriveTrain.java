@@ -89,14 +89,14 @@ public class DriveTrain extends SubsystemBase {
   private void configMotionMagic(WPI_TalonFX _talon) {
 
     /* Configure Sensor Source for Primary PID */
-    _talon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, Constants.kPIDLoopIdx,
-        Constants.kTimeoutMs);
+    _talon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, Constants.Drivetrain.kPIDLoopIdx,
+        Constants.Drivetrain.kTimeoutMs);
 
     /*
      * set deadband to super small 0.001 (0.1 %).
      * The default deadband is 0.04 (4 %)
      */
-    _talon.configNeutralDeadband(0.001, Constants.kTimeoutMs);
+    _talon.configNeutralDeadband(0.001, Constants.Drivetrain.kTimeoutMs);
 
     /**
      * Configure Talon FX Output and Sensor direction accordingly Invert Motor to
@@ -117,27 +117,27 @@ public class DriveTrain extends SubsystemBase {
     // _talon.setSensorPhase(true);
 
     /* Set relevant frame periods to be at least as fast as periodic rate */
-    _talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.kTimeoutMs);
-    _talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.kTimeoutMs);
+    _talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.Drivetrain.kTimeoutMs);
+    _talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.Drivetrain.kTimeoutMs);
 
     /* Set the peak and nominal outputs */
-    _talon.configNominalOutputForward(0, Constants.kTimeoutMs);
-    _talon.configNominalOutputReverse(0, Constants.kTimeoutMs);
-    _talon.configPeakOutputForward(1, Constants.kTimeoutMs);
-    _talon.configPeakOutputReverse(-1, Constants.kTimeoutMs);
+    _talon.configNominalOutputForward(0, Constants.Drivetrain.kTimeoutMs);
+    _talon.configNominalOutputReverse(0, Constants.Drivetrain.kTimeoutMs);
+    _talon.configPeakOutputForward(1, Constants.Drivetrain.kTimeoutMs);
+    _talon.configPeakOutputReverse(-1, Constants.Drivetrain.kTimeoutMs);
 
     /* Set Motion Magic gains in slot0 - see documentation */
-    _talon.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
-    _talon.config_kF(Constants.kSlotIdx, Constants.kGains.kF, Constants.kTimeoutMs);
-    _talon.config_kP(Constants.kSlotIdx, Constants.kGains.kP, Constants.kTimeoutMs);
-    _talon.config_kI(Constants.kSlotIdx, Constants.kGains.kI, Constants.kTimeoutMs);
-    _talon.config_kD(Constants.kSlotIdx, Constants.kGains.kD, Constants.kTimeoutMs);
+    _talon.selectProfileSlot(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kPIDLoopIdx);
+    _talon.config_kF(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kGains.kF, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_kP(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kGains.kP, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_kI(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kGains.kI, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_kD(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kGains.kD, Constants.Drivetrain.kTimeoutMs);
 
     /* Set acceleration and vcruise velocity - see documentation */
-    _talon.configMotionCruiseVelocity(4000, Constants.kTimeoutMs);
-    _talon.configMotionAcceleration(400, Constants.kTimeoutMs);
+    _talon.configMotionCruiseVelocity(4000, Constants.Drivetrain.kTimeoutMs);
+    _talon.configMotionAcceleration(400, Constants.Drivetrain.kTimeoutMs);
 
     /* Zero the sensor once on robot boot up */
-    _talon.setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
+    _talon.setSelectedSensorPosition(0, Constants.Drivetrain.kPIDLoopIdx, Constants.Drivetrain.kTimeoutMs);
   }
 }
