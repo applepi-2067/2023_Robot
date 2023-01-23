@@ -15,10 +15,10 @@ import frc.robot.Constants;
 
 public class Drivetrain extends SubsystemBase {
   /** Creates a new DriveTrain. */
-  private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDevices.MOTOR_LEFT_1_ID);
-  private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(Constants.CANDevices.MOTOR_RIGHT_1_ID);
-  private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDevices.MOTOR_LEFT_2_ID);
-  private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDevices.MOTOR_RIGHT_2_ID);
+  private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_1_ID);
+  private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_1_ID);
+  private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_2_ID);
+  private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_2_ID);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
 
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
