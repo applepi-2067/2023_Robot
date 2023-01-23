@@ -8,7 +8,6 @@ import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveToPosition extends CommandBase {
-    /** Creates a new SetPosition. */
     private static DriveTrain m_driveTrain;
     private static double m_inches;
     private static double m_acceptableErrorInches = 0.1;
@@ -42,12 +41,11 @@ public class DriveToPosition extends CommandBase {
     @Override
     public boolean isFinished() {
         double inchesError = m_driveTrain.getDistanceTraveled() - m_inches;
+
         if ((inchesError < m_acceptableErrorInches) && (inchesError > -m_acceptableErrorInches)) {
             return true;
         } else {
             return false;
         }
-        // return (climber.getPositionInches() < (inches + acceptableErrorInches) &&
-        // climber.getPositionInches() > (inches - acceptableErrorInches));
     }
 }
