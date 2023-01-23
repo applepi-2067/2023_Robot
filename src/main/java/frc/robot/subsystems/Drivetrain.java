@@ -73,6 +73,17 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
+   * Set drivetrain motor positions to zero
+   */
+  public void resetEncoders() {
+    m_leftMotor.getSensorCollection().setIntegratedSensorPosition(0, Constants.Drivetrain.kTimeoutMs);
+    m_rightMotor.getSensorCollection().setIntegratedSensorPosition(0, Constants.Drivetrain.kTimeoutMs);
+    
+    m_leftMotor.setSelectedSensorPosition(0.0);
+    m_rightMotor.setSelectedSensorPosition(0.0);
+}
+
+  /**
    * 
    * @return current position in inches
    */
