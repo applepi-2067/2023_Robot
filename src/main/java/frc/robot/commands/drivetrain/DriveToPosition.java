@@ -22,22 +22,23 @@ public class DriveToPosition extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_driveTrain.setSetPointDistance(m_inches);
+        m_driveTrain.resetEncoders();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-
+        m_driveTrain.setSetPointDistance(m_inches);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        // Stop the drivetain motors
         m_driveTrain.arcadeDrive(0, 0);
     }
 
-    // Returns true when the command should end.
+    // Returns true when we are within an acceptable distance of our target position
     @Override
     public boolean isFinished() {
         double inchesError = m_driveTrain.getDistanceTraveled() - m_inches;
