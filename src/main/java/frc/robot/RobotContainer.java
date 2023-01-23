@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.subsystems.*;
+import frc.robot.commands.drivetrain.DriveToPosition;
 
 /**
  * This class is where the bulk of the robot should be declared. 
@@ -70,7 +71,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous.
-    return null;
+    DriveToPosition m_autonomousCommand = new DriveToPosition(m_robotDrive, 36);
+    return m_autonomousCommand;
   }
 }
