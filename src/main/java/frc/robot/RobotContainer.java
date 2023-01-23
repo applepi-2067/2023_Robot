@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.subsystems.*;
-import frc.robot.Constants.OperatorConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. 
@@ -23,8 +22,8 @@ import frc.robot.Constants.OperatorConstants;
 public class RobotContainer {
   // Instantiate subsystems, controllers, and commands.
   private final CommandXboxController m_driverController = new CommandXboxController(
-    OperatorConstants.kDriverControllerPort);
-  private final DriveTrain m_robotDrive = new DriveTrain();
+    Constants.OperatorConstants.kDriverControllerPort);
+  private final Drivetrain m_robotDrive = new Drivetrain();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
