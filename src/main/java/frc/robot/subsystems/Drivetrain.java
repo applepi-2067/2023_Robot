@@ -21,7 +21,6 @@ public class Drivetrain extends SubsystemBase {
   private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.OperatorConstants.MOTOR_RIGHT_2_ID);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
 
-  // Move these constants later to consts file
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
   public static final double GEAR_RATIO = 10.0;
@@ -31,7 +30,6 @@ public class Drivetrain extends SubsystemBase {
   public static final double DEGREES_PER_REV = 360.0;
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
   public static final double WHEEL_BASE = 24.0; // distance between wheels (width) in inches
-  public static final int TIMEOUT = 30; // 30ms
 
   public Drivetrain() {
     // Set values to factory default.
@@ -42,11 +40,15 @@ public class Drivetrain extends SubsystemBase {
 
     // Make back motors follow front motor commands.
     m_leftMotorFollower.follow(m_leftMotor);
-    m_rightMotorFollower.follow(m_rightMotor);
+    m_rightMotorFollower.follow(m_rightMotor);  
 
     // Invert right motors so that positive values make robot move forward.
     m_rightMotor.setInverted(true);
     m_rightMotorFollower.setInverted(true);
+
+    // Set motion magic related parameters
+    configMotionMagic(m_leftMotor);
+    configMotionMagic(m_rightMotor);
   }
 
   // Move the robot forward with some rotation.
@@ -66,13 +68,14 @@ public class Drivetrain extends SubsystemBase {
   public void setSetPointDistance(double setPoint) {
     double setPointTicks = inchesToTicks(setPoint);
 
-    configMotionMagic(m_leftMotor);
-    configMotionMagic(m_rightMotor);
-
     m_leftMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
     m_rightMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
   }
 
+  /**
+   * 
+   * @return current position in inches
+   */
   public double getDistanceTraveled() {
     return ticksToInches(m_rightMotor.getSelectedSensorPosition());
   }
