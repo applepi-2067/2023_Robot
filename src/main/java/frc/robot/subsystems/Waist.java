@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.CANDeviceIDs;
+import frc.robot.utils.Gains;
 
 public class Waist extends SubsystemBase {
   private final CANSparkMax m_motor;
@@ -19,7 +20,7 @@ public class Waist extends SubsystemBase {
   private final RelativeEncoder m_encoder;
 
   // PID Coefficients.
-  private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
+  private Gains gains = new Gains(0.1, 1e-4, 1, 0, 0, 1);
 
   /** Creates a new Waist. */
   public Waist() {
@@ -29,22 +30,13 @@ public class Waist extends SubsystemBase {
     m_pidController = m_motor.getPIDController();
     m_encoder = m_motor.getEncoder();
 
-    // PID Coefficients.
-    kP = 0.1; 
-    kI = 1e-4;
-    kD = 1; 
-    kIz = 0; 
-    kFF = 0; 
-    kMaxOutput = 1; 
-    kMinOutput = -1;
-
      // Set PID coefficients
-     m_pidController.setP(kP);
-     m_pidController.setI(kI);
-     m_pidController.setD(kD);
-     m_pidController.setIZone(kIz);
-     m_pidController.setFF(kFF);
-     m_pidController.setOutputRange(kMinOutput, kMaxOutput);
+     m_pidController.setP(gains.kP);
+     m_pidController.setI(gains.kI);
+     m_pidController.setD(gains.kD);
+     m_pidController.setIZone(gains.kIzone);
+     m_pidController.setFF(gains.kF);
+     m_pidController.setOutputRange(-gains.kPeakOutput, gains.kPeakOutput);
   }
 
   /**
