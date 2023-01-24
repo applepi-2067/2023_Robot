@@ -101,5 +101,6 @@ wpi.java.configureTestTasks(test)
 
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
+    options.compilerArgs.add '-parameters' //this doesn't appear to be allowing oblog to get parameter names :(
     options.compilerArgs.add '-XDstringConcat=inline'
 }

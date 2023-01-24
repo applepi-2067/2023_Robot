@@ -8,8 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import frc.robot.commands.waist.DriveWaistWithJoystick;
+import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.subsystems.*;
+import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.drivetrain.DriveToPosition;
 
 /**
@@ -24,12 +26,19 @@ public class RobotContainer {
   // Instantiate subsystems, controllers, and commands.
   private final CommandXboxController m_driverController = new CommandXboxController(
     Constants.OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_operatorContoller = new CommandXboxController(
+    Constants.OperatorConstants.kOperatorControllerPort);
+
   private final Drivetrain m_robotDrive = new Drivetrain();
+  private final Waist waist = Waist.getInstance();
+  private final ExampleSubsystem example = ExampleSubsystem.getInstance();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    Logger.configureLoggingAndConfig(this, false);
+
     // Configure the trigger bindings.
     configureBindings();
 
@@ -45,6 +54,8 @@ public class RobotContainer {
                 ),
           m_robotDrive)
         );
+  
+    waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX()));
   }
 
   /**
@@ -56,13 +67,11 @@ public class RobotContainer {
    * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_exampleSubsystem::exampleCondition)
-    // .onTrue(new ExampleCommand(m_exampleSubsystem));
+    //Driver Controls
 
-    // Schedule `exampleMethodCommand` when the 
-    // Xbox controller's B button is pressed, cancelling on release.
-    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    //Operator Controls
+    m_operatorContoller.a().onTrue(new SetWaistPosition(0));
+    m_operatorContoller.b().onTrue(new SetWaistPosition(10));
   }
 
   /**
