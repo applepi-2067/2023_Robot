@@ -19,16 +19,19 @@ import frc.robot.utils.Gains;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
   }
 
-  public static class CANDevices {
+  public static class CANDeviceIDs {
     public static final int MOTOR_LEFT_1_ID = 1;
     public static final int MOTOR_RIGHT_1_ID = 2;
     public static final int MOTOR_LEFT_2_ID = 3;
     public static final int MOTOR_RIGHT_2_ID = 4;
+
+    public static final int MOTOR_WAIST_ID = 0;
   }
 
   public static class Drivetrain {
