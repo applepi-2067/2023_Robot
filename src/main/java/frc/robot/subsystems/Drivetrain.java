@@ -24,12 +24,12 @@ public class Drivetrain extends SubsystemBase {
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
   public static final double GEAR_RATIO = 10.0;
-  public static final double WHEEL_DIAMETER = 0.1524;
-  public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI; // meters
+  public static final double WHEEL_DIAMETER_METERS = 0.1524;
+  public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI; // meters
   public static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
   public static final double DEGREES_PER_REV = 360.0;
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
-  public static final double WHEEL_BASE = 0.6096; // distance between wheels (width) in meters
+  public static final double WHEEL_BASE_METERS = 0.6096; // distance between wheels (width) in meters
 
   public Drivetrain() {
     // Set values to factory default.
@@ -96,11 +96,11 @@ public class Drivetrain extends SubsystemBase {
   }
 
   private double metersToTicks(double setpoint) {
-    return (setpoint * TICKS_PER_REV * GEAR_RATIO) / WHEEL_CIRCUMFERENCE;
+    return (setpoint * TICKS_PER_REV * GEAR_RATIO) / WHEEL_CIRCUMFERENCE_METERS;
   }
 
   private double ticksToMeters(double setpoint) {
-    return (setpoint * WHEEL_CIRCUMFERENCE) / (TICKS_PER_REV * GEAR_RATIO);
+    return (setpoint * WHEEL_CIRCUMFERENCE_METERS) / (TICKS_PER_REV * GEAR_RATIO);
   }
   
   private double metersPerSecToTicksPer100ms(double setpoint) {
