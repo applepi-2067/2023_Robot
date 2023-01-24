@@ -102,6 +102,10 @@ public class Drivetrain extends SubsystemBase {
   private double ticksToInches(double setpoint) {
     return (setpoint * WHEEL_CIRCUMFERENCE) / (TICKS_PER_REV * GEAR_RATIO);
   }
+  
+  private double inchesPerSecToTicksPer100ms(double setpoint) {
+    return inchesToTicks(setpoint) / 10.0;
+  }
 
   private void configMotionMagic(WPI_TalonFX _talon) {
 
@@ -151,8 +155,10 @@ public class Drivetrain extends SubsystemBase {
     _talon.config_kD(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kGains.kD, Constants.Drivetrain.kTimeoutMs);
 
     /* Set acceleration and vcruise velocity - see documentation */
-    _talon.configMotionCruiseVelocity(4000, Constants.Drivetrain.kTimeoutMs);
-    _talon.configMotionAcceleration(400, Constants.Drivetrain.kTimeoutMs);
+    // Constants stolen from team 2168's 2022 repo
+    _talon.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0 * 12.0))); //(distance units per 100 ms) per second
+    _talon.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(10.0 * 12.0))); //distance units per 100 ms
+  
 
     /* Zero the sensor once on robot boot up */
     _talon.setSelectedSensorPosition(0, Constants.Drivetrain.kPIDLoopIdx, Constants.Drivetrain.kTimeoutMs);
