@@ -24,12 +24,12 @@ public class Drivetrain extends SubsystemBase {
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
   public static final double GEAR_RATIO = 10.0;
-  public static final double WHEEL_DIAMETER = 6.0;
-  public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI; // inches
+  public static final double WHEEL_DIAMETER = 0.1524;
+  public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI; // meters
   public static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
   public static final double DEGREES_PER_REV = 360.0;
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
-  public static final double WHEEL_BASE = 24.0; // distance between wheels (width) in inches
+  public static final double WHEEL_BASE = 0.6096; // distance between wheels (width) in meters
 
   public Drivetrain() {
     // Set values to factory default.
@@ -66,10 +66,10 @@ public class Drivetrain extends SubsystemBase {
 
   /**
    * 
-   * @param setPoint distance in inches (fwd positive)
+   * @param setPoint distance in meters (fwd positive)
    */
   public void setSetPointDistance(double setPoint) {
-    double setPointTicks = inchesToTicks(setPoint);
+    double setPointTicks = metersToTicks(setPoint);
     // Flipped the signs to mirror robot driving patterns
     m_leftMotor.set(TalonFXControlMode.MotionMagic, -setPointTicks);
     m_rightMotor.set(TalonFXControlMode.MotionMagic, -setPointTicks);
@@ -88,23 +88,23 @@ public class Drivetrain extends SubsystemBase {
 
   /**
    * 
-   * @return current position in inches
+   * @return current position in meters
    */
   public double getDistanceTraveled() { 
     // Negative sign because setter is also flipped
-    return ticksToInches(-m_rightMotor.getSelectedSensorPosition());
+    return ticksToMeters(-m_rightMotor.getSelectedSensorPosition());
   }
 
-  private double inchesToTicks(double setpoint) {
+  private double metersToTicks(double setpoint) {
     return (setpoint * TICKS_PER_REV * GEAR_RATIO) / WHEEL_CIRCUMFERENCE;
   }
 
-  private double ticksToInches(double setpoint) {
+  private double ticksToMeters(double setpoint) {
     return (setpoint * WHEEL_CIRCUMFERENCE) / (TICKS_PER_REV * GEAR_RATIO);
   }
   
-  private double inchesPerSecToTicksPer100ms(double setpoint) {
-    return inchesToTicks(setpoint) / 10.0;
+  private double metersPerSecToTicksPer100ms(double setpoint) {
+    return metersToTicks(setpoint) / 10.0;
   }
 
   private void configMotionMagic(WPI_TalonFX _talon) {
@@ -156,8 +156,8 @@ public class Drivetrain extends SubsystemBase {
 
     /* Set acceleration and vcruise velocity - see documentation */
     // Constants stolen from team 2168's 2022 repo
-    _talon.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0 * 12.0))); //(distance units per 100 ms) per second
-    _talon.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(10.0 * 12.0))); //distance units per 100 ms
+    _talon.configMotionAcceleration((int) (metersPerSecToTicksPer100ms(2.4384))); //(distance units per 100 ms) per second
+    _talon.configMotionCruiseVelocity((int) (metersPerSecToTicksPer100ms(3.048))); //distance units per 100 ms
   
 
     /* Zero the sensor once on robot boot up */
