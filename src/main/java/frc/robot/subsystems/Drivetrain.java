@@ -42,13 +42,17 @@ public class Drivetrain extends SubsystemBase {
     m_leftMotorFollower.follow(m_leftMotor);
     m_rightMotorFollower.follow(m_rightMotor);  
 
-    // Invert right motors so that positive values make robot move forward.
-    m_rightMotor.setInverted(true);
-    m_rightMotorFollower.setInverted(true);
+    
+    
 
     // Set motion magic related parameters
     configMotionMagic(m_leftMotor);
     configMotionMagic(m_rightMotor);
+    
+    // Invert right motors so that positive values make robot move forward.
+    // MotionMagic resets the inversion on the motors, so the .setInversion method should come AFTER the configMotionMagic
+    m_rightMotor.setInverted(true);
+    m_rightMotorFollower.setInverted(true);
   }
 
   // Move the robot forward with some rotation.
