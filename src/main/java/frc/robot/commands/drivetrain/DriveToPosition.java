@@ -7,6 +7,8 @@ package frc.robot.commands.drivetrain;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+import java.lang.Math;
+
 public class DriveToPosition extends CommandBase {
     private static Drivetrain m_driveTrain;
     private static double m_inches;
@@ -41,12 +43,9 @@ public class DriveToPosition extends CommandBase {
     // Returns true when we are within an acceptable distance of our target position
     @Override
     public boolean isFinished() {
-        double inchesError = m_driveTrain.getDistanceTraveled() - m_inches;
+        double inchesError = m_inches - m_driveTrain.getDistanceTraveled();
+        System.out.println(inchesError);
 
-        if ((inchesError < m_acceptableErrorInches) && (inchesError > -m_acceptableErrorInches)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (Math.abs(inchesError) < m_acceptableErrorInches);
     }
 }

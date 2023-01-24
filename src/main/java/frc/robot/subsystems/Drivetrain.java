@@ -33,6 +33,7 @@ public class Drivetrain extends SubsystemBase {
 
   public Drivetrain() {
     // Set values to factory default.
+    m_robotDrive.setSafetyEnabled(false);
     m_leftMotor.configFactoryDefault();
     m_rightMotor.configFactoryDefault();
     m_leftMotorFollower.configFactoryDefault();
@@ -40,17 +41,15 @@ public class Drivetrain extends SubsystemBase {
 
     // Make back motors follow front motor commands.
     m_leftMotorFollower.follow(m_leftMotor);
-    m_rightMotorFollower.follow(m_rightMotor);  
-
-    
-    
+    m_rightMotorFollower.follow(m_rightMotor);
 
     // Set motion magic related parameters
     configMotionMagic(m_leftMotor);
     configMotionMagic(m_rightMotor);
-    
+
     // Invert right motors so that positive values make robot move forward.
-    // MotionMagic resets the inversion on the motors, so the .setInversion method should come AFTER the configMotionMagic
+    // MotionMagic resets the inversion on the motors, so the .setInversion method
+    // should come AFTER the configMotionMagic
     m_rightMotor.setInverted(true);
     m_rightMotorFollower.setInverted(true);
   }
@@ -82,10 +81,10 @@ public class Drivetrain extends SubsystemBase {
   public void resetEncoders() {
     m_leftMotor.getSensorCollection().setIntegratedSensorPosition(0, Constants.Drivetrain.kTimeoutMs);
     m_rightMotor.getSensorCollection().setIntegratedSensorPosition(0, Constants.Drivetrain.kTimeoutMs);
-    
+
     m_leftMotor.setSelectedSensorPosition(0.0);
     m_rightMotor.setSelectedSensorPosition(0.0);
-}
+  }
 
   /**
    * 
