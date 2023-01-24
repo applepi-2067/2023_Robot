@@ -70,9 +70,9 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setSetPointDistance(double setPoint) {
     double setPointTicks = inchesToTicks(setPoint);
-
-    m_leftMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
-    m_rightMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
+    // Flipped the signs to mirror robot driving patterns
+    m_leftMotor.set(TalonFXControlMode.MotionMagic, -setPointTicks);
+    m_rightMotor.set(TalonFXControlMode.MotionMagic, -setPointTicks);
   }
 
   /**
@@ -90,8 +90,9 @@ public class Drivetrain extends SubsystemBase {
    * 
    * @return current position in inches
    */
-  public double getDistanceTraveled() {
-    return ticksToInches(m_rightMotor.getSelectedSensorPosition());
+  public double getDistanceTraveled() { 
+    // Negative sign because setter is also flipped
+    return ticksToInches(-m_rightMotor.getSelectedSensorPosition());
   }
 
   private double inchesToTicks(double setpoint) {
