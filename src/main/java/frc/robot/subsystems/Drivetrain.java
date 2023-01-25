@@ -7,7 +7,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,6 +22,8 @@ public class Drivetrain extends SubsystemBase {
   private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_2_ID);
   private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_2_ID);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
+  private final TalonSRX m_pidgeyController = new TalonSRX(11);
+  private final PigeonIMU m_pidgey = new PigeonIMU(m_pidgeyController);
 
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
@@ -90,7 +94,7 @@ public class Drivetrain extends SubsystemBase {
    * 
    * @return current position in inches
    */
-  public double getDistanceTraveled() { 
+  public double getDistanceTraveled() {
     // Negative sign because setter is also flipped
     return ticksToInches(-m_rightMotor.getSelectedSensorPosition());
   }
@@ -102,9 +106,16 @@ public class Drivetrain extends SubsystemBase {
   private double ticksToInches(double setpoint) {
     return (setpoint * WHEEL_CIRCUMFERENCE) / (TICKS_PER_REV * GEAR_RATIO);
   }
-  
+
   private double inchesPerSecToTicksPer100ms(double setpoint) {
     return inchesToTicks(setpoint) / 10.0;
+  }
+
+  public void getYaw() {
+    double[] ypr = new double[3];
+    m_pidgey.getYawPitchRoll(ypr);
+    System.out.println("Pigeon Yaw is: " + ypr[0]);
+    return;
   }
 
   private void configMotionMagic(WPI_TalonFX _talon) {
@@ -156,9 +167,9 @@ public class Drivetrain extends SubsystemBase {
 
     /* Set acceleration and vcruise velocity - see documentation */
     // Constants stolen from team 2168's 2022 repo
-    _talon.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0 * 12.0))); //(distance units per 100 ms) per second
-    _talon.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(10.0 * 12.0))); //distance units per 100 ms
-  
+    _talon.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0 * 12.0))); // (distance units per 100 ms) per
+                                                                                      // second
+    _talon.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(10.0 * 12.0))); // distance units per 100 ms
 
     /* Zero the sensor once on robot boot up */
     _talon.setSelectedSensorPosition(0, Constants.Drivetrain.kPIDLoopIdx, Constants.Drivetrain.kTimeoutMs);
