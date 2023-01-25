@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -24,12 +25,12 @@ public class Drivetrain extends SubsystemBase {
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
   public static final double GEAR_RATIO = 10.0;
-  public static final double WHEEL_DIAMETER_METERS = 0.1524;
+  public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(6.0);
   public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI; // meters
   public static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
   public static final double DEGREES_PER_REV = 360.0;
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
-  public static final double WHEEL_BASE_METERS = 0.6096; // distance between wheels (width) in meters
+  public static final double WHEEL_BASE_METERS = Units.inchesToMeters(24.0); // distance between wheels (width) in meters
 
   public Drivetrain() {
     // Set values to factory default.
@@ -156,8 +157,8 @@ public class Drivetrain extends SubsystemBase {
 
     /* Set acceleration and vcruise velocity - see documentation */
     // Constants stolen from team 2168's 2022 repo
-    _talon.configMotionAcceleration((int) (metersPerSecToTicksPer100ms(2.4384))); //(distance units per 100 ms) per second
-    _talon.configMotionCruiseVelocity((int) (metersPerSecToTicksPer100ms(3.048))); //distance units per 100 ms
+    _talon.configMotionAcceleration((int) (metersPerSecToTicksPer100ms(Units.inchesToMeters(8.0 * 12.0)))); //(distance units per 100 ms) per second
+    _talon.configMotionCruiseVelocity((int) (metersPerSecToTicksPer100ms(Units.inchesToMeters(10.0 * 12.0)))); //distance units per 100 ms
   
 
     /* Zero the sensor once on robot boot up */

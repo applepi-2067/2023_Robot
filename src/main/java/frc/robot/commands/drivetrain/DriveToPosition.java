@@ -5,6 +5,7 @@
 package frc.robot.commands.drivetrain;
 
 import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import java.lang.Math;
@@ -12,7 +13,7 @@ import java.lang.Math;
 public class DriveToPosition extends CommandBase {
     private static Drivetrain m_driveTrain;
     private static double m_meters;
-    private static double m_acceptableErrorMeters = 0.00254;
+    private static double m_acceptableErrorMeters = Units.inchesToMeters(0.1);
 
     public DriveToPosition(Drivetrain driveTrain, double meters) {
         // Use addRequirements() here to declare subsystem dependencies.
