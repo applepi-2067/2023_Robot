@@ -165,9 +165,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /* Set acceleration and vcruise velocity - see documentation */
     // Constants stolen from team 2168's 2022 repo
-    _talon.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0 * 12.0))); //(distance units per 100 ms) per second
+    _talon.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(4.0 * 12.0))); //(distance units per 100 ms) per second
     _talon.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(10.0 * 12.0))); //distance units per 100 ms
-    _talon.configMotionSCurveStrength(4);
+    _talon.configMotionSCurveStrength(8);
   
 
     /* Zero the sensor once on robot boot up */
