@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -44,6 +45,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     // Make back motors follow front motor commands.
     m_leftMotorFollower.follow(m_leftMotor);
     m_rightMotorFollower.follow(m_rightMotor);
+
+    m_leftMotor.setNeutralMode(NeutralMode.Brake);
+    m_leftMotorFollower.setNeutralMode(NeutralMode.Brake);
+    m_rightMotor.setNeutralMode(NeutralMode.Brake);
+    m_rightMotorFollower.setNeutralMode(NeutralMode.Brake);
 
     // Set motion magic related parameters
     configMotionMagic(m_leftMotor);
@@ -161,6 +167,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     // Constants stolen from team 2168's 2022 repo
     _talon.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0 * 12.0))); //(distance units per 100 ms) per second
     _talon.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(10.0 * 12.0))); //distance units per 100 ms
+    _talon.configMotionSCurveStrength(4);
   
 
     /* Zero the sensor once on robot boot up */
