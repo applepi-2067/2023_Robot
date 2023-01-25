@@ -12,8 +12,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class Drivetrain extends SubsystemBase {
+public class Drivetrain extends SubsystemBase implements Loggable {
   /** Creates a new DriveTrain. */
   private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_1_ID);
   private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_1_ID);
@@ -90,6 +92,7 @@ public class Drivetrain extends SubsystemBase {
    * 
    * @return current position in inches
    */
+  @Log
   public double getDistanceTraveled() { 
     // Negative sign because setter is also flipped
     return ticksToInches(-m_rightMotor.getSelectedSensorPosition());
