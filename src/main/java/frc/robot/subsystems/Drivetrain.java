@@ -3,7 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import frc.robot.Constants;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -12,9 +14,11 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
-public class Drivetrain extends SubsystemBase {
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
+
+public class Drivetrain extends SubsystemBase implements Loggable {
   /** Creates a new DriveTrain. */
   private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_1_ID);
   private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_1_ID);
@@ -43,6 +47,11 @@ public class Drivetrain extends SubsystemBase {
     // Make back motors follow front motor commands.
     m_leftMotorFollower.follow(m_leftMotor);
     m_rightMotorFollower.follow(m_rightMotor);
+
+    m_leftMotor.setNeutralMode(NeutralMode.Brake);
+    m_leftMotorFollower.setNeutralMode(NeutralMode.Brake);
+    m_rightMotor.setNeutralMode(NeutralMode.Brake);
+    m_rightMotorFollower.setNeutralMode(NeutralMode.Brake);
 
     // Set motion magic related parameters
     configMotionMagic(m_leftMotor);
@@ -157,8 +166,9 @@ public class Drivetrain extends SubsystemBase {
 
     /* Set acceleration and vcruise velocity - see documentation */
     // Constants stolen from team 2168's 2022 repo
-    _talon.configMotionAcceleration((int) (metersPerSecToTicksPer100ms(Units.inchesToMeters(8.0 * 12.0)))); //(distance units per 100 ms) per second
+    _talon.configMotionAcceleration((int) (metersPerSecToTicksPer100ms(Units.inchesToMeters(4.0 * 12.0)))); //(distance units per 100 ms) per second
     _talon.configMotionCruiseVelocity((int) (metersPerSecToTicksPer100ms(Units.inchesToMeters(10.0 * 12.0)))); //distance units per 100 ms
+    _talon.configMotionSCurveStrength(8);
   
 
     /* Zero the sensor once on robot boot up */
