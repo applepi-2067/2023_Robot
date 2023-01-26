@@ -54,8 +54,8 @@ public class Drivetrain extends SubsystemBase {
     // Invert right motors so that positive values make robot move forward.
     // MotionMagic resets the inversion on the motors, so the .setInversion method
     // should come AFTER the configMotionMagic
-    m_rightMotor.setInverted(true);
-    m_rightMotorFollower.setInverted(true);
+    m_leftMotor.setInverted(true);
+    m_leftMotorFollower.setInverted(true);
   }
 
   // Move the robot forward with some rotation.
@@ -75,8 +75,8 @@ public class Drivetrain extends SubsystemBase {
   public void setSetPointDistance(double setPoint) {
     double setPointTicks = inchesToTicks(setPoint);
     // Flipped the signs to mirror robot driving patterns
-    m_leftMotor.set(TalonFXControlMode.MotionMagic, -setPointTicks);
-    m_rightMotor.set(TalonFXControlMode.MotionMagic, -setPointTicks);
+    m_leftMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
+    m_rightMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
   }
 
   /**
@@ -91,12 +91,28 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
+   * Reset the gyro yaw values
+   */
+  public void resetGyro() {
+    m_pidgey.setYaw(0, Constants.Drivetrain.kTimeoutMs);
+    m_pidgey.setAccumZAngle(0, Constants.Drivetrain.kTimeoutMs);
+    return;
+  }
+
+  /**
    * 
    * @return current position in inches
    */
   public double getDistanceTraveled() {
     // Negative sign because setter is also flipped
-    return ticksToInches(-m_rightMotor.getSelectedSensorPosition());
+    return ticksToInches(m_rightMotor.getSelectedSensorPosition());
+  }
+
+  /**
+   * @return current yaw in degrees (CCW is positive)
+   */
+  public double getYaw() {
+    return m_pidgey.getYaw();
   }
 
   private double inchesToTicks(double setpoint) {
@@ -109,13 +125,6 @@ public class Drivetrain extends SubsystemBase {
 
   private double inchesPerSecToTicksPer100ms(double setpoint) {
     return inchesToTicks(setpoint) / 10.0;
-  }
-
-  public void getYaw() {
-    double[] ypr = new double[3];
-    m_pidgey.getYawPitchRoll(ypr);
-    System.out.println("Pigeon Yaw is: " + ypr[0]);
-    return;
   }
 
   private void configMotionMagic(WPI_TalonFX _talon) {

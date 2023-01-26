@@ -50,8 +50,8 @@ public class RobotContainer {
         // Forward/backward controlled by the left hand, turning controlled by the right.
         Commands.run(
           () -> m_robotDrive.arcadeDrive(
-                  m_driverController.getLeftY() / 2.0,
-                  m_driverController.getRightX() / 2.0
+                  -m_driverController.getLeftY() / 2.0,
+                  -m_driverController.getRightX() / 2.0
                 ),
           m_robotDrive)
         );
@@ -84,7 +84,7 @@ public class RobotContainer {
     RotateToPosition m_autonomousCommand = new RotateToPosition(m_robotDrive, 90);
     return m_autonomousCommand;
 
-    // DriveToPosition m_autonomousCommand = new DriveToPosition(m_robotDrive, 36);
+    // DriveToPosition m_autonomousCommand = new DriveToPosition(m_robotDrive, 12);
     // return m_autonomousCommand;
   }
 }
