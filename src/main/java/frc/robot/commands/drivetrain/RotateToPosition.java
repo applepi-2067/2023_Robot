@@ -33,7 +33,6 @@ public class RotateToPosition extends CommandBase {
     public void execute() {
         double rotationPower = m_pidController.calculate(m_driveTrain.getYaw(), m_degrees);
         rotationPower = MathUtil.clamp(rotationPower, -0.5, 0.5);
-        System.out.println("PID output power = " + rotationPower);
         m_driveTrain.arcadeDrive(0, rotationPower);
     }
 
