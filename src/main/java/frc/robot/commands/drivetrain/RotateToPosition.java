@@ -4,6 +4,8 @@ package frc.robot.commands.drivetrain;
 
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 
 import java.lang.Math;
 
@@ -11,6 +13,7 @@ public class RotateToPosition extends CommandBase {
     private static Drivetrain m_driveTrain;
     private static double m_degrees;
     private static double m_acceptableErrorDegrees = 1;
+    private static PIDController m_pidController = new PIDController(0.01, 0, 0);
 
     public RotateToPosition(Drivetrain driveTrain, double degrees) {
         // Use addRequirements() here to declare subsystem dependencies.
@@ -28,7 +31,10 @@ public class RotateToPosition extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_driveTrain.arcadeDrive(0, 0.2);
+        double rotationPower = m_pidController.calculate(m_driveTrain.getYaw(), m_degrees);
+        rotationPower = MathUtil.clamp(rotationPower, -0.5, 0.5);
+        System.out.println("PID output power = " + rotationPower);
+        m_driveTrain.arcadeDrive(0, rotationPower);
     }
 
     // Called once the command ends or is interrupted.
@@ -41,8 +47,6 @@ public class RotateToPosition extends CommandBase {
     @Override
     public boolean isFinished() {
         double angleError = getAngleError();
-        System.out.println("Angle error = " + angleError);
-
         return Math.abs(angleError) < m_acceptableErrorDegrees;
     }
 
