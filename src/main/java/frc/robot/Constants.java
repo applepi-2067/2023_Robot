@@ -32,6 +32,7 @@ public final class Constants {
     public static final int MOTOR_RIGHT_2_ID = 4;
 
     public static final int MOTOR_WAIST_ID = 5;
+    public static final int MOTOR_SHOULDER_ID = 6;
   }
 
   public static class Drivetrain {
