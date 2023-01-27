@@ -13,6 +13,8 @@ import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.subsystems.*;
 import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.drivetrain.DriveToPosition;
+import frc.robot.commands.shoulder.DriveShoulderWithJoystick;
+import frc.robot.commands.shoulder.SetShoulderPosition;
 
 /**
  * This class is where the bulk of the robot should be declared. 
@@ -31,6 +33,7 @@ public class RobotContainer {
 
   private final Drivetrain m_robotDrive = new Drivetrain();
   private final Waist waist = Waist.getInstance();
+  private final Shoulder shoulder = Shoulder.getInstance();
   private final ExampleSubsystem example = ExampleSubsystem.getInstance();
 
   /**
@@ -56,6 +59,7 @@ public class RobotContainer {
         );
   
     waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX()));
+    shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorContoller.getLeftY()));
   }
 
   /**
@@ -72,6 +76,9 @@ public class RobotContainer {
     //Operator Controls
     m_operatorContoller.a().onTrue(new SetWaistPosition(0));
     m_operatorContoller.b().onTrue(new SetWaistPosition(10));
+
+    m_operatorContoller.x().onTrue(new SetShoulderPosition(0));
+    m_operatorContoller.y().onTrue(new SetShoulderPosition(10));
   }
 
   /**
