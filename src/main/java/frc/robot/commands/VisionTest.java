@@ -27,8 +27,8 @@ public class VisionTest extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    final int targetID = 3;
-    Pose2d destinationTarget = new Pose2d(2, 0, new Rotation2d(Math.toRadians(180)));
+    final int targetID = 2;
+    Pose2d destinationTarget = new Pose2d(1, 0, new Rotation2d(Math.toRadians(180))); // (x, y) in meters, rotation in degrees
     Pose2d destinationCamera = m_vision.getCameraToDestPose(targetID, destinationTarget);
 
     if (destinationCamera != null) {
@@ -37,10 +37,10 @@ public class VisionTest extends CommandBase {
       double theta = destinationCamera.getRotation().getDegrees();
 
       DecimalFormat f = new DecimalFormat("##.00");
-      System.out.print("x, y, theta: " + f.format(x) + "\t" + f.format(y) + "\t" + f.format(theta));
+      System.out.println("x, y, theta: " + f.format(x) + "\t" + f.format(y) + "\t" + f.format(theta));
     }
     else {
-      System.out.println("Target " + targetID + " not tracked");
+      System.out.println("Target " + targetID + " not tracked\n");
     }
   }
 
