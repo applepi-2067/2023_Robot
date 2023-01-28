@@ -14,7 +14,7 @@ import frc.robot.subsystems.*;
 import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.drivetrain.RotateToPosition;
-
+import frc.robot.commands.auto.DriveSquareAuto;
 /**
  * This class is where the bulk of the robot should be declared. 
  * Since Command-based is a "declarative" paradigm, very little robot logic 
@@ -80,9 +80,11 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    RotateToPosition m_autonomousCommand = new RotateToPosition(m_robotDrive, 90);
+  public Command getAutonomousCommand() { 
+    DriveSquareAuto m_autonomousCommand = new DriveSquareAuto(m_robotDrive);
     return m_autonomousCommand;
+    //RotateToPosition m_autonomousCommand = new RotateToPosition(m_robotDrive, 90);
+    //return m_autonomousCommand;
 
     // DriveToPosition m_autonomousCommand = new DriveToPosition(m_robotDrive, 12);
     // return m_autonomousCommand;
