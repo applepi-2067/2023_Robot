@@ -14,16 +14,18 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.Constants.CANDeviceIDs;
+import frc.robot.Constants;
 import frc.robot.utils.Gains;
+
+import java.lang.Math;
 
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class Waist extends SubsystemBase implements Loggable {
+public class Shoulder extends SubsystemBase implements Loggable {
 
-  private static Waist instance = null;
+  private static Shoulder instance = null;
 
   private final CANSparkMax m_motor;
   private final SparkMaxPIDController m_pidController;
@@ -32,20 +34,23 @@ public class Waist extends SubsystemBase implements Loggable {
   public static final double GEAR_RATIO = 120.0;
   public static final double DEGREES_PER_REV = 360.0;
 
+  // Voltage needed to maintain horizontal arm position.
+  private static final double horizontalArbFF = 0.07;
+
   // PID Coefficients.
   private Gains gains = new Gains(0.1, 1e-4, 1, 0, 0, 1);
 
-  public static Waist getInstance() {
+  public static Shoulder getInstance() {
     if (instance == null) {
-      instance = new Waist();
+      instance = new Shoulder();
     }
 
     return instance;
   }
   
-  /** Creates a new Waist. */
-  private Waist() {
-    m_motor = new CANSparkMax(CANDeviceIDs.MOTOR_WAIST_ID, MotorType.kBrushless);
+  /** Creates a new Shoulder. */
+  private Shoulder() {
+    m_motor = new CANSparkMax(Constants.CANDeviceIDs.MOTOR_SHOULDER_ID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
 
     m_pidController = m_motor.getPIDController();
@@ -78,11 +83,28 @@ public class Waist extends SubsystemBase implements Loggable {
   }
 
   /**
-   * Set waist rotation.
+   * Set shoulder rotation.
    * @param degrees
    */
   public void setPosition(double degrees) {
-    m_pidController.setReference(degreesToMotorRotations(degrees), CANSparkMax.ControlType.kPosition);
+    m_pidController.setReference(
+      degreesToMotorRotations(degrees),
+      CANSparkMax.ControlType.kPosition,
+      Constants.Shoulder.kSlotIdx,
+      getArbFF()
+    );
+  }
+
+  /**
+   * Get the Arbitrary Feed-Forward term, voltage needed to maintain arm positon. 
+
+   * @return Arbitrary Feed-Forward (Volts)
+   */
+  public double getArbFF() {
+    double degrees = getPosition();
+    double radians = Math.toRadians(degrees);
+
+    return Math.cos(radians) * horizontalArbFF;
   }
 
   /**
@@ -96,8 +118,8 @@ public class Waist extends SubsystemBase implements Loggable {
   }
 
   /**
-   *  Get waist rotation.
-   * @return waist position in degrees
+   *  Get shoulder rotation.
+   * @return shoulder position in degrees
    */
   @Log (name = "Position (Deg)", rowIndex = 2, columnIndex = 0)
   public double getPosition() {

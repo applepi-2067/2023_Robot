@@ -32,6 +32,7 @@ public final class Constants {
     public static final int MOTOR_RIGHT_2_ID = 4;
 
     public static final int MOTOR_WAIST_ID = 5;
+    public static final int MOTOR_SHOULDER_ID = 6;
   }
 
   public static class Drivetrain {
@@ -59,5 +60,10 @@ public final class Constants {
      * Gains(kp, ki, kd, kf, izone, peak output);
      */
     public static final Gains kGains = new Gains(0.1, 0.001, 0.0, 0.0, 300, 1.0);
+  }
+
+  public static class Shoulder {
+    // PID Slot.
+    public static final int kSlotIdx = 0;
   }
 }
