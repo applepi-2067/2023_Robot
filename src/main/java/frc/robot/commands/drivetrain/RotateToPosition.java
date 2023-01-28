@@ -41,7 +41,7 @@ public class RotateToPosition extends CommandBase implements Loggable {
     @Override
     public void end(boolean interrupted) {
         m_driveTrain.arcadeDrive(0, 0);
-        // m_driveTrain.resetGyro();
+        m_driveTrain.resetGyro();
     }
 
     // Returns true when we are within an acceptable distance of our target position
@@ -68,7 +68,7 @@ public class RotateToPosition extends CommandBase implements Loggable {
         double rotationPower = m_pidController.calculate(m_driveTrain.getYaw(), m_degrees);
         rotationPower = MathUtil.clamp(rotationPower, -0.5, 0.5);
 
-        System.out.println("Error: " + getAngleError() + ", Power: " + rotationPower + ", Yaw: " + m_driveTrain.getYaw());
+        // System.out.println("Error: " + getAngleError() + ", Power: " + rotationPower + ", Yaw: " + m_driveTrain.getYaw());
         return rotationPower; 
     }
 
