@@ -11,6 +11,9 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
@@ -19,50 +22,45 @@ public class Vision extends SubsystemBase {
   /** Creates a new Vision. */
   public Vision() {}
 
-    /**
-   * Return relative position of target to camera.
+  /**
+   * Provided Pose2d relative to target, returns Pose2d relative to camera
    * 
    * @param targetID: photonvision target ID
-   * @return relative (x, y) of target from camera
+   * @param destination: Pose2d relative to target
+   * @return: Pose2d relative to camera
    */
-  public double[] getCameraToTarget(int targetID) {
+  public Pose2d getCameraToDestTranslation(int targetID, Pose2d destination) {
+    Transform3d cameraToTargetTransform = getCameraToTargetTransform(targetID);
+    if (cameraToTargetTransform != null) {
+      Transform3d targetToCameraTransform = cameraToTargetTransform.inverse();
+      Pose3d destination3dTargetSpace = new Pose3d(destination);
+      Pose3d destination3dCameraSpace = destination3dTargetSpace.transformBy(targetToCameraTransform);
+      Pose2d destination2dCameraSpace = destination3dCameraSpace.toPose2d();
+      return destination2dCameraSpace;
+    }
+
+    return null;
+  }
+
+  /**
+   * Get camera to target transform.
+   * Return null if the target isn't tracked.
+   * 
+   * @param targetID: photonvision target ID
+   * @return camera to target Transform3d or null
+   */
+  public Transform3d getCameraToTargetTransform(int targetID) {
     PhotonPipelineResult result = m_camera.getLatestResult();
     if (result.hasTargets()) {
       List<PhotonTrackedTarget> targets = result.getTargets();
       PhotonTrackedTarget target = getTarget(targets, targetID);
 
       if (target != null) {
-        Transform3d cameraToTargetTransform = target.getBestCameraToTarget();
-        double targetX = cameraToTargetTransform.getX();
-        double targetY = cameraToTargetTransform.getY();
-        
-        double[] targetCoords = {targetX, targetY};
-        return targetCoords;
+        return target.getBestCameraToTarget();
       }
     }
 
-    return new double[0];
-  }
-
-  /**
-   * Return relative position of destination to camera.
-   * 
-   * @param targetID: photonvision target ID
-   * @param targetToDestX: photonvision target vertical displacement to destination (+ up)
-   * @param targetToDestY: photonvision target vertical displacement to destination (+ left)
-   * @return relative (x, y) of destination from camera
-   */
-  public double[] getCameraToDest(int targetID, double targetToDestX, double targetToDestY) {
-    double[] targetCoords = getCameraToTarget(targetID);
-    if (targetCoords.length == 2) {
-      double destX = targetCoords[0] + targetToDestX;
-      double destY = targetCoords[1] + targetToDestY;
-        
-      double[] destCoords = {destX, destY};
-      return destCoords;
-    }
-
-    return new double[0];
+    return null;
   }
 
   /**
@@ -78,6 +76,7 @@ public class Vision extends SubsystemBase {
         return target;
       }
     }
+
     return null;
   }
 
