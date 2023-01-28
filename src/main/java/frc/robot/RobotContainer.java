@@ -12,6 +12,7 @@ import frc.robot.commands.waist.DriveWaistWithJoystick;
 import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.subsystems.*;
 import io.github.oblarg.oblog.Logger;
+import frc.robot.commands.VisionTest;
 import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.drivetrain.RotateToPosition;
 
@@ -31,8 +32,9 @@ public class RobotContainer {
     Constants.OperatorConstants.kOperatorControllerPort);
 
   private final Drivetrain m_robotDrive = new Drivetrain();
-  private final Waist waist = Waist.getInstance();
+  private final Waist m_waist = Waist.getInstance();
   private final ExampleSubsystem example = ExampleSubsystem.getInstance();
+  private final Vision m_vision = new Vision();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -56,7 +58,7 @@ public class RobotContainer {
           m_robotDrive)
         );
   
-    waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX()));
+    m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX()));
   }
 
   /**
@@ -81,7 +83,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    RotateToPosition m_autonomousCommand = new RotateToPosition(m_robotDrive, 90);
+    VisionTest m_autonomousCommand = new VisionTest(m_vision);
     return m_autonomousCommand;
 
     // DriveToPosition m_autonomousCommand = new DriveToPosition(m_robotDrive, 12);

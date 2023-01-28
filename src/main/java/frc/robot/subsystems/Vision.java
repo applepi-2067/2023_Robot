@@ -29,7 +29,7 @@ public class Vision extends SubsystemBase {
    * @param destination: Pose2d relative to target
    * @return: Pose2d relative to camera
    */
-  public Pose2d getCameraToDestTranslation(int targetID, Pose2d destination) {
+  public Pose2d getCameraToDestPose(int targetID, Pose2d destination) {
     Transform3d cameraToTargetTransform = getCameraToTargetTransform(targetID);
     if (cameraToTargetTransform != null) {
       Transform3d targetToCameraTransform = cameraToTargetTransform.inverse();
@@ -49,7 +49,7 @@ public class Vision extends SubsystemBase {
    * @param targetID: photonvision target ID
    * @return camera to target Transform3d or null
    */
-  public Transform3d getCameraToTargetTransform(int targetID) {
+  private Transform3d getCameraToTargetTransform(int targetID) {
     PhotonPipelineResult result = m_camera.getLatestResult();
     if (result.hasTargets()) {
       List<PhotonTrackedTarget> targets = result.getTargets();
@@ -70,7 +70,7 @@ public class Vision extends SubsystemBase {
    * @param targetID: photonvision target ID
    * @return target or null if the camera doesn't see the correct target
    */
-  public PhotonTrackedTarget getTarget(List<PhotonTrackedTarget> targets, int targetID) {
+  private PhotonTrackedTarget getTarget(List<PhotonTrackedTarget> targets, int targetID) {
     for (PhotonTrackedTarget target: targets) {
       if (target.getFiducialId() == targetID) {
         return target;
