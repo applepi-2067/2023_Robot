@@ -13,6 +13,7 @@ import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.subsystems.*;
 import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.drivetrain.DriveToPosition;
+import frc.robot.commands.drivetrain.RotateToPosition;
 
 /**
  * This class is where the bulk of the robot should be declared. 
@@ -49,8 +50,8 @@ public class RobotContainer {
         // Forward/backward controlled by the left hand, turning controlled by the right.
         Commands.run(
           () -> m_robotDrive.arcadeDrive(
-                  m_driverController.getLeftY() / 2.0,
-                  m_driverController.getRightX() / 2.0
+                  -m_driverController.getLeftY() / 2.0,
+                  -m_driverController.getRightX() / 2.0
                 ),
           m_robotDrive)
         );
@@ -80,7 +81,10 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    DriveToPosition m_autonomousCommand = new DriveToPosition(m_robotDrive, 36);
+    RotateToPosition m_autonomousCommand = new RotateToPosition(m_robotDrive, 90);
     return m_autonomousCommand;
+
+    // DriveToPosition m_autonomousCommand = new DriveToPosition(m_robotDrive, 12);
+    // return m_autonomousCommand;
   }
 }

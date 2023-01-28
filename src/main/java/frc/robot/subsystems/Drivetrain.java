@@ -9,7 +9,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -25,6 +27,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_2_ID);
   private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_2_ID);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
+  private final TalonSRX m_pidgeyController = new TalonSRX(11);
+  private final PigeonIMU m_pidgey = new PigeonIMU(m_pidgeyController);
 
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
@@ -60,8 +64,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     // Invert right motors so that positive values make robot move forward.
     // MotionMagic resets the inversion on the motors, so the .setInversion method
     // should come AFTER the configMotionMagic
-    m_rightMotor.setInverted(true);
-    m_rightMotorFollower.setInverted(true);
+    m_leftMotor.setInverted(true);
+    m_leftMotorFollower.setInverted(true);
   }
 
   // Move the robot forward with some rotation.
@@ -81,8 +85,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public void setSetPointDistance(double setPoint) {
     double setPointTicks = metersToTicks(setPoint);
     // Flipped the signs to mirror robot driving patterns
-    m_leftMotor.set(TalonFXControlMode.MotionMagic, -setPointTicks);
-    m_rightMotor.set(TalonFXControlMode.MotionMagic, -setPointTicks);
+    m_leftMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
+    m_rightMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
   }
 
   /**
@@ -97,12 +101,28 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
 
   /**
+   * Reset the gyro yaw values
+   */
+  public void resetGyro() {
+    m_pidgey.setYaw(0, Constants.Drivetrain.kTimeoutMs);
+    m_pidgey.setAccumZAngle(0, Constants.Drivetrain.kTimeoutMs);
+    return;
+  }
+
+  /**
    * 
    * @return current position in meters
    */
-  public double getDistanceTraveled() { 
+  public double getDistanceTraveled() {
     // Negative sign because setter is also flipped
-    return ticksToMeters(-m_rightMotor.getSelectedSensorPosition());
+    return ticksToMeters(m_rightMotor.getSelectedSensorPosition());
+  }
+
+  /**
+   * @return current yaw in degrees (CCW is positive)
+   */
+  public double getYaw() {
+    return m_pidgey.getYaw();
   }
 
   private double metersToTicks(double setpoint) {
