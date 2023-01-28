@@ -3,17 +3,20 @@
 package frc.robot.commands.drivetrain;
 
 import frc.robot.subsystems.Drivetrain;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 
 import java.lang.Math;
 
-public class RotateToPosition extends CommandBase {
-    private static Drivetrain m_driveTrain;
-    private static double m_degrees;
-    private static double m_acceptableErrorDegrees = 1;
-    private static PIDController m_pidController = new PIDController(0.01, 0, 0);
+public class RotateToPosition extends CommandBase implements Loggable {
+    private Drivetrain m_driveTrain;
+    private double m_degrees;
+    private double m_acceptableErrorDegrees = 1;
+    private PIDController m_pidController = new PIDController(0.0125, 0, 0);
+    private boolean wasWithinTolerance = false;
 
     public RotateToPosition(Drivetrain driveTrain, double degrees) {
         // Use addRequirements() here to declare subsystem dependencies.
@@ -31,25 +34,48 @@ public class RotateToPosition extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        double rotationPower = m_pidController.calculate(m_driveTrain.getYaw(), m_degrees);
-        rotationPower = MathUtil.clamp(rotationPower, -0.5, 0.5);
-        m_driveTrain.arcadeDrive(0, rotationPower);
+        m_driveTrain.arcadeDrive(0, getRotationPower());
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         m_driveTrain.arcadeDrive(0, 0);
+        // m_driveTrain.resetGyro();
     }
 
     // Returns true when we are within an acceptable distance of our target position
     @Override
     public boolean isFinished() {
         double angleError = getAngleError();
-        return Math.abs(angleError) < m_acceptableErrorDegrees;
+        boolean withinTolerance = Math.abs(angleError) < m_acceptableErrorDegrees;
+
+        if (withinTolerance && wasWithinTolerance) {
+            return true;
+        } else {
+            wasWithinTolerance = withinTolerance;
+            return false;
+        }
     }
 
+    @Log
     private double getAngleError() {
         return m_degrees - m_driveTrain.getYaw();
     }
+
+    @Log
+    private double getRotationPower() {
+        double rotationPower = m_pidController.calculate(m_driveTrain.getYaw(), m_degrees);
+        rotationPower = MathUtil.clamp(rotationPower, -0.5, 0.5);
+
+        System.out.println("Error: " + getAngleError() + ", Power: " + rotationPower + ", Yaw: " + m_driveTrain.getYaw());
+        return rotationPower; 
+    }
+
+    @Log
+    private double getYaw() {
+        return m_driveTrain.getYaw();
+    }
+    
+
 }
