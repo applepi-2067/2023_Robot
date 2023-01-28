@@ -61,9 +61,4 @@ public final class Constants {
      */
     public static final Gains kGains = new Gains(0.1, 0.001, 0.0, 0.0, 300, 1.0);
   }
-
-  public static class Shoulder {
-    // PID Slot.
-    public static final int kSlotIdx = 0;
-  }
 }

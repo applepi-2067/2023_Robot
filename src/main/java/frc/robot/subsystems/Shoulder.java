@@ -39,6 +39,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
   // PID Coefficients.
   private Gains gains = new Gains(0.1, 1e-4, 1, 0, 0, 1);
+  private static final int kSlotIdx = 0;
 
   public static Shoulder getInstance() {
     if (instance == null) {
@@ -90,7 +91,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
     m_pidController.setReference(
       degreesToMotorRotations(degrees),
       CANSparkMax.ControlType.kPosition,
-      Constants.Shoulder.kSlotIdx,
+      kSlotIdx,
       getArbFF()
     );
   }
