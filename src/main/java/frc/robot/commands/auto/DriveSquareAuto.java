@@ -7,7 +7,6 @@ package frc.robot.commands.auto;
 import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.drivetrain.RotateToPosition;
 import frc.robot.subsystems.Drivetrain;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -16,13 +15,20 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class DriveSquareAuto extends SequentialCommandGroup {
   /** Creates a new TwoBall. */
   public DriveSquareAuto(Drivetrain drivetrain) { 
-    double squareSideLength=.10; //meters 
+    double squareSideLength = 1; //meters 
     double turnAngle = -90;
 
     addCommands(
         new DriveToPosition(drivetrain, squareSideLength),
-        new RotateToPosition(drivetrain, turnAngle)
-    );
+        new RotateToPosition(drivetrain, turnAngle), // turn 1
+        new DriveToPosition(drivetrain, squareSideLength),
+        new RotateToPosition(drivetrain, turnAngle), // turn 2
+        new DriveToPosition(drivetrain, squareSideLength),
+        new RotateToPosition(drivetrain, turnAngle), // turn 3
+        new DriveToPosition(drivetrain, squareSideLength),
+        new RotateToPosition(drivetrain, turnAngle) // turn back to original position
+    );  
+  
       //new InstantCommand(() -> System.out.println("reving up shooter!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
   }
 }
