@@ -3,20 +3,21 @@
 package frc.robot.commands.drivetrain;
 
 import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import java.lang.Math;
 
 public class DriveToPosition extends CommandBase {
     private static Drivetrain m_driveTrain;
-    private static double m_inches;
-    private static double m_acceptableErrorInches = 0.1;
+    private static double m_meters;
+    private static double m_acceptableErrorMeters = Units.inchesToMeters(0.1);
 
-    public DriveToPosition(Drivetrain driveTrain, double inch) {
+    public DriveToPosition(Drivetrain driveTrain, double meters) {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(driveTrain);
         m_driveTrain = driveTrain;
-        m_inches = inch;
+        m_meters = meters;
     }
 
     // Called when the command is initially scheduled.
@@ -28,7 +29,7 @@ public class DriveToPosition extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_driveTrain.setSetPointDistance(m_inches);
+        m_driveTrain.setSetPointDistance(m_meters);
     }
 
     // Called once the command ends or is interrupted.
@@ -41,9 +42,9 @@ public class DriveToPosition extends CommandBase {
     // Returns true when we are within an acceptable distance of our target position
     @Override
     public boolean isFinished() {
-        double inchesError = m_inches - m_driveTrain.getDistanceTraveled();
-        System.out.println(inchesError);
+        double metersError = m_meters - m_driveTrain.getDistanceTraveled();
+        System.out.println(metersError);
 
-        return (Math.abs(inchesError) < m_acceptableErrorInches);
+        return (Math.abs(metersError) < m_acceptableErrorMeters);
     }
 }
