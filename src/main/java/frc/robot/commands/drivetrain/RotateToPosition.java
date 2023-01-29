@@ -13,7 +13,7 @@ public class RotateToPosition extends CommandBase {
     private Drivetrain m_driveTrain;
     private double m_degrees;
     private double m_acceptableErrorDegrees = 2;
-    private PIDController m_pidController = new PIDController(0.03, 0, 0);
+    private PIDController m_pidController = new PIDController(0.015, 0.02, 0);
 
     public RotateToPosition(Drivetrain driveTrain, double degrees) {
         // Use addRequirements() here to declare subsystem dependencies.
