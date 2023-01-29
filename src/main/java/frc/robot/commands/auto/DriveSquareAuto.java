@@ -29,6 +29,5 @@ public class DriveSquareAuto extends SequentialCommandGroup {
         new RotateToPosition(drivetrain, turnAngle) // turn back to original position
     );  
   
-      //new InstantCommand(() -> System.out.println("reving up shooter!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
   }
 }
