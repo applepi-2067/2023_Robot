@@ -13,7 +13,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
@@ -32,11 +32,22 @@ public class Vision extends SubsystemBase {
   public Pose2d getCameraToDestPose(int targetID, Pose2d destination) {
     Transform3d cameraToTargetTransform = getCameraToTargetTransform(targetID);
     if (cameraToTargetTransform != null) {
-      Transform3d targetToCameraTransform = cameraToTargetTransform.inverse();
-      Pose3d destination3dTargetSpace = new Pose3d(destination);
-      Pose3d destination3dCameraSpace = destination3dTargetSpace.transformBy(targetToCameraTransform);
-      Pose2d destination2dCameraSpace = destination3dCameraSpace.toPose2d();
-      return destination2dCameraSpace;
+      double targetX = cameraToTargetTransform.getX();
+      double targetY = cameraToTargetTransform.getY();
+      double targetRotationRadians = cameraToTargetTransform.getRotation().toRotation2d().getRadians();
+
+      // Coords of destination in target reference frame.
+      double destinationXTarget = destination.getX();
+      double destinationYTarget = destination.getY();
+      double destinationRotationRadiansTarget = destination.getRotation().getRadians();
+
+      // Coords of destination in camera reference frame.
+      double destinationXCamera = targetX + (destinationXTarget * Math.cos(targetRotationRadians)) + (destinationYTarget * Math.sin(targetRotationRadians));
+      double destinationYCamera = targetY + (destinationYTarget * Math.cos(targetRotationRadians)) + (destinationXTarget * Math.sin(targetRotationRadians));
+      double destinationRotationRadiansCamera = targetRotationRadians + destinationRotationRadiansTarget;
+
+      Pose2d cameraToDestPose = new Pose2d(destinationXCamera, destinationYCamera, new Rotation2d(destinationRotationRadiansCamera));
+      return cameraToDestPose;
     }
 
     return null;

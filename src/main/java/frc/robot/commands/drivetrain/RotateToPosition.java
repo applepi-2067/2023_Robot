@@ -10,16 +10,27 @@ import edu.wpi.first.math.controller.PIDController;
 import java.lang.Math;
 
 public class RotateToPosition extends CommandBase {
-    private static Drivetrain m_driveTrain;
-    private static double m_degrees;
-    private static double m_acceptableErrorDegrees = 1;
-    private static PIDController m_pidController = new PIDController(0.01, 0, 0);
+    private Drivetrain m_driveTrain;
+    private double m_degrees;
+    private double m_acceptableErrorDegrees = 2;
+    private PIDController m_pidController = new PIDController(0.03, 0, 0);
 
     public RotateToPosition(Drivetrain driveTrain, double degrees) {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(driveTrain);
         m_driveTrain = driveTrain;
-        m_degrees = degrees;
+        m_degrees = optimizeRotation(degrees);
+    }
+
+    private double optimizeRotation(double degrees) {
+        degrees = degrees % 360.0;
+        if (degrees > 180.0) {
+            degrees -= 360.0;
+        }
+        else if (degrees < -180.0) {
+            degrees += 360.0;
+        }
+        return degrees;
     }
 
     // Called when the command is initially scheduled.

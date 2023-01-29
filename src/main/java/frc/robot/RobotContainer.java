@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -12,7 +14,7 @@ import frc.robot.commands.waist.DriveWaistWithJoystick;
 import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.subsystems.*;
 import io.github.oblarg.oblog.Logger;
-import frc.robot.commands.VisionTest;
+import frc.robot.commands.auto.DriveToVisionTargetOffset;
 import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.drivetrain.RotateToPosition;
 
@@ -28,12 +30,12 @@ public class RobotContainer {
   // Instantiate subsystems, controllers, and commands.
   private final CommandXboxController m_driverController = new CommandXboxController(
     Constants.OperatorConstants.kDriverControllerPort);
-  private final CommandXboxController m_operatorContoller = new CommandXboxController(
-    Constants.OperatorConstants.kOperatorControllerPort);
+  // private final CommandXboxController m_operatorContoller = new CommandXboxController(
+  //   Constants.OperatorConstants.kOperatorControllerPort);
 
   private final Drivetrain m_robotDrive = new Drivetrain();
-  private final Waist m_waist = Waist.getInstance();
-  private final ExampleSubsystem example = ExampleSubsystem.getInstance();
+  // private final Waist m_waist = Waist.getInstance();
+  // private final ExampleSubsystem example = ExampleSubsystem.getInstance();
   private final Vision m_vision = new Vision();
 
   /**
@@ -58,7 +60,7 @@ public class RobotContainer {
           m_robotDrive)
         );
   
-    m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX()));
+    // m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX()));
   }
 
   /**
@@ -73,8 +75,8 @@ public class RobotContainer {
     //Driver Controls
 
     //Operator Controls
-    m_operatorContoller.a().onTrue(new SetWaistPosition(0));
-    m_operatorContoller.b().onTrue(new SetWaistPosition(10));
+    // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
+    // m_operatorContoller.b().onTrue(new SetWaistPosition(10));
   }
 
   /**
@@ -83,7 +85,12 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    VisionTest m_autonomousCommand = new VisionTest(m_vision);
+    int targetID = 2;
+    Pose2d destinationTargetPose = new Pose2d(1, 0, new Rotation2d(Math.toRadians(180)));
+
+    DriveToVisionTargetOffset m_autonomousCommand = new DriveToVisionTargetOffset(
+      m_robotDrive, m_vision, targetID, destinationTargetPose
+    );
     return m_autonomousCommand;
 
     // DriveToPosition m_autonomousCommand = new DriveToPosition(m_robotDrive, 12);
