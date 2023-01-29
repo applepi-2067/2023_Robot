@@ -51,7 +51,7 @@ public class RobotContainer {
         Commands.run(
           () -> m_robotDrive.arcadeDrive(
                   -m_driverController.getLeftY() / 2.0,
-                  -m_driverController.getRightX() / 2.0
+                  -m_driverController.getRightX() / 3.0
                 ),
           m_robotDrive)
         );
