@@ -88,7 +88,7 @@ public class RotateToPosition extends CommandBase implements Loggable {
     @Log
     private double getRotationPower() {
         double rotationPower = m_pidController.calculate(m_driveTrain.getYaw(), m_degrees);
-        rotationPower = MathUtil.clamp(rotationPower, -1, 1);
+        rotationPower = MathUtil.clamp(rotationPower, -.65, .65);
         SmartDashboard.putNumber("Position Error", m_pidController.getPositionError());
         SmartDashboard.putNumber("Angle Error", getAngleError());
         SmartDashboard.putNumber("Applied power", rotationPower);
