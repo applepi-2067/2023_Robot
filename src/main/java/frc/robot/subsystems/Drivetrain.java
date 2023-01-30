@@ -62,7 +62,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     configMotionMagic(m_rightMotor);
 
     // Invert right motors so that positive values make robot move forward.
-    // MotionMagic resets the inversion on the motors, so the .setInversion method
+    // configMotionMagic resets the inversion on the motors, so the .setInversion method
     // should come AFTER the configMotionMagic
     m_leftMotor.setInverted(true);
     m_leftMotorFollower.setInverted(true);
