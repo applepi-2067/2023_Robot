@@ -17,7 +17,9 @@ import io.github.oblarg.oblog.annotations.Log;
 public class RotateToPosition extends CommandBase implements Loggable {
     private Drivetrain m_driveTrain;
     private double m_degrees;
-    private double m_acceptableErrorDegrees = 0.5;
+    private final double m_acceptableErrorDegrees = 1;
+    private final double m_acceptableErrorDegreesPerSecond = 5;
+
 
     // Velocity and acceleration constrained PID control. maxVelocity and maxAcceleration are deg/s and deg/s^2, respectively
     // Ex. a maxAcceleration of 10 deg/s^2 would reach a 40 deg/s angular velocity in 4 seconds
@@ -30,9 +32,6 @@ public class RotateToPosition extends CommandBase implements Loggable {
 
     private TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(200, 80);
     private ProfiledPIDController m_pidController = new ProfiledPIDController(0.016, 0.08, 0.001, constraints);
-
-
-    private boolean wasWithinTolerance = false;
 
     public RotateToPosition(Drivetrain driveTrain, double degrees) {
         // Use addRequirements() here to declare subsystem dependencies.
@@ -70,14 +69,9 @@ public class RotateToPosition extends CommandBase implements Loggable {
     @Override
     public boolean isFinished() {
         double angleError = getAngleError();
-        boolean withinTolerance = Math.abs(angleError) < m_acceptableErrorDegrees;
-
-        if (withinTolerance && wasWithinTolerance) {
-            return true;
-        } else {
-            wasWithinTolerance = withinTolerance;
-            return false;
-        }
+        boolean withinPositionTolerance = Math.abs(angleError) < m_acceptableErrorDegrees;
+        boolean withinVelocityTolerance = Math.abs(m_pidController.getVelocityError()) < m_acceptableErrorDegreesPerSecond;
+        return withinPositionTolerance && withinVelocityTolerance;
     }
 
     @Log
@@ -88,18 +82,12 @@ public class RotateToPosition extends CommandBase implements Loggable {
     @Log
     private double getRotationPower() {
         double rotationPower = m_pidController.calculate(m_driveTrain.getYaw(), m_degrees);
-        rotationPower = MathUtil.clamp(rotationPower, -.65, .65);
+        rotationPower = MathUtil.clamp(rotationPower, -0.65, 0.65);
         SmartDashboard.putNumber("Position Error", m_pidController.getPositionError());
         SmartDashboard.putNumber("Angle Error", getAngleError());
         SmartDashboard.putNumber("Applied power", rotationPower);
+        SmartDashboard.putNumber("Velocity Error", m_pidController.getVelocityError());
 
         return rotationPower; 
     }
-
-    @Log
-    private double getYaw() {
-        return m_driveTrain.getYaw();
-    }
-    
-
 }
