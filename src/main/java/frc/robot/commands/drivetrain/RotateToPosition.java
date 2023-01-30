@@ -21,8 +21,6 @@ public class RotateToPosition extends CommandBase implements Loggable {
     private final double m_acceptableErrorDegreesPerSecond = 5;
     private final double m_minimumPower = 0.20; // Minimum power to turn the robot at all
 
-
-
     // Velocity and acceleration constrained PID control. maxVelocity and maxAcceleration are deg/s and deg/s^2, respectively
     // Ex. a maxAcceleration of 10 deg/s^2 would reach a 40 deg/s angular velocity in 4 seconds
     // Reference values for maximum velocity on 2022 robot:
@@ -32,13 +30,11 @@ public class RotateToPosition extends CommandBase implements Loggable {
     // 200 - competitive, motor power = 61%
     // >250 - scary
 
-    private TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(200, 80);
-    // private ProfiledPIDController m_pidController = new ProfiledPIDController(0.016, 0.08, 0.001, constraints);
-    private ProfiledPIDController m_pidController = new ProfiledPIDController(0.009, 0.0, 0.0, constraints);
+    private TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(200, 150);
+    private ProfiledPIDController m_pidController = new ProfiledPIDController(0.014, 0.0, 0.0, constraints);
 
 
     public RotateToPosition(Drivetrain driveTrain, double degrees) {
-        // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(driveTrain);
         m_driveTrain = driveTrain;
         m_degrees = degrees;
@@ -49,11 +45,6 @@ public class RotateToPosition extends CommandBase implements Loggable {
     public void initialize() {
         m_driveTrain.resetGyro();
         m_pidController.reset(0);
-
-        // Sets a limit on integrator range, allowing for more aggressive integrator accumulation via high Ki
-        // without runaway accumulation. Set empirically by setting Kp to zero and Ki to a small value, then
-        // increasing maximumIntegral until the max integral term is large enough to move to the set point on its own
-        // m_pidController.setIntegratorRange(-0.1, 0.1);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
