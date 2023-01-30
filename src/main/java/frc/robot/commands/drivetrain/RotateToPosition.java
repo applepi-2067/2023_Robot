@@ -34,7 +34,7 @@ public class RotateToPosition extends CommandBase implements Loggable {
 
     private TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(200, 80);
     // private ProfiledPIDController m_pidController = new ProfiledPIDController(0.016, 0.08, 0.001, constraints);
-    private ProfiledPIDController m_pidController = new ProfiledPIDController(0.020, 0.0, 0.001, constraints);
+    private ProfiledPIDController m_pidController = new ProfiledPIDController(0.009, 0.0, 0.0, constraints);
 
 
     public RotateToPosition(Drivetrain driveTrain, double degrees) {
