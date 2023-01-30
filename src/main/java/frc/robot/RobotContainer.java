@@ -85,7 +85,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() { 
-    RotationTest m_autonomousCommand = new RotationTest(m_robotDrive);
+    // RotationTest m_autonomousCommand = new RotationTest(m_robotDrive);
+    DriveSquareAuto m_autonomousCommand = new DriveSquareAuto(m_robotDrive);
     return m_autonomousCommand;
   }
 }
