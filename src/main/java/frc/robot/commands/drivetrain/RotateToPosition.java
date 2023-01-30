@@ -21,7 +21,14 @@ public class RotateToPosition extends CommandBase implements Loggable {
 
     // Velocity and acceleration constrained PID control. maxVelocity and maxAcceleration are deg/s and deg/s^2, respectively
     // Ex. a maxAcceleration of 10 deg/s^2 would reach a 40 deg/s angular velocity in 4 seconds
-    private TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(60, 30);
+    // Reference values for maximum velocity on 2022 robot:
+    // 50 - pokey, motor power = 33%
+    // 100 - decent, motor power = 42%
+    // 150 - fast, motor power = 50%
+    // 200 - competitive, motor power = 61%
+    // >250 - scary
+
+    private TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(200, 80);
     private ProfiledPIDController m_pidController = new ProfiledPIDController(0.01, 0.08, 0, constraints);
 
 
@@ -81,7 +88,7 @@ public class RotateToPosition extends CommandBase implements Loggable {
     @Log
     private double getRotationPower() {
         double rotationPower = m_pidController.calculate(m_driveTrain.getYaw(), m_degrees);
-        rotationPower = MathUtil.clamp(rotationPower, -0.5, 0.5);
+        rotationPower = MathUtil.clamp(rotationPower, -1, 1);
         SmartDashboard.putNumber("Position Error", m_pidController.getPositionError());
         SmartDashboard.putNumber("Angle Error", getAngleError());
         SmartDashboard.putNumber("Applied power", rotationPower);
