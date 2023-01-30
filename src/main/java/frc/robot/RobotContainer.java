@@ -15,6 +15,7 @@ import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.drivetrain.RotateToPosition;
 import frc.robot.commands.auto.DriveSquareAuto;
+import frc.robot.commands.auto.RotationTest;
 /**
  * This class is where the bulk of the robot should be declared. 
  * Since Command-based is a "declarative" paradigm, very little robot logic 
@@ -27,12 +28,12 @@ public class RobotContainer {
   // Instantiate subsystems, controllers, and commands.
   private final CommandXboxController m_driverController = new CommandXboxController(
     Constants.OperatorConstants.kDriverControllerPort);
-  private final CommandXboxController m_operatorContoller = new CommandXboxController(
-    Constants.OperatorConstants.kOperatorControllerPort);
+  // private final CommandXboxController m_operatorContoller = new CommandXboxController(
+  //   Constants.OperatorConstants.kOperatorControllerPort);
 
   private final Drivetrain m_robotDrive = new Drivetrain();
-  private final Waist waist = Waist.getInstance();
-  private final ExampleSubsystem example = ExampleSubsystem.getInstance();
+  // private final Waist waist = Waist.getInstance();
+  // private final ExampleSubsystem example = ExampleSubsystem.getInstance();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -56,7 +57,7 @@ public class RobotContainer {
           m_robotDrive)
         );
   
-    waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX()));
+    // waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX()));
   }
 
   /**
@@ -71,8 +72,8 @@ public class RobotContainer {
     //Driver Controls
 
     //Operator Controls
-    m_operatorContoller.a().onTrue(new SetWaistPosition(0));
-    m_operatorContoller.b().onTrue(new SetWaistPosition(10));
+    // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
+    // m_operatorContoller.b().onTrue(new SetWaistPosition(10));
     m_driverController.a().onTrue(new RotateToPosition(m_robotDrive, -90.0));
     m_driverController.b().onTrue(new RotateToPosition(m_robotDrive, 90));
 
@@ -84,12 +85,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() { 
-    DriveSquareAuto m_autonomousCommand = new DriveSquareAuto(m_robotDrive);
+    RotationTest m_autonomousCommand = new RotationTest(m_robotDrive);
     return m_autonomousCommand;
-    //RotateToPosition m_autonomousCommand = new RotateToPosition(m_robotDrive, 90);
-    //return m_autonomousCommand;
-
-    // DriveToPosition m_autonomousCommand = new DriveToPosition(m_robotDrive, 12);
-    // return m_autonomousCommand;
   }
 }
