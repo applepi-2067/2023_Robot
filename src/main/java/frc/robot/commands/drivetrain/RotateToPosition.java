@@ -29,7 +29,7 @@ public class RotateToPosition extends CommandBase implements Loggable {
     // >250 - scary
 
     private TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(200, 80);
-    private ProfiledPIDController m_pidController = new ProfiledPIDController(0.01, 0.08, 0, constraints);
+    private ProfiledPIDController m_pidController = new ProfiledPIDController(0.016, 0.08, 0.001, constraints);
 
 
     private boolean wasWithinTolerance = false;
