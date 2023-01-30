@@ -19,6 +19,8 @@ public class RotateToPosition extends CommandBase implements Loggable {
     private double m_degrees;
     private final double m_acceptableErrorDegrees = 1;
     private final double m_acceptableErrorDegreesPerSecond = 5;
+    private final double m_minimumPower = 0.20; // Minimum power to turn the robot at all
+
 
 
     // Velocity and acceleration constrained PID control. maxVelocity and maxAcceleration are deg/s and deg/s^2, respectively
@@ -31,7 +33,9 @@ public class RotateToPosition extends CommandBase implements Loggable {
     // >250 - scary
 
     private TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(200, 80);
-    private ProfiledPIDController m_pidController = new ProfiledPIDController(0.016, 0.08, 0.001, constraints);
+    // private ProfiledPIDController m_pidController = new ProfiledPIDController(0.016, 0.08, 0.001, constraints);
+    private ProfiledPIDController m_pidController = new ProfiledPIDController(0.020, 0.0, 0.001, constraints);
+
 
     public RotateToPosition(Drivetrain driveTrain, double degrees) {
         // Use addRequirements() here to declare subsystem dependencies.
@@ -49,7 +53,7 @@ public class RotateToPosition extends CommandBase implements Loggable {
         // Sets a limit on integrator range, allowing for more aggressive integrator accumulation via high Ki
         // without runaway accumulation. Set empirically by setting Kp to zero and Ki to a small value, then
         // increasing maximumIntegral until the max integral term is large enough to move to the set point on its own
-        m_pidController.setIntegratorRange(-0.25, 0.25);
+        // m_pidController.setIntegratorRange(-0.1, 0.1);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -82,7 +86,18 @@ public class RotateToPosition extends CommandBase implements Loggable {
     @Log
     private double getRotationPower() {
         double rotationPower = m_pidController.calculate(m_driveTrain.getYaw(), m_degrees);
+
+        // Set "floor" of power output to start at m_minimumPower, the minimum power % to move the robot at all
+        if (rotationPower > 0) {
+            rotationPower += m_minimumPower;
+        } else if (rotationPower < 0) {
+            rotationPower -= m_minimumPower;
+        }
+
+        // Limit power to 65% no matter what controller asks for
         rotationPower = MathUtil.clamp(rotationPower, -0.65, 0.65);
+
+        // Debug in shuffleboard
         SmartDashboard.putNumber("Position Error", m_pidController.getPositionError());
         SmartDashboard.putNumber("Angle Error", getAngleError());
         SmartDashboard.putNumber("Applied power", rotationPower);
