@@ -35,7 +35,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
   public static final double DEGREES_PER_REV = 360.0;
 
   // Voltage needed to maintain horizontal arm position.
-  private static final double horizontalArbFF = 0.07;
+  private static final double horizontalArbFF = 0.07; // Tune this.
 
   // PID Coefficients.
   private Gains gains = new Gains(0.1, 1e-4, 1, 0, 0, 1);
