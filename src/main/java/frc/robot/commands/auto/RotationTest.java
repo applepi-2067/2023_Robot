@@ -40,10 +40,6 @@ public class RotationTest extends SequentialCommandGroup {
         new WaitCommand(1),
         new InstantCommand(() -> System.out.println("Turning 360 degrees")),
         new RotateToPosition(drivetrain, 360),
-        new WaitCommand(1),
-        new InstantCommand(() -> System.out.println("Turning 1080 degrees")),
-        new RotateToPosition(drivetrain, 1080),
-        new WaitCommand(1),
         new InstantCommand(() -> System.out.println("Rotation test complete"))
         
 
