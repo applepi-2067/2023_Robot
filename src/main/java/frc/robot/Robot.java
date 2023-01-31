@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Drivetrain;
 import io.github.oblarg.oblog.Logger;
 
 /**
@@ -56,6 +58,11 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    //Only allow pushing the robot around if we aren't on a real field
+    if (!DriverStation.isFMSAttached())
+      Drivetrain.getInstance().setMotorsCoast();
+    else
+      Drivetrain.getInstance().setMotorsBrake();
   }
 
   @Override
@@ -69,6 +76,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    Drivetrain.getInstance().setMotorsBrake();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -90,6 +99,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    Drivetrain.getInstance().setMotorsBrake();
   }
 
   /** This function is called periodically during operator control. */
@@ -112,6 +123,7 @@ public class Robot extends TimedRobot {
   /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {
+    Drivetrain.getInstance().setMotorsBrake();
   }
 
   /** This function is called periodically whilst in simulation. */
