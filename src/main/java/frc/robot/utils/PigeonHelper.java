@@ -1,5 +1,6 @@
 package frc.robot.utils;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
@@ -13,6 +14,10 @@ public class PigeonHelper extends WPI_PigeonIMU {
 
     public PigeonHelper(int deviceID) {
         super(deviceID);
+    }
+
+    public PigeonHelper(TalonSRX t) {
+        super(t);
     }
 
     public void setReducedStatusFramePeriods() {
