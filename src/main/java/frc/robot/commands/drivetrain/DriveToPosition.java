@@ -43,8 +43,6 @@ public class DriveToPosition extends CommandBase {
     @Override
     public boolean isFinished() {
         double metersError = m_meters - m_driveTrain.getDistanceTraveled();
-        System.out.println(metersError);
-
         return (Math.abs(metersError) < m_acceptableErrorMeters);
     }
 }

@@ -37,7 +37,18 @@ public class RotateToPosition extends CommandBase implements Loggable {
     public RotateToPosition(Drivetrain driveTrain, double degrees) {
         addRequirements(driveTrain);
         m_driveTrain = driveTrain;
-        m_degrees = degrees;
+        m_degrees = optimizeRotation(degrees);
+    }
+
+    private double optimizeRotation(double degrees) {
+        degrees = degrees % 360.0;
+        if (degrees > 180.0) {
+            degrees -= 360.0;
+        }
+        else if (degrees < -180.0) {
+            degrees += 360.0;
+        }
+        return degrees;
     }
 
     // Called when the command is initially scheduled.
