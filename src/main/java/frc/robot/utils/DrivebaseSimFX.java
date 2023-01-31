@@ -3,7 +3,7 @@ package frc.robot.utils;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.BasePigeonSimCollection;
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -14,7 +14,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 
 public class DrivebaseSimFX {
 	private WPI_TalonFX _leftMaster, _rightMaster;
-	private WPI_Pigeon2 _pidgey;
+	private WPI_PigeonIMU _pidgey;
 
 	private TalonFXSimCollection _leftMasterSim, _rightMasterSim;
 	private BasePigeonSimCollection _pidgeySim;
@@ -55,7 +55,7 @@ public class DrivebaseSimFX {
 	 * @param rightMaster the right master Falcon
 	 * @param pidgey the Pigeon IMU
 	 */
-	public DrivebaseSimFX(WPI_TalonFX leftMaster, WPI_TalonFX rightMaster, WPI_Pigeon2 pidgey) {
+	public DrivebaseSimFX(WPI_TalonFX leftMaster, WPI_TalonFX rightMaster, WPI_PigeonIMU pidgey) {
 		_leftMaster = leftMaster;
 		_rightMaster = rightMaster;
 		_pidgey = pidgey;
