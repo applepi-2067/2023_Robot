@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 import frc.robot.Constants;
+import frc.robot.utils.DrivebaseSimFX;
 import frc.robot.utils.PigeonHelper;
 import frc.robot.utils.TalonFXHelper;
 
@@ -14,7 +15,9 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import io.github.oblarg.oblog.Loggable;
@@ -41,6 +44,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public static final double WHEEL_BASE_METERS = Units.inchesToMeters(24.0); // distance between wheels (width) in meters
 
   private static Drivetrain drivetrain = null;
+
+  DrivebaseSimFX _driveSim = new DrivebaseSimFX(m_leftMotor, m_rightMotor, m_pidgey);
 
   public static Drivetrain getInstance() {
     if (drivetrain == null) {
@@ -76,6 +81,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     // should come AFTER the configMotionMagic
     m_leftMotor.setInverted(true);
     m_leftMotorFollower.setInverted(true);
+
+    //Show simulated field position
+    SmartDashboard.putData("Field", _driveSim.getField());
+
+    // Set parameters for using pigeon as an aux PID input for driving straight
+    // m_rightMotor.configSelectedFeedbackSensor(Remo)
+    // _rightConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.Pigeon_Yaw;
+		// _rightConfig.remoteFilter0.remoteSensorDeviceID = _pidgey.getDeviceID();
   }
 
   // Move the robot forward with some rotation.
@@ -148,6 +161,28 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return metersToTicks(setpoint) / 10.0;
   }
 
+  /**
+   * Change all motors to their default mix of brake/coast modes.
+   * Should be used for normal match play.
+   */
+  public void setMotorsBrake() {
+    m_leftMotor.setNeutralMode(NeutralMode.Brake);
+    m_leftMotorFollower.setNeutralMode(NeutralMode.Brake);
+    m_rightMotor.setNeutralMode(NeutralMode.Brake);
+    m_rightMotorFollower.setNeutralMode(NeutralMode.Brake);
+  }
+
+  /**
+   * Change all the drivetrain motor controllers to coast mode.
+   * Useful for allowing robot to be manually pushed around the field.
+   */
+  public void setMotorsCoast() {
+    m_leftMotor.setNeutralMode(NeutralMode.Coast);
+    m_leftMotorFollower.setNeutralMode(NeutralMode.Coast);
+    m_rightMotor.setNeutralMode(NeutralMode.Coast);
+    m_rightMotorFollower.setNeutralMode(NeutralMode.Coast);
+  }
+
   private void configMotionMagic(TalonFXHelper _talon) {
 
     /* Configure Sensor Source for Primary PID */
@@ -204,5 +239,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /* Zero the sensor once on robot boot up */
     _talon.setSelectedSensorPosition(0, Constants.Drivetrain.kPIDLoopIdx, Constants.Drivetrain.kTimeoutMs);
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    _driveSim.run();
   }
 }
