@@ -4,14 +4,14 @@
 
 package frc.robot.subsystems;
 import frc.robot.Constants;
+import frc.robot.utils.PigeonHelper;
+import frc.robot.utils.TalonFXHelper;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -22,13 +22,13 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
   /** Creates a new DriveTrain. */
-  private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_1_ID);
-  private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_1_ID);
-  private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_2_ID);
-  private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_2_ID);
+  private final TalonFXHelper m_leftMotor = new TalonFXHelper(Constants.CANDeviceIDs.DT_MOTOR_LEFT_1_ID);
+  private final TalonFXHelper m_rightMotor = new TalonFXHelper(Constants.CANDeviceIDs.DT_MOTOR_RIGHT_1_ID);
+  private final TalonFXHelper m_leftMotorFollower = new TalonFXHelper(Constants.CANDeviceIDs.DT_MOTOR_LEFT_2_ID);
+  private final TalonFXHelper m_rightMotorFollower = new TalonFXHelper(Constants.CANDeviceIDs.DT_MOTOR_RIGHT_2_ID);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
-  private final TalonSRX m_pidgeyController = new TalonSRX(11);
-  private final PigeonIMU m_pidgey = new PigeonIMU(m_pidgeyController);
+  private final TalonSRX m_pidgeyController = new TalonSRX(Constants.CANDeviceIDs.PIGEON_TALON_ID);
+  private final PigeonHelper m_pidgey = new PigeonHelper(m_pidgeyController);
 
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
@@ -148,7 +148,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return metersToTicks(setpoint) / 10.0;
   }
 
-  private void configMotionMagic(WPI_TalonFX _talon) {
+  private void configMotionMagic(TalonFXHelper _talon) {
 
     /* Configure Sensor Source for Primary PID */
     _talon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, Constants.Drivetrain.kPIDLoopIdx,
