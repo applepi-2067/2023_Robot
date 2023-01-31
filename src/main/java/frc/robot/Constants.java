@@ -26,12 +26,14 @@ public final class Constants {
   }
 
   public static class CANDeviceIDs {
-    public static final int MOTOR_LEFT_1_ID = 1;
-    public static final int MOTOR_RIGHT_1_ID = 2;
-    public static final int MOTOR_LEFT_2_ID = 3;
-    public static final int MOTOR_RIGHT_2_ID = 4;
+    public static final int DT_MOTOR_LEFT_1_ID = 1;
+    public static final int DT_MOTOR_RIGHT_1_ID = 2;
+    public static final int DT_MOTOR_LEFT_2_ID = 3;
+    public static final int DT_MOTOR_RIGHT_2_ID = 4;
 
     public static final int MOTOR_WAIST_ID = 5;
+
+    public static final int PIGEON_TALON_ID = 11;
   }
 
   public static class Drivetrain {
