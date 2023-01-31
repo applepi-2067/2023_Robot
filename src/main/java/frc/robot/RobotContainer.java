@@ -4,17 +4,18 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.waist.DriveWaistWithJoystick;
-import frc.robot.commands.waist.SetWaistPosition;
+import frc.robot.commands.waist.*;
 import frc.robot.subsystems.*;
+import frc.robot.commands.auto.*;
+import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.shoulder.*;
 import io.github.oblarg.oblog.Logger;
-import frc.robot.commands.drivetrain.DriveToPosition;
-import frc.robot.commands.shoulder.DriveShoulderWithJoystick;
-import frc.robot.commands.shoulder.SetShoulderPosition;
 
 /**
  * This class is where the bulk of the robot should be declared. 
@@ -35,7 +36,7 @@ public class RobotContainer {
   private final Drivetrain m_robotDrive = new Drivetrain();
   private final Waist m_waist = Waist.getInstance();
   private final Shoulder m_shoulder = Shoulder.getInstance();
-  
+  private final Vision m_vision = new Vision();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -53,8 +54,8 @@ public class RobotContainer {
         // Forward/backward controlled by the left hand, turning controlled by the right.
         Commands.run(
           () -> m_robotDrive.arcadeDrive(
-                  m_driverController.getLeftY() / 2.0,
-                  m_driverController.getRightX() / 2.0
+                  -m_driverController.getLeftY() / 2.0,
+                  -m_driverController.getRightX() / 3.0
                 ),
           m_robotDrive)
         );
@@ -80,6 +81,9 @@ public class RobotContainer {
 
     m_operatorContoller.x().onTrue(new SetShoulderPosition(90));
     m_operatorContoller.y().onTrue(new SetShoulderPosition(270));
+
+    m_driverController.a().onTrue(new RotateToPosition(m_robotDrive, -90.0));
+    m_driverController.b().onTrue(new RotateToPosition(m_robotDrive, 90));
   }
 
   /**
@@ -88,7 +92,16 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    DriveToPosition m_autonomousCommand = new DriveToPosition(m_robotDrive, 36);
+    int targetID = 2;
+    Pose2d destinationTargetPose = new Pose2d(1, 0, new Rotation2d(Math.toRadians(180)));
+
+    DriveToVisionTargetOffset m_autonomousCommand = new DriveToVisionTargetOffset(
+      m_robotDrive, m_vision, targetID, destinationTargetPose
+    );
+
+    // RotationTest m_autonomousCommand = new RotationTest(m_robotDrive);
+    // DriveSquareAuto m_autonomousCommand = new DriveSquareAuto(m_robotDrive);
+
     return m_autonomousCommand;
   }
 }

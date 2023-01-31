@@ -1,6 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// Commands the robot to move a specified distance in inches
 
 package frc.robot.commands.drivetrain;
 
@@ -45,8 +43,6 @@ public class DriveToPosition extends CommandBase {
     @Override
     public boolean isFinished() {
         double metersError = m_meters - m_driveTrain.getDistanceTraveled();
-        System.out.println(metersError);
-
         return (Math.abs(metersError) < m_acceptableErrorMeters);
     }
 }
