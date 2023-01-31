@@ -17,7 +17,8 @@ import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.auto.DriveToVisionTargetOffset;
 import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.drivetrain.RotateToPosition;
-
+import frc.robot.commands.auto.DriveSquareAuto;
+import frc.robot.commands.auto.RotationTest;
 /**
  * This class is where the bulk of the robot should be declared. 
  * Since Command-based is a "declarative" paradigm, very little robot logic 
@@ -55,7 +56,7 @@ public class RobotContainer {
         Commands.run(
           () -> m_robotDrive.arcadeDrive(
                   -m_driverController.getLeftY() / 2.0,
-                  -m_driverController.getRightX() / 2.0
+                  -m_driverController.getRightX() / 3.0
                 ),
           m_robotDrive)
         );
@@ -77,6 +78,9 @@ public class RobotContainer {
     //Operator Controls
     // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
     // m_operatorContoller.b().onTrue(new SetWaistPosition(10));
+    m_driverController.a().onTrue(new RotateToPosition(m_robotDrive, -90.0));
+    m_driverController.b().onTrue(new RotateToPosition(m_robotDrive, 90));
+
   }
 
   /**
@@ -91,9 +95,10 @@ public class RobotContainer {
     DriveToVisionTargetOffset m_autonomousCommand = new DriveToVisionTargetOffset(
       m_robotDrive, m_vision, targetID, destinationTargetPose
     );
-    return m_autonomousCommand;
 
-    // DriveToPosition m_autonomousCommand = new DriveToPosition(m_robotDrive, 12);
-    // return m_autonomousCommand;
+    // RotationTest m_autonomousCommand = new RotationTest(m_robotDrive);
+    // DriveSquareAuto m_autonomousCommand = new DriveSquareAuto(m_robotDrive);
+
+    return m_autonomousCommand;
   }
 }
