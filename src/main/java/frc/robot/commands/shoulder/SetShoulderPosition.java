@@ -47,6 +47,7 @@ public class SetShoulderPosition extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(targetPositionDegrees - shoulder.getPosition()) < positionToleranceDegrees;
+    return false; // We need to keep commanding the arm indefinitely for it to stay where we asked it to go
+    // return Math.abs(targetPositionDegrees - shoulder.getPosition()) < positionToleranceDegrees;
   }
 }
