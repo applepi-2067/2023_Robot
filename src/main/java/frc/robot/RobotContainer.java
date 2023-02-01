@@ -105,4 +105,16 @@ public class RobotContainer {
 
     return m_autonomousCommand;
   }
+
+  /**
+   * Sets motors to coast or brake mode
+   * @param coastEnabled Set coast enabled if true, otherwise set brake mode
+   */
+  public void setCoastEnabled(boolean coastEnabled) {
+    if (coastEnabled) {
+      m_robotDrive.setMotorsCoast();
+    } else {
+      m_robotDrive.setMotorsBrake();
+    }
+  }
 }
