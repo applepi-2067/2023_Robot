@@ -31,14 +31,14 @@ public class Shoulder extends SubsystemBase implements Loggable {
   private final SparkMaxPIDController m_pidController;
   private final RelativeEncoder m_encoder;
 
-  public static final double GEAR_RATIO = 120.0;
+  public static final double GEAR_RATIO = 36.0;
   public static final double DEGREES_PER_REV = 360.0;
 
   // Voltage needed to maintain horizontal arm position.
-  private static final double horizontalArbFF = 0.07; // Tune this.
+  private static final double horizontalArbFF = 0.30;
 
   // PID Coefficients.
-  private Gains gains = new Gains(0.1, 1e-4, 1, 0, 0, 1);
+  private Gains gains = new Gains(0.11, 0.001, 0, 0, 1, 0.4);
   private static final int kSlotIdx = 0;
 
   public static Shoulder getInstance() {
@@ -78,6 +78,11 @@ public class Shoulder extends SubsystemBase implements Loggable {
     return (rotations / GEAR_RATIO) * DEGREES_PER_REV;
   }
 
+  @Log (name = "Motor Current (A)", rowIndex = 2, columnIndex = 3)
+  private double getMotorOutputCurrent() {
+    return m_motor.getOutputCurrent();
+  }
+
   @Config
   private void setGains(double P, double I, double D, double f, double IZone, double peak) {
 
@@ -113,7 +118,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
    * @param speed (-1.0 to 1.0)
    */
   public void setSpeed(double speed) {
-    final double MAX_VOLTAGE = 4.0;
+    final double MAX_VOLTAGE = 2.0;
 
     m_pidController.setReference(speed * MAX_VOLTAGE, CANSparkMax.ControlType.kVoltage);
   }
