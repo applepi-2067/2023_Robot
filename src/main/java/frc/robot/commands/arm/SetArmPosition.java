@@ -13,13 +13,17 @@ public class SetArmPosition extends CommandBase {
   private double targetPositionMeters = 0.0;
   // private double positionToleranceMeters = 0.1;
 
-  /** Creates a new SetWaistPosition. */
-  public SetArmPosition(double positionDegrees) {
+  /** Creates a new SetArmPosition. */
+  /**
+   * 
+   * @param positionMeters the target extension to move the arm to (meters)
+   */
+  public SetArmPosition(double positionMeters) {
     // Use addRequirements() here to declare subsystem dependencies.
     arm = Arm.getInstance();
     addRequirements(arm);
 
-    targetPositionMeters = positionDegrees;
+    targetPositionMeters = positionMeters;
   }
 
   // Called when the command is initially scheduled.
