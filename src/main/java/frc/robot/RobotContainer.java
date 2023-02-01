@@ -77,9 +77,10 @@ public class RobotContainer {
     m_driverController.b().onTrue(new RotateToPosition(m_robotDrive, 90));
 
     //Operator Controls
-    // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
-    // m_operatorContoller.b().onTrue(new SetWaistPosition(10));
-
+    m_operatorContoller.a().onTrue(new SetWaistPosition(0));
+    m_operatorContoller.b().onTrue(new SetWaistPosition(10));
+    m_operatorContoller.leftBumper().onTrue(new SetArmPosition(0));
+    m_operatorContoller.rightBumper().onTrue(new SetArmPosition(0.5));
     
 
   }
