@@ -18,9 +18,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
   private PhotonCamera m_camera = new PhotonCamera("Arducam_1");
+  public static Vision instance = null;
 
   /** Creates a new Vision. */
   public Vision() {}
+
+  public static Vision getInstance() {
+    if (instance == null) {
+      instance = new Vision();
+    }
+    return instance;
+  }
 
   /**
    * Provided Pose2d relative to target, returns Pose2d relative to camera

@@ -34,7 +34,7 @@ public class RobotContainer {
   // private final CommandXboxController m_operatorContoller = new CommandXboxController(
   //   Constants.OperatorConstants.kOperatorControllerPort);
 
-  private final Drivetrain m_robotDrive = new Drivetrain();
+  private final Drivetrain m_robotDrive = Drivetrain.getInstance();
   // private final Waist m_waist = Waist.getInstance();
   // private final ExampleSubsystem example = ExampleSubsystem.getInstance();
   private final Vision m_vision = new Vision();
@@ -96,8 +96,8 @@ public class RobotContainer {
       m_robotDrive, m_vision, targetID, destinationTargetPose
     );
 
-    // RotationTest m_autonomousCommand = new RotationTest(m_robotDrive);
-    // DriveSquareAuto m_autonomousCommand = new DriveSquareAuto(m_robotDrive);
+    //RotationTest m_autonomousCommand = new RotationTest(m_robotDrive);
+    //DriveSquareAuto m_autonomousCommand = new DriveSquareAuto(m_robotDrive);
 
     return m_autonomousCommand;
   }
