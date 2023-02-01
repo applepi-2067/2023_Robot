@@ -74,16 +74,17 @@ public class RobotContainer {
    */
   private void configureBindings() {
     //Driver Controls
+    m_driverController.a().onTrue(new RotateToPosition(m_robotDrive, -90.0));
+    m_driverController.b().onTrue(new RotateToPosition(m_robotDrive, 90));
+
 
     //Operator Controls
-    m_operatorContoller.a().onTrue(new SetWaistPosition(0));
-    m_operatorContoller.b().onTrue(new SetWaistPosition(10));
+    // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
+    // m_operatorContoller.b().onTrue(new SetWaistPosition(10));
 
     m_operatorContoller.x().onTrue(new SetShoulderPosition(90));
     m_operatorContoller.y().onTrue(new SetShoulderPosition(270));
-
-    m_driverController.a().onTrue(new RotateToPosition(m_robotDrive, -90.0));
-    m_driverController.b().onTrue(new RotateToPosition(m_robotDrive, 90));
+    m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
   }
 
   /**
