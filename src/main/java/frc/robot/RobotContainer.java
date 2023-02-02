@@ -12,10 +12,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
 import frc.robot.subsystems.*;
+import frc.robot.commands.auto.*;
+import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.shoulder.*;
 import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.arm.*;
+
 /**
  * This class is where the bulk of the robot should be declared. 
  * Since Command-based is a "declarative" paradigm, very little robot logic 
@@ -31,11 +35,12 @@ public class RobotContainer {
   private final CommandXboxController m_operatorContoller = new CommandXboxController(
     Constants.OperatorConstants.kOperatorControllerPort);
 
+  // private final ExampleSubsystem example = ExampleSubsystem.getInstance();
   private final Drivetrain m_robotDrive = new Drivetrain();
   private final Waist m_waist = Waist.getInstance();
-  private final Arm m_arm = Arm.getInstance();
-  // private final ExampleSubsystem example = ExampleSubsystem.getInstance();
+  private final Shoulder m_shoulder = Shoulder.getInstance();
   private final Vision m_vision = new Vision();
+  private final Arm m_arm = Arm.getInstance();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -59,7 +64,9 @@ public class RobotContainer {
           m_robotDrive)
         );
   
-    // m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX()));
+
+    m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX()));
+    m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorContoller.getRightY()));
     m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorContoller.getLeftY()));
   }
 
@@ -77,12 +84,14 @@ public class RobotContainer {
     m_driverController.b().onTrue(new RotateToPosition(m_robotDrive, 90));
 
     //Operator Controls
-    m_operatorContoller.a().onTrue(new SetWaistPosition(0));
-    m_operatorContoller.b().onTrue(new SetWaistPosition(10));
+    //m_operatorContoller.a().onTrue(new SetWaistPosition(0));
+    //m_operatorContoller.b().onTrue(new SetWaistPosition(10));
     m_operatorContoller.leftBumper().onTrue(new SetArmPosition(0));
     m_operatorContoller.rightBumper().onTrue(new SetArmPosition(0.5));
     
-
+    m_operatorContoller.x().onTrue(new SetShoulderPosition(90));
+    m_operatorContoller.y().onTrue(new SetShoulderPosition(270));
+    m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
   }
 
   /**
@@ -102,5 +111,17 @@ public class RobotContainer {
     // DriveSquareAuto m_autonomousCommand = new DriveSquareAuto(m_robotDrive);
 
     return m_autonomousCommand;
+  }
+
+  /**
+   * Sets motors to coast or brake mode
+   * @param coastEnabled Set coast enabled if true, otherwise set brake mode
+   */
+  public void setCoastEnabled(boolean coastEnabled) {
+    if (coastEnabled) {
+      m_robotDrive.setMotorsCoast();
+    } else {
+      m_robotDrive.setMotorsBrake();
+    }
   }
 }
