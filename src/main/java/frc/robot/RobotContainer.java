@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
@@ -29,13 +30,13 @@ public class RobotContainer {
   // Instantiate subsystems, controllers, and commands.
   private final CommandXboxController m_driverController = new CommandXboxController(
     Constants.OperatorConstants.kDriverControllerPort);
-  private final CommandXboxController m_operatorContoller = new CommandXboxController(
-    Constants.OperatorConstants.kOperatorControllerPort);
+  // private final CommandXboxController m_operatorContoller = new CommandXboxController(
+    // Constants.OperatorConstants.kOperatorControllerPort);
 
   // private final ExampleSubsystem example = ExampleSubsystem.getInstance();
   private final Drivetrain m_robotDrive = new Drivetrain();
-  private final Waist m_waist = Waist.getInstance();
-  private final Shoulder m_shoulder = Shoulder.getInstance();
+  // private final Waist m_waist = Waist.getInstance();
+  // private final Shoulder m_shoulder = Shoulder.getInstance();
   private final Vision m_vision = new Vision();
 
   /**
@@ -60,8 +61,8 @@ public class RobotContainer {
           m_robotDrive)
         );
   
-    m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX()));
-    m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorContoller.getRightY()));
+    // m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX()));
+    // m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorContoller.getRightY()));
   }
 
   /**
@@ -76,15 +77,15 @@ public class RobotContainer {
     //Driver Controls
     m_driverController.a().onTrue(new RotateToPosition(m_robotDrive, -90.0));
     m_driverController.b().onTrue(new RotateToPosition(m_robotDrive, 90));
-
+    m_driverController.x().onTrue(new InstantCommand(() -> System.out.println(m_vision.getCameraAbsolutePose())));
 
     //Operator Controls
     // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
     // m_operatorContoller.b().onTrue(new SetWaistPosition(10));
 
-    m_operatorContoller.x().onTrue(new SetShoulderPosition(90));
-    m_operatorContoller.y().onTrue(new SetShoulderPosition(270));
-    m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
+    // m_operatorContoller.x().onTrue(new SetShoulderPosition(90));
+    // m_operatorContoller.y().onTrue(new SetShoulderPosition(270));
+    // m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
   }
 
   /**
@@ -113,7 +114,8 @@ public class RobotContainer {
   public void setCoastEnabled(boolean coastEnabled) {
     if (coastEnabled) {
       m_robotDrive.setMotorsCoast();
-    } else {
+    }
+    else {
       m_robotDrive.setMotorsBrake();
     }
   }
