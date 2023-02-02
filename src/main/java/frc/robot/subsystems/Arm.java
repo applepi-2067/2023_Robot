@@ -11,10 +11,12 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Gains;
 import frc.robot.utils.Util;
+import frc.robot.Constants;
 import frc.robot.Constants.CANDeviceIDs;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
@@ -27,6 +29,7 @@ public class Arm extends SubsystemBase implements Loggable{
   private final CANSparkMax m_motor;
   private final SparkMaxPIDController m_pidController;
   private final RelativeEncoder m_encoder;
+  private final DigitalInput m_endOfTravelSensor;
 
   public static final double GEAR_RATIO = 36.0;  //TODO: set
   public static final double METERS_PER_REV = 1.0; //TODO: set
@@ -45,7 +48,9 @@ public class Arm extends SubsystemBase implements Loggable{
   }
 
   private Arm() {
-    m_motor = new CANSparkMax(CANDeviceIDs.MOTOR_WAIST_ID, MotorType.kBrushless);
+    m_endOfTravelSensor = new DigitalInput(Constants.DiscreteInputs.ARM_END_OF_TRAVEL_DI);
+
+    m_motor = new CANSparkMax(CANDeviceIDs.ARM_MOTOR_ID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
 
     m_pidController = m_motor.getPIDController();
@@ -111,5 +116,10 @@ public class Arm extends SubsystemBase implements Loggable{
   @Override
   public void simulationPeriodic() {
     REVPhysicsSim.getInstance().run();
+  }
+
+  @Log
+  public boolean atEndOfTravel() {
+    return ! m_endOfTravelSensor.get();
   }
 }

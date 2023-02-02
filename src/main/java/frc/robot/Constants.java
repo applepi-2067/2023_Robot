@@ -36,6 +36,10 @@ public final class Constants {
     public static final int ARM_MOTOR_ID = 8;
   }
 
+  public static class DiscreteInputs {
+    public static final int ARM_END_OF_TRAVEL_DI = 0;
+  }
+
   public static class Drivetrain {
     /**
      * Which PID slot to pull gains from. Starting 2018, you can choose from
@@ -62,4 +66,6 @@ public final class Constants {
      */
     public static final Gains kGains = new Gains(0.1, 0.001, 0.0, 0.0, 300, 1.0);
   }
+
+  public static final String DigitalInputs = null;
 }
