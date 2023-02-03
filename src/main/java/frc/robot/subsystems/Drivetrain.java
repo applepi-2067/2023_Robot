@@ -53,11 +53,6 @@ public class Drivetrain extends SubsystemBase {
     m_leftMotorFollower.follow(m_leftMotor);
     m_rightMotorFollower.follow(m_rightMotor);
 
-    m_leftMotor.setNeutralMode(NeutralMode.Brake);
-    m_leftMotorFollower.setNeutralMode(NeutralMode.Brake);
-    m_rightMotor.setNeutralMode(NeutralMode.Brake);
-    m_rightMotorFollower.setNeutralMode(NeutralMode.Brake);
-
     // Set motion magic related parameters
     configMotionMagic(m_leftMotor);
     configMotionMagic(m_rightMotor);
@@ -202,5 +197,19 @@ public class Drivetrain extends SubsystemBase {
 
     /* Zero the sensor once on robot boot up */
     _talon.setSelectedSensorPosition(0, Constants.Drivetrain.kPIDLoopIdx, Constants.Drivetrain.kTimeoutMs);
+  }
+
+  public void setMotorsCoast() {
+    m_leftMotor.setNeutralMode(NeutralMode.Coast);
+    m_leftMotorFollower.setNeutralMode(NeutralMode.Coast);
+    m_rightMotor.setNeutralMode(NeutralMode.Coast);
+    m_rightMotorFollower.setNeutralMode(NeutralMode.Coast);
+  }
+
+  public void setMotorsBrake() {
+    m_leftMotor.setNeutralMode(NeutralMode.Brake);
+    m_leftMotorFollower.setNeutralMode(NeutralMode.Brake);
+    m_rightMotor.setNeutralMode(NeutralMode.Brake);
+    m_rightMotorFollower.setNeutralMode(NeutralMode.Brake);
   }
 }
