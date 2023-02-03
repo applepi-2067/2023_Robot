@@ -18,11 +18,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Vision extends SubsystemBase {
   private PhotonCamera m_camera = new PhotonCamera("Arducam_1");
   public static Vision instance = null;
+  private Vision() {}  // Constructor is private since this class is singleton
 
-  /** Creates a new Vision. */
-  public Vision() {}
-
-  public static Vision getInstance() {
+  public static Vision getInstance() {  // Get a new object through singleton method
     if (instance == null) {
       instance = new Vision();
     }

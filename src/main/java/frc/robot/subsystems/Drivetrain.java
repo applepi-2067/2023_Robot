@@ -41,7 +41,7 @@ public class Drivetrain extends SubsystemBase {
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
   public static final double WHEEL_BASE_METERS = Units.inchesToMeters(24.0); // distance between wheels (width) in meters
 
-  public Drivetrain() {
+  private Drivetrain() {  // Constructor is private since this class is singleton
     // Set values to factory default.
     m_robotDrive.setSafetyEnabled(false);
     m_leftMotor.configFactoryDefault();
