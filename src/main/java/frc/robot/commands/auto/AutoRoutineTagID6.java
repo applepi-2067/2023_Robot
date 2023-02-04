@@ -4,11 +4,13 @@
 
 package frc.robot.commands.auto;
 
+import frc.robot.commands.arm.SetArmPosition;
 import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.drivetrain.RotateToPosition;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -22,8 +24,12 @@ public class AutoRoutineTagID6 extends SequentialCommandGroup {
 
     addCommands(
       new SetShoulderPosition(80.0),
-      new SetWaistPosition(30.0),
-      new SetShoulderPosition(135.0),
+      Commands.parallel(
+        new SetWaistPosition(30.0),
+        new SetShoulderPosition(135.0)
+      ),
+      new SetArmPosition(1.2192),
+      new clawIntake(true),
 
       
     );  

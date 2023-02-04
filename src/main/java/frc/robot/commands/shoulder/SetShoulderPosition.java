@@ -37,17 +37,16 @@ public class SetShoulderPosition extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(interrupted) {
-      // stop moving
-      shoulder.setSpeed(0);
-    }
+    // if(interrupted) {
+    //   // stop moving
+    //   shoulder.setSpeed(0);
+    // }
     //otherwise, do nothing... i.e. keep holding last commanded position on exit
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false; // We need to keep commanding the arm indefinitely for it to stay where we asked it to go
-    // return Math.abs(targetPositionDegrees - shoulder.getPosition()) < positionToleranceDegrees;
+    return Math.abs(targetPositionDegrees - shoulder.getPosition()) < positionToleranceDegrees;
   }
 }
