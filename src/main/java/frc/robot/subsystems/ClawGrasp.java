@@ -4,37 +4,34 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.PneumaticsDevices;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class ClawGrasp
- extends SubsystemBase implements Loggable {
+    extends SubsystemBase implements Loggable {
 
+  private static ClawGrasp instance = null;
+  private DoubleSolenoid m_clawSolenoid = new DoubleSolenoid(PneumaticsDevices.MODULE_TYPE,
+      PneumaticsDevices.CLAW_CLOSE,
+      PneumaticsDevices.CLAW_OPEN);
 
-
-
-
-
-  private static ClawGrasp
-   instance = null;
-
-
-  public static ClawGrasp
-   getInstance() {
+  public static ClawGrasp getInstance() {
     if (instance == null) {
-      instance = new ClawGrasp
-      ();
+      instance = new ClawGrasp();
     }
     return instance;
   }
 
-  /** Creates a new ClawGrasp
-   * . */
-  private ClawGrasp
-  () {}
+  /**
+   * Creates a new ClawGrasp
+   * .
+   */
+  private ClawGrasp() {
+  }
 
   @Override
   public void periodic() {
@@ -44,7 +41,13 @@ public class ClawGrasp
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
-  public void open() {
 
+  /**
+   * Open the claw
+   */
+  public void open() {
+  }
+  /* Close the Claw */
+  public void close() { 
   }
 }
