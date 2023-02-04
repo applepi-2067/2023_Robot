@@ -58,8 +58,8 @@ public class RobotContainer {
         // Forward/backward controlled by the left hand, turning controlled by the right.
         Commands.run(
           () -> m_robotDrive.arcadeDrive(
-                  -m_driverController.getLeftY() / 2.0,
-                  -m_driverController.getRightX() / 3.0
+                  -m_driverController.getLeftY() / 1.5,
+                  -m_driverController.getRightX() / 2.0
                 ),
           m_robotDrive)
         );
