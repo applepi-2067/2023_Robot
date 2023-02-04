@@ -26,17 +26,19 @@ public class AutoRoutineTagID6 extends SequentialCommandGroup {
         new SetShoulderPosition(135.0)
       ),
       new SetArmPosition(1.2192), // 48 inches in meters
+      
       new GrabPiece(false),
       Commands.parallel(
         new SetArmPosition(0),
-        new SetWaistPosition(180.0),
+        new SetWaistPosition(0.0),
         new SetShoulderPosition(25.0)
       ),
       Commands.deadline(
         new DriveToPosition(5.11), // Distance in meters to travel
         new IntakePiece(true)
-      )
-      
+      ),
+        new DriveToPosition(-5.11),
+        new SetArmPosition(0.1016),
 
     );  
   
