@@ -34,7 +34,8 @@ public class RotateToPosition extends CommandBase implements Loggable {
     private ProfiledPIDController m_pidController = new ProfiledPIDController(0.014, 0.0, 0.0, constraints);
 
 
-    public RotateToPosition(Drivetrain driveTrain, double degrees) {
+    public RotateToPosition(double degrees) { 
+        Drivetrain drivetrain = Drivetrain.getInstance(); 
         addRequirements(driveTrain);
         m_driveTrain = driveTrain;
         m_degrees = optimizeRotation(degrees);

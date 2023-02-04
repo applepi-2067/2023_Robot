@@ -45,6 +45,6 @@ public class ClawGrasp
     // This method will be called once per scheduler run during simulation
   }
   public void open() {
-    
+
   }
 }

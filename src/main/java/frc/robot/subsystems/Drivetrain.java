@@ -22,6 +22,7 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
   /** Creates a new DriveTrain. */
+  private static Drivetrain instance = null;
   private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_1_ID);
   private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_1_ID);
   private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_2_ID);
@@ -40,7 +41,15 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
   public static final double WHEEL_BASE_METERS = Units.inchesToMeters(24.0); // distance between wheels (width) in meters
 
-  public Drivetrain() {
+  public static Drivetrain getInstance() {
+    if (instance == null) {
+      instance = new Drivetrain();
+    }
+
+    return instance;
+  }
+
+  private Drivetrain() {
     // Set values to factory default.
     m_robotDrive.setSafetyEnabled(false);
     m_leftMotor.configFactoryDefault();

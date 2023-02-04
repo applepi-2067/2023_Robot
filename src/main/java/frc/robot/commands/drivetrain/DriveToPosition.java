@@ -13,7 +13,8 @@ public class DriveToPosition extends CommandBase {
     private static double m_meters;
     private static double m_acceptableErrorMeters = Units.inchesToMeters(0.1);
 
-    public DriveToPosition(Drivetrain driveTrain, double meters) {
+    public DriveToPosition(double meters) { 
+        Drivetrain drivetrain = Drivetrain.getInstance(); 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(driveTrain);
         m_driveTrain = driveTrain;
