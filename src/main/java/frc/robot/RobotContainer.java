@@ -16,6 +16,9 @@ import frc.robot.commands.auto.*;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.shoulder.*;
 import io.github.oblarg.oblog.Logger;
+import frc.robot.commands.auto.*;
+import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.arm.*;
 
 /**
  * This class is where the bulk of the robot should be declared. 
@@ -37,6 +40,7 @@ public class RobotContainer {
   private final Waist m_waist = Waist.getInstance();
   private final Shoulder m_shoulder = Shoulder.getInstance();
   private final Vision m_vision = new Vision();
+  private final Arm m_arm = Arm.getInstance();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -60,8 +64,10 @@ public class RobotContainer {
           m_robotDrive)
         );
   
+
     m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX()));
     m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorContoller.getRightY()));
+    m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorContoller.getLeftY()));
   }
 
   /**
@@ -77,11 +83,12 @@ public class RobotContainer {
     m_driverController.a().onTrue(new RotateToPosition(m_robotDrive, -90.0));
     m_driverController.b().onTrue(new RotateToPosition(m_robotDrive, 90));
 
-
     //Operator Controls
-    // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
-    // m_operatorContoller.b().onTrue(new SetWaistPosition(10));
-
+    //m_operatorContoller.a().onTrue(new SetWaistPosition(0));
+    //m_operatorContoller.b().onTrue(new SetWaistPosition(10));
+    m_operatorContoller.leftBumper().onTrue(new SetArmPosition(0));
+    m_operatorContoller.rightBumper().onTrue(new SetArmPosition(0.5));
+    
     m_operatorContoller.x().onTrue(new SetShoulderPosition(90));
     m_operatorContoller.y().onTrue(new SetShoulderPosition(270));
     m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
