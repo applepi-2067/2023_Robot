@@ -59,10 +59,11 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     //Only allow pushing the robot around if we aren't on a real field
-    if (!DriverStation.isFMSAttached())
+    if (!DriverStation.isFMSAttached()) {
       Drivetrain.getInstance().setMotorsCoast();
-    else
+    } else {
       Drivetrain.getInstance().setMotorsBrake();
+    }
   }
 
   @Override

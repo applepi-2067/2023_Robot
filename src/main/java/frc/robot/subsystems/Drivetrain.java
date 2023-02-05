@@ -67,11 +67,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     m_leftMotorFollower.follow(m_leftMotor);
     m_rightMotorFollower.follow(m_rightMotor);
 
-    m_leftMotor.setNeutralMode(NeutralMode.Brake);
-    m_leftMotorFollower.setNeutralMode(NeutralMode.Brake);
-    m_rightMotor.setNeutralMode(NeutralMode.Brake);
-    m_rightMotorFollower.setNeutralMode(NeutralMode.Brake);
-
     // Set motion magic related parameters
     configMotionMagic(m_leftMotor);
     configMotionMagic(m_rightMotor);
