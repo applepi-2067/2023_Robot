@@ -62,11 +62,13 @@ public class AutoRoutineTagID6 extends SequentialCommandGroup {
         //(Not a written step) arm retracts to pull piece out of intake
         new SetArmExtension(0),
         // 11b
-        new SetShoulderPosition(135.0),
-        // 12b
-        new SetWaistPosition(30),
-        // 12a
-        new SetArmExtension(1.2192),
+        Commands.parallel(
+          new SetShoulderPosition(135.0),
+          // 12b
+          new SetWaistPosition(30),
+          // 12a
+          new SetArmExtension(1.2192)
+        ),
         // 13
         new ClawIntake(false)
     );  
