@@ -31,13 +31,13 @@ public class DriveToVisionTargetOffset extends SequentialCommandGroup {
 
     addCommands(
       // Turn to face destination.
-      new RotateToPosition(m_drivetrain, Math.toDegrees(angleToDestinationRadians)),
+      new RotateToPosition( Math.toDegrees(angleToDestinationRadians)),
 
       // Drive hypotenuse to desination.
-      new DriveToPosition(m_drivetrain, Math.sqrt(destinationCameraX * destinationCameraX + destinationCameraY * destinationCameraY)),
+      new DriveToPosition( Math.sqrt(destinationCameraX * destinationCameraX + destinationCameraY * destinationCameraY)),
 
       // Unturn to vertical, and turn to face destination.
-      new RotateToPosition(m_drivetrain, Math.toDegrees(rotationAngleRadians))
+      new RotateToPosition( Math.toDegrees(rotationAngleRadians))
     );
   }
 }

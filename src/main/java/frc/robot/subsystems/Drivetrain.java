@@ -49,7 +49,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return instance;
   }
 
-  private Drivetrain() {
+  public Drivetrain() {
     // Set values to factory default.
     m_robotDrive.setSafetyEnabled(false);
     m_leftMotor.configFactoryDefault();

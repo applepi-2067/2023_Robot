@@ -16,8 +16,8 @@ public class DriveToPosition extends CommandBase {
     public DriveToPosition(double meters) { 
         Drivetrain drivetrain = Drivetrain.getInstance(); 
         // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(driveTrain);
-        m_driveTrain = driveTrain;
+        addRequirements(drivetrain);
+        m_driveTrain = drivetrain;
         m_meters = meters;
     }
 

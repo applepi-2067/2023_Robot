@@ -36,8 +36,8 @@ public class RotateToPosition extends CommandBase implements Loggable {
 
     public RotateToPosition(double degrees) { 
         Drivetrain drivetrain = Drivetrain.getInstance(); 
-        addRequirements(driveTrain);
-        m_driveTrain = driveTrain;
+        addRequirements(drivetrain);
+        m_driveTrain = drivetrain;
         m_degrees = optimizeRotation(degrees);
     }
 
