@@ -20,27 +20,39 @@ public class AutoRoutineTagID6 extends SequentialCommandGroup {
   /** Creates a new TwoBall. */
   public AutoRoutineTagID6(Drivetrain drivetrain) { 
     addCommands(
+      // 2a
       new SetShoulderPosition(80.0),
       Commands.parallel(
+        // 3a
         new SetWaistPosition(150.0),
+        // 3b
         new SetShoulderPosition(135.0)
       ),
+      // 4
       new SetArmPosition(1.2192), // 48 inches in meters
-      
+      // 5
       new GrabPiece(false),
       Commands.parallel(
+        // 6a
         new SetArmPosition(0),
+        // 6b
         new SetWaistPosition(0.0),
+        // 6c
         new SetShoulderPosition(25.0)
       ),
       Commands.deadline(
+        // 7a and 8a
         new DriveToPosition(5.11), // Distance in meters to travel
+        // 7b
         new IntakePiece(true)
       ),
+        // 9a
         new DriveToPosition(-5.11),
+        // 9b
         new SetArmPosition(0.1016),
 
     );  
   
   }
 }
+
