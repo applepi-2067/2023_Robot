@@ -3,10 +3,10 @@ package frc.robot.commands.claw;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawBelt;
 
-public class GrabPiece extends CommandBase {
+public class ClawIntake extends CommandBase {
     private static ClawBelt m_clawBelt;
 
-    public GrabPiece(Boolean spin) {
+    public ClawIntake(Boolean spin) {
         // Use addRequirements() here to declare subsystem dependencies.
         ClawBelt clawbelt = ClawBelt.getInstance();
         addRequirements(clawbelt);
