@@ -81,16 +81,16 @@ public class RobotContainer {
    */
   private void configureBindings() {
     //Driver Controls
-    m_driverController.a().onTrue(new RotateToPosition(m_robotDrive, -90.0));
-    m_driverController.b().onTrue(new RotateToPosition(m_robotDrive, 90));
+    m_driverController.a().onTrue(new RotateToPosition( -90.0));
+    m_driverController.b().onTrue(new RotateToPosition( 90));
 
     m_driverController.x().onTrue(new InstantCommand(() -> System.out.println(m_vision.getCameraAbsolutePose())));
 
     //Operator Controls
-    m_operatorContoller.a().onTrue(new SetWaistPosition(0));
-    m_operatorContoller.b().onTrue(new SetWaistPosition(10));
-    m_operatorContoller.leftBumper().onTrue(new SetArmPosition(0));
-    m_operatorContoller.rightBumper().onTrue(new SetArmPosition(0.5));
+    //m_operatorContoller.a().onTrue(new SetWaistPosition(0));
+    //m_operatorContoller.b().onTrue(new SetWaistPosition(10));
+    m_operatorContoller.leftBumper().onTrue(new SetArmExtension(0));
+    m_operatorContoller.rightBumper().onTrue(new SetArmExtension(0.5));
     
     m_operatorContoller.x().onTrue(new SetShoulderPosition(90));
     m_operatorContoller.y().onTrue(new SetShoulderPosition(270));
