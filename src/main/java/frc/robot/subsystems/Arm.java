@@ -18,6 +18,7 @@ import frc.robot.utils.Gains;
 import frc.robot.utils.Util;
 import frc.robot.Constants;
 import frc.robot.Constants.CANDeviceIDs;
+import frc.robot.Conversions;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
@@ -33,6 +34,8 @@ public class Arm extends SubsystemBase implements Loggable{
 
   public static final double GEAR_RATIO = 36.0;  //TODO: set
   public static final double METERS_PER_REV = 1.0; //TODO: set
+
+  
 
   public static double max_voltage_open_loop = 1.0;
 
@@ -69,23 +72,18 @@ public class Arm extends SubsystemBase implements Loggable{
     }
   }
 
-  private double metersToMotorRotations(double degrees) {
-    return degrees/METERS_PER_REV * GEAR_RATIO;
-  }
-
-  private double motorRotationsToMeters(double rotations) {
-    return (rotations / GEAR_RATIO) * METERS_PER_REV;
-  }
-
   /**
    * Set arm position.
    * @param meters
    */
   public void setPosition(double meters) {
-    m_pidController.setReference(metersToMotorRotations(meters), CANSparkMax.ControlType.kPosition);
+    m_pidController.setReference(Conversions.metersToMotorRotations(meters, METERS_PER_REV, GEAR_RATIO), CANSparkMax.ControlType.kPosition);
+    
   }
 
 
+
+  
 
   /**
    * Set motor speed.
@@ -102,7 +100,7 @@ public class Arm extends SubsystemBase implements Loggable{
    */
   @Log (name = "Position (M)", rowIndex = 2, columnIndex = 0)
   public double getPosition() {
-    return motorRotationsToMeters(m_encoder.getPosition());
+    return Conversions.motorRotationsToMeters(m_encoder.getPosition(), GEAR_RATIO, METERS_PER_REV);
   }
 
   @Config (name = "Output Limit (V)", rowIndex = 2, columnIndex = 2, defaultValueNumeric = 1.0)
