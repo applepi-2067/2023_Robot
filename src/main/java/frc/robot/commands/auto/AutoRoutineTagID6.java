@@ -6,7 +6,6 @@ package frc.robot.commands.auto;
 
 import frc.robot.commands.arm.SetArmPosition;
 import frc.robot.commands.drivetrain.DriveToPosition;
-import frc.robot.commands.drivetrain.RotateToPosition;
 import frc.robot.commands.intake.IntakePiece;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.waist.SetWaistPosition;
@@ -52,9 +51,11 @@ public class AutoRoutineTagID6 extends SequentialCommandGroup {
         new SetArmPosition(0.1016),
         
         // skipping step 10 for now (check document in slack)
-        new SetShoulderPosition(135.0),
-        new SetArmPosition(0.3048),
-        new SetWaistPosition(30.0),
+        Commands.parallel(
+          new SetShoulderPosition(135.0),
+          new SetArmPosition(0.3048),
+          new SetWaistPosition(30.0)
+        ),
         new GrabPiece(false)
     );  
   
