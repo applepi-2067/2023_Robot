@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import io.github.oblarg.oblog.Loggable;
@@ -69,6 +70,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     // should come AFTER the configMotionMagic
     m_leftMotor.setInverted(true);
     m_leftMotorFollower.setInverted(true);
+
+    resetEncoders();
+    resetGyro();
   }
 
   // Move the robot forward with some rotation.
@@ -141,7 +145,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   /**
    * @return current yaw in radians (CCW is positive)
    */
-  @Log
   public double getYawRadians() {
     return Units.degreesToRadians(m_pidgey.getYaw());
   }
@@ -150,9 +153,12 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     m_latestRobotPose2d = m_odometry.update(
       new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters()
     );
+
+    SmartDashboard.putNumber("Robot X (meters)", m_latestRobotPose2d.getX());
+    SmartDashboard.putNumber("Robot Y (meters)", m_latestRobotPose2d.getY());
+    SmartDashboard.putNumber("Robot Rotation (degrees)", m_latestRobotPose2d.getRotation().getDegrees());
   }
 
-  @Log
   public Pose2d getLatestRobotPose2d() {
     return m_latestRobotPose2d;
   }
