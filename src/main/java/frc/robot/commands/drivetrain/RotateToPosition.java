@@ -82,12 +82,12 @@ public class RotateToPosition extends CommandBase implements Loggable {
 
     @Log
     private double getAngleError() {
-        return m_degrees - m_driveTrain.getYaw();
+        return m_degrees - m_driveTrain.getYawDegrees();
     }
 
     @Log
     private double getRotationPower() {
-        double rotationPower = m_pidController.calculate(m_driveTrain.getYaw(), m_degrees);
+        double rotationPower = m_pidController.calculate(m_driveTrain.getYawDegrees(), m_degrees);
 
         // Set "floor" of power output to start at m_minimumPower, the minimum power % to move the robot at all
         if (rotationPower > 0) {

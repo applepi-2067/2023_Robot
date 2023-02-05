@@ -42,7 +42,7 @@ public class DriveToPosition extends CommandBase {
     // Returns true when we are within an acceptable distance of our target position
     @Override
     public boolean isFinished() {
-        double metersError = m_meters - m_driveTrain.getDistanceTraveled();
+        double metersError = m_meters - m_driveTrain.getAverageMotorDistanceMeters();
         return (Math.abs(metersError) < m_acceptableErrorMeters);
     }
 }
