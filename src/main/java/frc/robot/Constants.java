@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.utils.Gains;
 
 /**
@@ -68,5 +69,11 @@ public final class Constants {
      */
     public static final Gains kGains = new Gains(0.1, 0.001, 0.0, 0.0, 300, 1.0);
   }
+
+  public static final class PneumaticsDevices {
+    public static final int CLAW_CLOSE = 12;
+    public static final int CLAW_OPEN = 13;
+    public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.REVPH;
+}
 
 }
