@@ -85,6 +85,8 @@ public class Arm extends SubsystemBase implements Loggable{
     m_pidController.setReference(metersToMotorRotations(meters), CANSparkMax.ControlType.kPosition);
   }
 
+
+
   /**
    * Set motor speed.
    * @param speed (-1.0 to 1.0)
