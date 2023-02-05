@@ -52,7 +52,10 @@ public class AutoRoutineTagID6 extends SequentialCommandGroup {
         new SetArmPosition(0.1016),
         
         // skipping step 10 for now (check document in slack)
-        new SetShoulderPosition(135.0)
+        new SetShoulderPosition(135.0),
+        new SetArmPosition(0.3048),
+        new SetWaistPosition(30.0),
+        new GrabPiece(false)
     );  
   
   }
