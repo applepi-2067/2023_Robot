@@ -40,6 +40,8 @@ public final class Constants {
 
   public static class DiscreteInputs {
     public static final int ARM_END_OF_TRAVEL_DI = 0;
+
+    public static final int PBOT_JUMPER_DI = 9;
   }
 
   public static class Drivetrain {
