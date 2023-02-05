@@ -10,8 +10,9 @@ import java.lang.Math;
 
 public class DriveToPosition extends CommandBase {
     private static Drivetrain m_drivetrain;
-    private static double m_meters;
-    private static double m_acceptableErrorMeters = Units.inchesToMeters(0.1);
+    private double m_startingDistance;
+    private double m_meters;
+    private final double ACCEPTABLE_ERROR_METERS = Units.inchesToMeters(0.1);
 
     public DriveToPosition(double meters) { 
         Drivetrain drivetrain = Drivetrain.getInstance(); 
@@ -24,7 +25,7 @@ public class DriveToPosition extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_drivetrain.resetEncoders();
+        m_startingDistance = m_drivetrain.getAverageMotorDistanceMeters();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -43,7 +44,7 @@ public class DriveToPosition extends CommandBase {
     // Returns true when we are within an acceptable distance of our target position
     @Override
     public boolean isFinished() {
-        double metersError = m_meters - m_drivetrain.getAverageMotorDistanceMeters();
-        return (Math.abs(metersError) < m_acceptableErrorMeters);
+        double metersError = m_meters - (m_drivetrain.getAverageMotorDistanceMeters() - m_startingDistance);
+        return (Math.abs(metersError) < ACCEPTABLE_ERROR_METERS);
     }
 }
