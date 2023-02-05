@@ -94,25 +94,6 @@ public class RobotContainer {
   }
 
   /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    int targetID = 2;
-    Pose2d destinationTargetPose = new Pose2d(1, 0, new Rotation2d(Math.toRadians(180)));
-
-    DriveToVisionTargetOffset m_autonomousCommand = new DriveToVisionTargetOffset(
-      m_robotDrive, m_vision, targetID, destinationTargetPose
-    );
-
-    //RotationTest m_autonomousCommand = new RotationTest(m_robotDrive);
-    //DriveSquareAuto m_autonomousCommand = new DriveSquareAuto(m_robotDrive);
-
-    return m_autonomousCommand;
-  }
-
-  /**
    * Sets motors to coast or brake mode
    * @param coastEnabled Set coast enabled if true, otherwise set brake mode
    */
