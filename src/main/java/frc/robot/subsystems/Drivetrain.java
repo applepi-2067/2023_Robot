@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class Drivetrain extends SubsystemBase {
+public class Drivetrain extends SubsystemBase implements Loggable {
   /** Creates a new DriveTrain. */
   private final TalonFXHelper m_leftMotor = new TalonFXHelper(Constants.CANDeviceIDs.DT_MOTOR_LEFT_1_ID);
   private final TalonFXHelper m_rightMotor = new TalonFXHelper(Constants.CANDeviceIDs.DT_MOTOR_RIGHT_1_ID);
