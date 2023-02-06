@@ -14,19 +14,19 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class DriveSquareAuto extends SequentialCommandGroup {
   /** Creates a new TwoBall. */
-  public DriveSquareAuto(Drivetrain drivetrain) { 
+  public DriveSquareAuto() { 
     double squareSideLength = 1; //meters 
     double turnAngle = -90;
 
     addCommands(
-        new DriveToPosition(drivetrain, squareSideLength),
-        new RotateToPosition(drivetrain, turnAngle), // turn 1
-        new DriveToPosition(drivetrain, squareSideLength),
-        new RotateToPosition(drivetrain, turnAngle), // turn 2
-        new DriveToPosition(drivetrain, squareSideLength),
-        new RotateToPosition(drivetrain, turnAngle), // turn 3
-        new DriveToPosition(drivetrain, squareSideLength),
-        new RotateToPosition(drivetrain, turnAngle) // turn back to original position
+        new DriveToPosition(squareSideLength),
+        new RotateToPosition(turnAngle), // turn 1
+        new DriveToPosition(squareSideLength),
+        new RotateToPosition(turnAngle), // turn 2
+        new DriveToPosition(squareSideLength),
+        new RotateToPosition(turnAngle), // turn 3
+        new DriveToPosition(squareSideLength),
+        new RotateToPosition(turnAngle) // turn back to original position
     );  
   
   }
