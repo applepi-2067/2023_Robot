@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -29,11 +30,12 @@ public class Waist extends SubsystemBase implements Loggable {
   private final SparkMaxPIDController m_pidController;
   private final RelativeEncoder m_encoder;
 
-  public static final double GEAR_RATIO = 120.0;
-  public static final double DEGREES_PER_REV = 360.0;
+  private static final double GEAR_RATIO = 4.0 * 4.0 * (36.0 / 18.0) * (106.0 / 30.0);
+  private static final double DEGREES_PER_REV = 360.0;
+  private static final int CURRENT_LIMIT_AMPS = 30;
 
   // PID Coefficients.
-  private Gains gains = new Gains(0.1, 1e-4, 1, 0, 0, 1);
+  private Gains gains = new Gains(0.1, 5e-4, 0, 0, 3, 0.7);
 
   public static Waist getInstance() {
     if (instance == null) {
@@ -47,6 +49,8 @@ public class Waist extends SubsystemBase implements Loggable {
   private Waist() {
     m_motor = new CANSparkMax(CANDeviceIDs.MOTOR_WAIST_ID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
+    m_motor.setIdleMode(IdleMode.kBrake);
+    m_motor.setSmartCurrentLimit(CURRENT_LIMIT_AMPS);
 
     m_pidController = m_motor.getPIDController();
     m_encoder = m_motor.getEncoder();
