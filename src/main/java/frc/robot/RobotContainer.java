@@ -38,7 +38,7 @@ public class RobotContainer {
   private final Drivetrain m_robotDrive = Drivetrain.getInstance();
   private final Waist m_waist = Waist.getInstance();
   private final Shoulder m_shoulder = Shoulder.getInstance();
-  private final Vision m_vision = new Vision();
+  private final Vision m_vision = Vision.getInstance();
   private final Arm m_arm = Arm.getInstance();
 
   /**
