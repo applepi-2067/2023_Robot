@@ -5,11 +5,16 @@
 package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.utils.DrivebaseSimFX;
+import frc.robot.utils.Gains;
 import frc.robot.utils.PigeonHelper;
 import frc.robot.utils.TalonFXHelper;
 import frc.robot.RobotContainer;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -82,7 +87,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     configMotionMagic(m_rightMotor);
 
     // configure right talon to use pigeon as remote sensor to aid driving straight
-    setAuxPigeon(m_rightMotor);
+    auxPigeonConfig(m_rightMotor);
 
     // Invert right motors so that positive values make robot move forward.
     // configMotionMagic resets the inversion on the motors, so the .setInversion method
@@ -118,6 +123,15 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     // Flipped the signs to mirror robot driving patterns
     m_leftMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
     m_rightMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
+  }
+
+  /**
+   * 
+   * @param meters
+   */
+  public void driveStraightDistance(double meters, double targetAngle) {
+    m_rightMotor.set(ControlMode.MotionMagic, metersToTicks(meters), DemandType.AuxPID, targetAngle);
+    m_leftMotor.follow(m_rightMotor, FollowerType.AuxOutput1);
   }
 
   /**
@@ -228,15 +242,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     /* Set the peak and nominal outputs */
     _talon.configNominalOutputForward(0, Constants.Drivetrain.kTimeoutMs);
     _talon.configNominalOutputReverse(0, Constants.Drivetrain.kTimeoutMs);
-    _talon.configPeakOutputForward(1, Constants.Drivetrain.kTimeoutMs);
-    _talon.configPeakOutputReverse(-1, Constants.Drivetrain.kTimeoutMs);
+    _talon.configPeakOutputForward(Constants.Drivetrain.kGains.kPeakOutput, Constants.Drivetrain.kTimeoutMs);
+    _talon.configPeakOutputReverse(-Constants.Drivetrain.kGains.kPeakOutput, Constants.Drivetrain.kTimeoutMs);
 
     /* Set Motion Magic gains in slot0 - see documentation */
-    _talon.selectProfileSlot(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kPIDLoopIdx);
-    _talon.config_kF(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kGains.kF, Constants.Drivetrain.kTimeoutMs);
-    _talon.config_kP(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kGains.kP, Constants.Drivetrain.kTimeoutMs);
-    _talon.config_kI(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kGains.kI, Constants.Drivetrain.kTimeoutMs);
-    _talon.config_kD(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kGains.kD, Constants.Drivetrain.kTimeoutMs);
+    _talon.selectProfileSlot(Constants.Drivetrain.MOTION_MAGIC_PID_SLOT, Constants.Drivetrain.kPIDLoopIdx);
+    _talon.config_kF(Constants.Drivetrain.MOTION_MAGIC_PID_SLOT, Constants.Drivetrain.kGains.kF, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_kP(Constants.Drivetrain.MOTION_MAGIC_PID_SLOT, Constants.Drivetrain.kGains.kP, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_kI(Constants.Drivetrain.MOTION_MAGIC_PID_SLOT, Constants.Drivetrain.kGains.kI, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_kD(Constants.Drivetrain.MOTION_MAGIC_PID_SLOT, Constants.Drivetrain.kGains.kD, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_IntegralZone(Constants.Drivetrain.MOTION_MAGIC_PID_SLOT, Constants.Drivetrain.kGains.kIzone);
 
     /* Set acceleration and vcruise velocity - see documentation */
     // Constants stolen from team 2168's 2022 repo
@@ -249,9 +264,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     _talon.setSelectedSensorPosition(0, Constants.Drivetrain.kPIDLoopIdx, Constants.Drivetrain.kTimeoutMs);
   }
 
+  private void auxPigeonConfig(TalonFXHelper motor) {
+    motor.configRemoteFeedbackFilter(Constants.CANDeviceIDs.PIGEON_IMU_ID, RemoteSensorSource.Pigeon_Yaw, 0);
+    motor.configSelectedFeedbackCoefficient(DEGREES_PER_REV);
 
-  private void setAuxPigeon(TalonFXHelper motor) {
-
+    // Set turning gains in slot1
+    motor.config_kF(Constants.Drivetrain.TURNING_PID_SLOT, Constants.Drivetrain.turningGains.kF, Constants.Drivetrain.kTimeoutMs);
+    motor.config_kP(Constants.Drivetrain.TURNING_PID_SLOT, Constants.Drivetrain.turningGains.kP, Constants.Drivetrain.kTimeoutMs);
+    motor.config_kI(Constants.Drivetrain.TURNING_PID_SLOT, Constants.Drivetrain.turningGains.kI, Constants.Drivetrain.kTimeoutMs);
+    motor.config_kD(Constants.Drivetrain.TURNING_PID_SLOT, Constants.Drivetrain.turningGains.kD, Constants.Drivetrain.kTimeoutMs);
+    motor.config_IntegralZone(Constants.Drivetrain.TURNING_PID_SLOT, Constants.Drivetrain.turningGains.kIzone);
   }
 
   @Override

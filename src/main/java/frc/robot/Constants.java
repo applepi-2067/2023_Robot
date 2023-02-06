@@ -53,7 +53,8 @@ public final class Constants {
      * 0,1,2 or 3. Only the first two (0,1) are visible in web-based
      * configuration.
      */
-    public static final int kSlotIdx = 0;
+    public static final int MOTION_MAGIC_PID_SLOT = 0;
+    public static final int TURNING_PID_SLOT = 1;
 
     /**
      * Talon FX supports multiple (cascaded) PID loops. For
@@ -72,12 +73,13 @@ public final class Constants {
      * Gains(kp, ki, kd, kf, izone, peak output);
      */
     public static final Gains kGains = new Gains(0.1, 0.001, 0.0, 0.0, 300, 1.0);
+    public static final Gains turningGains = new Gains(2.0, 0.0, 4.0, 0.0, 200, 1.0);
   }
 
   public static final class PneumaticsDevices {
     public static final int CLAW_CLOSE = 12;
     public static final int CLAW_OPEN = 13;
     public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.REVPH;
-}
+  }
 
 }
