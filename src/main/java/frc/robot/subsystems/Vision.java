@@ -24,13 +24,22 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
-  private PhotonCamera m_camera = new PhotonCamera("Arducam_1");
+  public static Vision instance = null;
 
+  private PhotonCamera m_camera = new PhotonCamera("Arducam_1");
   private PhotonPoseEstimator m_photonPoseEstimator;
   private Pose3d m_lastCameraPoseAbsolute = new Pose3d();
+  
+  // Get a new object through singleton method
+  public static Vision getInstance() {
+    if (instance == null) {
+      instance = new Vision();
+    }
+    return instance;
+  }
 
-  /** Creates a new Vision. */
-  public Vision() {
+  // Constructor is private since this class is singleton
+  private Vision() {
     AprilTagFieldLayout aprilTagFieldLayout = null;
     try {
       aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
