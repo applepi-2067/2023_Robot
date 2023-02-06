@@ -38,7 +38,8 @@ public final class Constants {
   }
 
   public static class DiscreteInputs {
-    public static final int ARM_END_OF_TRAVEL_DI = 0;
+    public static final int ARM_END_OF_TRAVEL_DI = 1;
+    public static final int WAIST_ZEROING_DI = 0;
   }
 
   public static class Drivetrain {

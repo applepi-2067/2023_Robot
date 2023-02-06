@@ -12,9 +12,11 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.Constants;
 import frc.robot.Constants.CANDeviceIDs;
 import frc.robot.utils.Gains;
 
@@ -33,6 +35,7 @@ public class Waist extends SubsystemBase implements Loggable {
   private static final double GEAR_RATIO = 4.0 * 4.0 * (36.0 / 18.0) * (106.0 / 30.0);
   private static final double DEGREES_PER_REV = 360.0;
   private static final int CURRENT_LIMIT_AMPS = 30;
+  public static final DigitalInput m_waistZeroSensor = new DigitalInput(Constants.DiscreteInputs.WAIST_ZEROING_DI);
 
   // PID Coefficients.
   private Gains gains = new Gains(0.1, 5e-4, 0, 0, 3, 0.7);
@@ -110,6 +113,7 @@ public class Waist extends SubsystemBase implements Loggable {
 
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("Waist Zero Sensor", m_waistZeroSensor.get());
     // This method will be called once per scheduler run
   }
 
