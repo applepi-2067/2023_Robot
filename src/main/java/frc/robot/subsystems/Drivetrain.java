@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class Drivetrain extends SubsystemBase implements Loggable {
+public class Drivetrain extends SubsystemBase {
   /** Creates a new DriveTrain. */
   private final TalonFXHelper m_leftMotor = new TalonFXHelper(Constants.CANDeviceIDs.DT_MOTOR_LEFT_1_ID);
   private final TalonFXHelper m_rightMotor = new TalonFXHelper(Constants.CANDeviceIDs.DT_MOTOR_RIGHT_1_ID);
@@ -55,7 +55,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return drivetrain;
   }
 
-  private Drivetrain() {
+  private Drivetrain() {  // Constructor is private since this class is singleton
     // Set values to factory default.
     if (RobotContainer.isPracticeBot()){
       m_pidgey = new PigeonHelper(Constants.CANDeviceIDs.PIGEON_IMU_ID);
