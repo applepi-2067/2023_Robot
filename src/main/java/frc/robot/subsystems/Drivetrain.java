@@ -81,6 +81,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     configMotionMagic(m_leftMotor);
     configMotionMagic(m_rightMotor);
 
+    // configure right talon to use pigeon as remote sensor to aid driving straight
+    setAuxPigeon(m_rightMotor);
+
     // Invert right motors so that positive values make robot move forward.
     // configMotionMagic resets the inversion on the motors, so the .setInversion method
     // should come AFTER the configMotionMagic
@@ -244,6 +247,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /* Zero the sensor once on robot boot up */
     _talon.setSelectedSensorPosition(0, Constants.Drivetrain.kPIDLoopIdx, Constants.Drivetrain.kTimeoutMs);
+  }
+
+
+  private void setAuxPigeon(TalonFXHelper motor) {
+
   }
 
   @Override
