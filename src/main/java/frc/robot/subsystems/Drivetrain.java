@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class Drivetrain extends SubsystemBase implements Loggable {
+public class Drivetrain extends SubsystemBase {
   /** Creates a new DriveTrain. */
   private static Drivetrain instance = null;
   private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_1_ID);
@@ -41,6 +41,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
   public static final double WHEEL_BASE_METERS = Units.inchesToMeters(24.0); // distance between wheels (width) in meters
 
+
   public static Drivetrain getInstance() {
     if (instance == null) {
       instance = new Drivetrain();
@@ -49,7 +50,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return instance;
   }
 
-  public Drivetrain() {
+  private Drivetrain() {  // Constructor is private since this class is singleton
     // Set values to factory default.
     m_robotDrive.setSafetyEnabled(false);
     m_leftMotor.configFactoryDefault();

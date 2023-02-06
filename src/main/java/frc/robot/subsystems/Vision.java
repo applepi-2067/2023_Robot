@@ -12,15 +12,20 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
   private PhotonCamera m_camera = new PhotonCamera("Arducam_1");
+  public static Vision instance = null;
+  private Vision() {}  // Constructor is private since this class is singleton
 
-  /** Creates a new Vision. */
-  public Vision() {}
+  public static Vision getInstance() {  // Get a new object through singleton method
+    if (instance == null) {
+      instance = new Vision();
+    }
+    return instance;
+  }
 
   /**
    * Provided Pose2d relative to target, returns Pose2d relative to camera
