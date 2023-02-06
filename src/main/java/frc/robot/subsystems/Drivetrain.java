@@ -7,15 +7,16 @@ import frc.robot.Constants;
 import frc.robot.utils.DrivebaseSimFX;
 import frc.robot.utils.PigeonHelper;
 import frc.robot.utils.TalonFXHelper;
+import frc.robot.RobotContainer;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,8 +31,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private final TalonFXHelper m_leftMotorFollower = new TalonFXHelper(Constants.CANDeviceIDs.DT_MOTOR_LEFT_2_ID);
   private final TalonFXHelper m_rightMotorFollower = new TalonFXHelper(Constants.CANDeviceIDs.DT_MOTOR_RIGHT_2_ID);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
-  private final TalonSRX m_pidgeyController = new TalonSRX(Constants.CANDeviceIDs.PIGEON_TALON_ID);
-  private final PigeonHelper m_pidgey = new PigeonHelper(m_pidgeyController);
+  private final PigeonHelper m_pidgey;
 
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
@@ -45,7 +45,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   private static Drivetrain drivetrain = null;
 
-  DrivebaseSimFX _driveSim = new DrivebaseSimFX(m_leftMotor, m_rightMotor, m_pidgey);
+  DrivebaseSimFX _driveSim;
 
   public static Drivetrain getInstance() {
     if (drivetrain == null) {
@@ -57,6 +57,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   private Drivetrain() {
     // Set values to factory default.
+    if (RobotContainer.isPracticeBot()){
+      m_pidgey = new PigeonHelper(Constants.CANDeviceIDs.PIGEON_IMU_ID);
+    }
+    else{
+      //This is for the 2022 robot testing
+      TalonSRX m_pidgeyController = new TalonSRX(11);
+      m_pidgey = new PigeonHelper(m_pidgeyController);
+    }
+    _driveSim = new DrivebaseSimFX(m_leftMotor, m_rightMotor, (WPI_PigeonIMU) m_pidgey);
+
     m_robotDrive.setSafetyEnabled(false);
     m_leftMotor.configFactoryDefault();
     m_rightMotor.configFactoryDefault();

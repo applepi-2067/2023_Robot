@@ -32,15 +32,19 @@ public final class Constants {
     public static final int DT_MOTOR_LEFT_2_ID = 3;
     public static final int DT_MOTOR_RIGHT_2_ID = 4;
 
-    public static final int MOTOR_SHOULDER_ID = 10;
     public static final int MOTOR_WAIST_ID = 5;
 
     public static final int PIGEON_TALON_ID = 11;
     public static final int ARM_MOTOR_ID = 8;
+    public static final int MOTOR_SHOULDER_ID = 10;
+
+    public static final int PIGEON_IMU_ID = 0;
   }
 
   public static class DiscreteInputs {
     public static final int ARM_END_OF_TRAVEL_DI = 0;
+
+    public static final int PBOT_JUMPER_DI = 9;
   }
 
   public static class Drivetrain {
