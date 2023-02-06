@@ -13,8 +13,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import io.github.oblarg.oblog.Loggable;
@@ -41,7 +45,11 @@ public class Drivetrain extends SubsystemBase {
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
   public static final double WHEEL_BASE_METERS = Units.inchesToMeters(24.0); // distance between wheels (width) in meters
 
-
+  private final DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(
+    new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters(), new Pose2d()
+  );
+  private Pose2d m_latestRobotPose2d = new Pose2d();
+  
   public static Drivetrain getInstance() {
     if (instance == null) {
       instance = new Drivetrain();
@@ -71,6 +79,9 @@ public class Drivetrain extends SubsystemBase {
     // should come AFTER the configMotionMagic
     m_leftMotor.setInverted(true);
     m_leftMotorFollower.setInverted(true);
+
+    resetEncoders();
+    resetGyro();
   }
 
   // Move the robot forward with some rotation.
@@ -80,7 +91,7 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run.
+    updateOdometry();
   }
 
   /**
@@ -115,20 +126,50 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * 
-   * @return current position in meters
+   * @return right motor distance in meters.
    */
-  public double getDistanceTraveled() {
-    // Negative sign because setter is also flipped
+  public double getRightMotorDistanceMeters() {
     return ticksToMeters(m_rightMotor.getSelectedSensorPosition());
+  }
+
+  /**
+   * @return left motor distance in meters.
+   */
+  public double getLeftMotorDistanceMeters() {
+    return ticksToMeters(m_leftMotor.getSelectedSensorPosition());
+  }
+
+  public double getAverageMotorDistanceMeters() {
+    return (getRightMotorDistanceMeters() + getLeftMotorDistanceMeters()) / 2.0;
   }
 
   /**
    * @return current yaw in degrees (CCW is positive)
    */
   @Log
-  public double getYaw() {
+  public double getYawDegrees() {
     return m_pidgey.getYaw();
+  }
+
+  /**
+   * @return current yaw in radians (CCW is positive)
+   */
+  public double getYawRadians() {
+    return Units.degreesToRadians(m_pidgey.getYaw());
+  }
+
+  public void updateOdometry() {
+    m_latestRobotPose2d = m_odometry.update(
+      new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters()
+    );
+
+    SmartDashboard.putNumber("Robot X (meters)", m_latestRobotPose2d.getX());
+    SmartDashboard.putNumber("Robot Y (meters)", m_latestRobotPose2d.getY());
+    SmartDashboard.putNumber("Robot Rotation (degrees)", m_latestRobotPose2d.getRotation().getDegrees());
+  }
+
+  public Pose2d getLatestRobotPose2d() {
+    return m_latestRobotPose2d;
   }
 
   private double metersToTicks(double setpoint) {

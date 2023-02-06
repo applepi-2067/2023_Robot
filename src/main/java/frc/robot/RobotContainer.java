@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
@@ -82,6 +83,8 @@ public class RobotContainer {
     m_driverController.a().onTrue(new RotateToPosition( -90.0));
     m_driverController.b().onTrue(new RotateToPosition( 90));
 
+    m_driverController.x().onTrue(new InstantCommand(() -> System.out.println(m_vision.getCameraAbsolutePose())));
+
     //Operator Controls
     m_operatorContoller.x().onTrue(new SetWaistPosition(0));
     m_operatorContoller.b().onTrue(new SetWaistPosition(180));
@@ -102,7 +105,8 @@ public class RobotContainer {
   public void setCoastEnabled(boolean coastEnabled) {
     if (coastEnabled) {
       m_robotDrive.setMotorsCoast();
-    } else {
+    }
+    else {
       m_robotDrive.setMotorsBrake();
     }
   }
