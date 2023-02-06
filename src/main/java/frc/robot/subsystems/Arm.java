@@ -94,6 +94,23 @@ public class Arm extends SubsystemBase implements Loggable{
     m_pidController.setReference(speed * max_voltage_open_loop, CANSparkMax.ControlType.kVoltage);
   }
 
+  @Log (name = "Velocity (V)", rowIndex = 2, columnIndex = 0)
+  double getVelocity() {
+    return (m_encoder.getVelocity());
+  }
+  
+  /**
+   * Calibrates the arm extender encoder
+   */
+  public void epicArmExtenionEncoderCalibration() {
+
+  }
+
+  public void resetEncoders() {
+    m_encoder.setPosition(0);
+  }
+  
+
   /**
    *  Get arm position.
    * @return waist position in meters
