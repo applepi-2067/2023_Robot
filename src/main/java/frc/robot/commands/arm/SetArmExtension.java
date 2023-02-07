@@ -7,7 +7,7 @@ package frc.robot.commands.arm;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 
-public class SetArmPosition extends CommandBase {
+public class SetArmExtension extends CommandBase {
 
   private Arm arm;
   private double targetPositionMeters = 0.0;
@@ -18,7 +18,7 @@ public class SetArmPosition extends CommandBase {
    * 
    * @param positionMeters the target extension to move the arm to (meters)
    */
-  public SetArmPosition(double positionMeters) {
+  public SetArmExtension(double positionMeters) {
     // Use addRequirements() here to declare subsystem dependencies.
     arm = Arm.getInstance();
     addRequirements(arm);

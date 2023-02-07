@@ -5,10 +5,19 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.auto.DriveSquareAuto;
+import frc.robot.commands.auto.DriveToVisionTargetOffset;
+import frc.robot.commands.auto.RotationTest;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Vision;
 import io.github.oblarg.oblog.Logger;
 
 /**
@@ -21,6 +30,8 @@ import io.github.oblarg.oblog.Logger;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  static Command autonomousCommand;
+  public static SendableChooser<Command> m_autoChooser;
 
   /**
    * This function is run when the robot is first started up
@@ -31,6 +42,9 @@ public class Robot extends TimedRobot {
     // Instantiate the RobotContainer. Perform all our button bindings,
     // and put the autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    // Initialize Autonomous Selector Choices
+    autoSelectInit();
   }
 
   /**
@@ -68,6 +82,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    SmartDashboard.putData("Autonomous Mode Chooser", m_autoChooser); 
+    m_autonomousCommand = (Command) m_autoChooser.getSelected();
+  }
+
+  public void autoSelectInit() {
+    m_autoChooser = new SendableChooser<Command>();
+    m_autoChooser.setDefaultOption("Rotate Test", new RotationTest(Drivetrain.getInstance()));
+    m_autoChooser.addOption("Drive Square", new DriveSquareAuto());
   }
 
   /**
@@ -77,7 +99,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_robotContainer.setCoastEnabled(false);
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
@@ -38,11 +39,10 @@ public class RobotContainer implements Loggable{
   private final CommandXboxController m_operatorContoller = new CommandXboxController(
     Constants.OperatorConstants.kOperatorControllerPort);
 
-  // private final ExampleSubsystem example = ExampleSubsystem.getInstance();
-  private final Drivetrain m_robotDrive = new Drivetrain();
+  private final Drivetrain m_robotDrive = Drivetrain.getInstance();
   private final Waist m_waist = Waist.getInstance();
   private final Shoulder m_shoulder = Shoulder.getInstance();
-  private final Vision m_vision = new Vision();
+  private final Vision m_vision = Vision.getInstance();
   private final Arm m_arm = Arm.getInstance();
   private static DigitalInput m_practiceBotJumper = new DigitalInput(Constants.DiscreteInputs.PBOT_JUMPER_DI);
 
@@ -84,37 +84,22 @@ public class RobotContainer implements Loggable{
    */
   private void configureBindings() {
     //Driver Controls
-    m_driverController.a().onTrue(new RotateToPosition(m_robotDrive, -90.0));
-    m_driverController.b().onTrue(new RotateToPosition(m_robotDrive, 90));
+    m_driverController.a().onTrue(new RotateToPosition( -90.0));
+    m_driverController.b().onTrue(new RotateToPosition( 90));
+
+    m_driverController.x().onTrue(new InstantCommand(() -> System.out.println(m_vision.getCameraAbsolutePose())));
 
     //Operator Controls
-    //m_operatorContoller.a().onTrue(new SetWaistPosition(0));
-    //m_operatorContoller.b().onTrue(new SetWaistPosition(10));
-    m_operatorContoller.leftBumper().onTrue(new SetArmPosition(0));
-    m_operatorContoller.rightBumper().onTrue(new SetArmPosition(0.5));
+    m_operatorContoller.x().onTrue(new SetWaistPosition(0));
+    m_operatorContoller.b().onTrue(new SetWaistPosition(180));
+    m_operatorContoller.a().onTrue(new DriveWaistWithJoystick(()->{return 0.0;}));
+
+    m_operatorContoller.leftBumper().onTrue(new SetArmExtension(0));
+    m_operatorContoller.rightBumper().onTrue(new SetArmExtension(0.5));
     
-    m_operatorContoller.x().onTrue(new SetShoulderPosition(90));
-    m_operatorContoller.y().onTrue(new SetShoulderPosition(270));
-    m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
-  }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    int targetID = 2;
-    Pose2d destinationTargetPose = new Pose2d(1, 0, new Rotation2d(Math.toRadians(180)));
-
-    DriveToVisionTargetOffset m_autonomousCommand = new DriveToVisionTargetOffset(
-      m_robotDrive, m_vision, targetID, destinationTargetPose
-    );
-
-    // RotationTest m_autonomousCommand = new RotationTest(m_robotDrive);
-    // DriveSquareAuto m_autonomousCommand = new DriveSquareAuto(m_robotDrive);
-
-    return m_autonomousCommand;
+    // m_operatorContoller.x().onTrue(new SetShoulderPosition(90));
+    // m_operatorContoller.y().onTrue(new SetShoulderPosition(270));
+    // m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
   }
 
   /**
@@ -124,7 +109,8 @@ public class RobotContainer implements Loggable{
   public void setCoastEnabled(boolean coastEnabled) {
     if (coastEnabled) {
       m_robotDrive.setMotorsCoast();
-    } else {
+    }
+    else {
       m_robotDrive.setMotorsBrake();
     }
   }
