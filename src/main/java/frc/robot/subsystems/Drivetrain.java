@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -32,8 +33,7 @@ public class Drivetrain extends SubsystemBase {
   private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_2_ID);
   private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_2_ID);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
-  private final TalonSRX m_pidgeyController = new TalonSRX(11);
-  private final PigeonIMU m_pidgey = new PigeonIMU(m_pidgeyController);
+  private final PigeonIMU m_pidgey;
 
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
@@ -60,6 +60,14 @@ public class Drivetrain extends SubsystemBase {
 
   private Drivetrain() {  // Constructor is private since this class is singleton
     // Set values to factory default.
+    if (RobotContainer.isPracticeBot()){
+      m_pidgey = new PigeonIMU(Constants.CANDeviceIDs.PIGEON_IMU_ID);
+    }
+    else{
+      //This is for the 2022 robot testing
+      TalonSRX m_pidgeyController = new TalonSRX(11);
+      m_pidgey = new PigeonIMU(m_pidgeyController);
+    }
     m_robotDrive.setSafetyEnabled(false);
     m_leftMotor.configFactoryDefault();
     m_rightMotor.configFactoryDefault();
