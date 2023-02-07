@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -13,14 +14,18 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class Drivetrain extends SubsystemBase implements Loggable {
+public class Drivetrain extends SubsystemBase {
   /** Creates a new DriveTrain. */
   private static Drivetrain instance = null;
   private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_1_ID);
@@ -28,8 +33,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_2_ID);
   private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_2_ID);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
-  private final TalonSRX m_pidgeyController = new TalonSRX(11);
-  private final PigeonIMU m_pidgey = new PigeonIMU(m_pidgeyController);
+  private static PigeonIMU m_pidgey;
+  private static TalonSRX m_pidgeyController;
 
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
@@ -41,6 +46,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
   public static final double WHEEL_BASE_METERS = Units.inchesToMeters(24.0); // distance between wheels (width) in meters
 
+  private DifferentialDriveOdometry m_odometry;
+  private Pose2d m_latestRobotPose2d = new Pose2d();
+  
   public static Drivetrain getInstance() {
     if (instance == null) {
       instance = new Drivetrain();
@@ -49,8 +57,17 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return instance;
   }
 
-  public Drivetrain() {
+  private Drivetrain() {  // Constructor is private since this class is singleton
     // Set values to factory default.
+    if (RobotContainer.isPracticeBot()){
+      m_pidgey = new PigeonIMU(Constants.CANDeviceIDs.PIGEON_IMU_ID);
+    }
+    else{
+      //This is for the 2022 robot testing
+      m_pidgeyController = new TalonSRX(11);
+      m_pidgey = new PigeonIMU(m_pidgeyController);
+    }
+    m_odometry = new DifferentialDriveOdometry(new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters(), new Pose2d());
     m_robotDrive.setSafetyEnabled(false);
     m_leftMotor.configFactoryDefault();
     m_rightMotor.configFactoryDefault();
@@ -70,6 +87,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     // should come AFTER the configMotionMagic
     m_leftMotor.setInverted(true);
     m_leftMotorFollower.setInverted(true);
+
+    resetEncoders();
+    resetGyro();
   }
 
   // Move the robot forward with some rotation.
@@ -79,7 +99,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run.
+    updateOdometry();
   }
 
   /**
@@ -114,20 +134,50 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
 
   /**
-   * 
-   * @return current position in meters
+   * @return right motor distance in meters.
    */
-  public double getDistanceTraveled() {
-    // Negative sign because setter is also flipped
+  public double getRightMotorDistanceMeters() {
     return ticksToMeters(m_rightMotor.getSelectedSensorPosition());
+  }
+
+  /**
+   * @return left motor distance in meters.
+   */
+  public double getLeftMotorDistanceMeters() {
+    return ticksToMeters(m_leftMotor.getSelectedSensorPosition());
+  }
+
+  public double getAverageMotorDistanceMeters() {
+    return (getRightMotorDistanceMeters() + getLeftMotorDistanceMeters()) / 2.0;
   }
 
   /**
    * @return current yaw in degrees (CCW is positive)
    */
   @Log
-  public double getYaw() {
+  public double getYawDegrees() {
     return m_pidgey.getYaw();
+  }
+
+  /**
+   * @return current yaw in radians (CCW is positive)
+   */
+  public double getYawRadians() {
+    return Units.degreesToRadians(m_pidgey.getYaw());
+  }
+
+  public void updateOdometry() {
+    m_latestRobotPose2d = m_odometry.update(
+      new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters()
+    );
+
+    SmartDashboard.putNumber("Robot X (meters)", m_latestRobotPose2d.getX());
+    SmartDashboard.putNumber("Robot Y (meters)", m_latestRobotPose2d.getY());
+    SmartDashboard.putNumber("Robot Rotation (degrees)", m_latestRobotPose2d.getRotation().getDegrees());
+  }
+
+  public Pose2d getLatestRobotPose2d() {
+    return m_latestRobotPose2d;
   }
 
   private double metersToTicks(double setpoint) {
