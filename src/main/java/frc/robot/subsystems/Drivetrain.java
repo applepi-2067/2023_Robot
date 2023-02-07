@@ -33,7 +33,8 @@ public class Drivetrain extends SubsystemBase {
   private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_2_ID);
   private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_2_ID);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
-  private final PigeonIMU m_pidgey;
+  private static PigeonIMU m_pidgey;
+  private static TalonSRX m_pidgeyController;
 
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
@@ -45,9 +46,7 @@ public class Drivetrain extends SubsystemBase {
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
   public static final double WHEEL_BASE_METERS = Units.inchesToMeters(24.0); // distance between wheels (width) in meters
 
-  private final DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(
-    new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters(), new Pose2d()
-  );
+  private DifferentialDriveOdometry m_odometry;
   private Pose2d m_latestRobotPose2d = new Pose2d();
   
   public static Drivetrain getInstance() {
@@ -65,9 +64,10 @@ public class Drivetrain extends SubsystemBase {
     }
     else{
       //This is for the 2022 robot testing
-      TalonSRX m_pidgeyController = new TalonSRX(11);
+      m_pidgeyController = new TalonSRX(11);
       m_pidgey = new PigeonIMU(m_pidgeyController);
     }
+    m_odometry = new DifferentialDriveOdometry(new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters(), new Pose2d());
     m_robotDrive.setSafetyEnabled(false);
     m_leftMotor.configFactoryDefault();
     m_rightMotor.configFactoryDefault();
