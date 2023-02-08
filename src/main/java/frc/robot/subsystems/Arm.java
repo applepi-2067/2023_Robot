@@ -52,6 +52,7 @@ public class Arm extends SubsystemBase implements Loggable{
 
     m_motor = new CANSparkMax(CANDeviceIDs.ARM_MOTOR_ID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
+    m_motor.setSmartCurrentLimit(5);
 
     m_pidController = m_motor.getPIDController();
     m_encoder = m_motor.getEncoder();
