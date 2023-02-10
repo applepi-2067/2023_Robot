@@ -27,12 +27,17 @@ public class ZeroWaistPosition extends CommandBase {
   @Override
   public void initialize() {
     m_waist.setEncoderPosition(0.0);
+
+    // Member variables must be reset during init because the command object instance is sometimes reused,
+    // for example when the command is bound to a button
+    reachedMagnetStart = false;
+    reachedMagnetEnd = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_waist.setSpeed(0.05);
+    m_waist.setSpeed(1);
 
     if (m_waist.getZeroSensor() && !reachedMagnetStart) {
       magnetRangeStart = m_waist.getPosition();
@@ -50,9 +55,12 @@ public class ZeroWaistPosition extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    double ZEROING_TOLERANCE_DEGREES = 0.1;
     double sensorPosition = (magnetRangeEnd - magnetRangeStart) / 2.0;
     m_waist.setEncoderPosition(sensorPosition);
-    //m_waist.setPosition(0.0);
+    while (Math.abs(m_waist.getPosition()) > ZEROING_TOLERANCE_DEGREES) {
+      m_waist.setPosition(0.0);
+    }
   }
 
   // Returns true when the command should end.
