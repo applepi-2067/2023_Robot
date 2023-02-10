@@ -37,7 +37,7 @@ public class ZeroWaistPosition extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_waist.setSpeed(1);
+    m_waist.setSpeed(0.1);
 
     if (m_waist.getZeroSensor() && !reachedMagnetStart) {
       magnetRangeStart = m_waist.getPosition();
