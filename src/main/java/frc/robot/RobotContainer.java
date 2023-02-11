@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -16,7 +17,9 @@ import frc.robot.subsystems.*;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.shoulder.*;
+import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
+import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.arm.*;
@@ -29,7 +32,7 @@ import frc.robot.commands.arm.*;
  * Instead, the robot structure (including subsystems, commands,
  * and trigger mappings) should be declared here.
  */
-public class RobotContainer {
+public class RobotContainer implements Loggable{
   // Instantiate subsystems, controllers, and commands.
   private final CommandXboxController m_driverController = new CommandXboxController(
     Constants.OperatorConstants.kDriverControllerPort);
@@ -41,6 +44,7 @@ public class RobotContainer {
   private final Shoulder m_shoulder = Shoulder.getInstance();
   private final Vision m_vision = Vision.getInstance();
   private final Arm m_arm = Arm.getInstance();
+  private static DigitalInput m_practiceBotJumper = new DigitalInput(Constants.DiscreteInputs.PBOT_JUMPER_DI);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -58,14 +62,14 @@ public class RobotContainer {
         // Forward/backward controlled by the left hand, turning controlled by the right.
         Commands.run(
           () -> m_robotDrive.arcadeDrive(
-                  -m_driverController.getLeftY() / 2.0,
-                  -m_driverController.getRightX() / 3.0
+                  -m_driverController.getLeftY() / 1.5,
+                  -m_driverController.getRightX() / 2.0
                 ),
           m_robotDrive)
         );
   
 
-    m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX()));
+    m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX() / 4.0));
     m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorContoller.getRightY()));
     m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorContoller.getLeftY()));
   }
@@ -86,9 +90,10 @@ public class RobotContainer {
     m_driverController.x().onTrue(new InstantCommand(() -> System.out.println(m_vision.getCameraAbsolutePose())));
 
     //Operator Controls
-    m_operatorContoller.x().onTrue(new SetWaistPosition(0));
+    m_operatorContoller.a().onTrue(new SetWaistPosition(0));
     m_operatorContoller.b().onTrue(new SetWaistPosition(180));
-    m_operatorContoller.a().onTrue(new DriveWaistWithJoystick(()->{return 0.0;}));
+    m_operatorContoller.x().onTrue(new ZeroWaistPosition());
+    m_operatorContoller.y().onTrue(new ZeroWaistPositionCoarse());
 
     m_operatorContoller.leftBumper().onTrue(new SetArmExtension(0));
     m_operatorContoller.rightBumper().onTrue(new SetArmExtension(0.5));
@@ -109,5 +114,10 @@ public class RobotContainer {
     else {
       m_robotDrive.setMotorsBrake();
     }
+  }
+
+  @Log
+  public static boolean isPracticeBot() {
+    return !m_practiceBotJumper.get();
   }
 }

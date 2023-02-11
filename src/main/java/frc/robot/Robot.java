@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -89,9 +90,6 @@ public class Robot extends TimedRobot {
     m_autoChooser = new SendableChooser<Command>();
     m_autoChooser.setDefaultOption("Rotate Test", new RotationTest(Drivetrain.getInstance()));
     m_autoChooser.addOption("Drive Square", new DriveSquareAuto());
-    // int targetID = 2;
-    // Pose2d destinationTargetPose = new Pose2d(1, 0, new Rotation2d(Math.toRadians(180)));
-    // m_autoChooser.addOption("Drive to apriltag", new DriveToVisionTargetOffset(Drivetrain.getInstance(), Vision.getInstance(), targetID, destinationTargetPose));
   }
 
   /**
@@ -151,4 +149,5 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationPeriodic() {
   }
+
 }
