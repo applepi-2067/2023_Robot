@@ -11,6 +11,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,10 +32,12 @@ public class Arm extends SubsystemBase implements Loggable{
   private final RelativeEncoder m_encoder;
   private final DigitalInput m_endOfTravelSensor;
 
-  public static final double GEAR_RATIO = 36.0;  //TODO: set
-  public static final double METERS_PER_REV = 1.0; //TODO: set
+  private static final int CURRENT_LIMIT = 5; //Amps
+  private static final double GEAR_RATIO = 5.0 * 4.0;
+  private static final double METERS_PER_REV = Units.inchesToMeters(5.0/20); //TODO: set
+  private static final boolean INVERT_MOTOR = false;
 
-  public static double max_voltage_open_loop = 1.0;
+  private static double max_voltage_open_loop = 1.0;
 
   // PID Coefficients.
   private Gains gains = new Gains(0.1, 1e-4, 1, 0, 1, 0.4);
@@ -52,7 +55,8 @@ public class Arm extends SubsystemBase implements Loggable{
 
     m_motor = new CANSparkMax(CANDeviceIDs.ARM_MOTOR_ID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
-    m_motor.setSmartCurrentLimit(5);
+    m_motor.setSmartCurrentLimit(CURRENT_LIMIT);
+    m_motor.setInverted(INVERT_MOTOR);
 
     m_pidController = m_motor.getPIDController();
     m_encoder = m_motor.getEncoder();
