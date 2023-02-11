@@ -31,7 +31,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
   private final SparkMaxPIDController m_pidController;
   private final RelativeEncoder m_encoder;
 
-  public static final double GEAR_RATIO = 36.0;
+  public static final double GEAR_RATIO = (5.0/1.0) * (3.0/1.0) * (66.0 / 22.0) * (54.0 / 16.0);
   public static final double DEGREES_PER_REV = 360.0;
 
   // Voltage needed to maintain horizontal arm position.

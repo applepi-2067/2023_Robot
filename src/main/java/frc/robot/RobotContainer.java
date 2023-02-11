@@ -101,11 +101,11 @@ public class RobotContainer implements Loggable{
     // m_operatorContoller.x().onTrue(new ZeroWaistPosition());
     // m_operatorContoller.y().onTrue(new ZeroWaistPositionCoarse());
 
-    // m_operatorContoller.leftBumper().onTrue(new SetArmExtension(0));
-    // m_operatorContoller.rightBumper().onTrue(new SetArmExtension(0.5));
+    m_operatorContoller.leftBumper().onTrue(new SetArmExtension(0));
+    m_operatorContoller.rightBumper().onTrue(new SetArmExtension(0.5));
     
-    m_operatorContoller.x().onTrue(new ClawOpen());
-    m_operatorContoller.a().onTrue(new ClawClose());
+    // m_operatorContoller.x().onTrue(new ClawOpen());
+    // m_operatorContoller.a().onTrue(new ClawClose());
     // m_operatorContoller.x().onTrue(new SetShoulderPosition(90));
     // m_operatorContoller.y().onTrue(new SetShoulderPosition(270));
     // m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
