@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.arm.ZeroArmPosition;
 import frc.robot.commands.auto.DriveSquareAuto;
 import frc.robot.commands.auto.DriveToVisionTargetOffset;
 import frc.robot.commands.auto.RotationTest;
@@ -89,6 +90,7 @@ public class Robot extends TimedRobot {
   public void autoSelectInit() {
     m_autoChooser = new SendableChooser<Command>();
     m_autoChooser.setDefaultOption("Rotate Test", new RotationTest(Drivetrain.getInstance()));
+    m_autoChooser.addOption("Zero Arm", new ZeroArmPosition());
     m_autoChooser.addOption("Drive Square", new DriveSquareAuto());
   }
 

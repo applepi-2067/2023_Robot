@@ -52,6 +52,7 @@ public class Arm extends SubsystemBase implements Loggable{
 
     m_motor = new CANSparkMax(CANDeviceIDs.ARM_MOTOR_ID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
+    m_motor.setSmartCurrentLimit(5);
 
     m_pidController = m_motor.getPIDController();
     m_encoder = m_motor.getEncoder();
@@ -93,6 +94,16 @@ public class Arm extends SubsystemBase implements Loggable{
     Util.limit(speed);
     m_pidController.setReference(speed * max_voltage_open_loop, CANSparkMax.ControlType.kVoltage);
   }
+
+  @Log (name = "Velocity (V)", rowIndex = 2, columnIndex = 0)
+  double getVelocity() {
+    return (m_encoder.getVelocity());
+  }
+  
+  public void resetEncoders() {
+    m_encoder.setPosition(0);
+  }
+  
 
   /**
    *  Get arm position.

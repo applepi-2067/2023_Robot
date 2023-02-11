@@ -90,8 +90,8 @@ public class RobotContainer implements Loggable{
    */
   private void configureBindings() {
     //Driver Controls
-    m_driverController.a().onTrue(new RotateToPosition( -90.0));
-    m_driverController.b().onTrue(new RotateToPosition( 90));
+    m_driverController.a().onTrue(new SetArmExtension(0.0));
+    m_driverController.b().onTrue(new SetArmExtension(1.0));
 
     m_driverController.x().onTrue(new InstantCommand(() -> System.out.println(m_vision.getCameraAbsolutePose())));
 
