@@ -36,16 +36,40 @@ The motors that move the robot chassis around the field.
   * Sensors:
     * Pigeon IMU for measuring robot heading and pitch
 
-### Intake (not pictured)
+### Intake (upper)
 
+A set of rollers on a arm that can extend & retract.  
 Mounted at the front of the chassis, for game piece acquisition from the floor.
 
+#### Intake Rollers
   * Actuators:
-    * 🤷‍♀️ 1x TalonFX motor controller to pull in game pieces
-    * 1x DoubleSolenoid for raise/lower
+    * 2x SparkMax motor controllers to pull in game pieces
 
   * Sensors: 
-    * 🤷‍♀️ 1x Discrete input for game piece detection
+    * 1x Discrete input for game piece detection
+
+#### Intake Extend/Retract
+
+Motors on the left and right of the intake assembly to extend and retract the intake roller assembly
+
+We should set one up as a follower to the other so that the two motors stay synchronized
+
+ * Actuators: 
+   * 2x TalonFX motor controllers for moving the intake in & out
+
+
+### Intake Conveyor (lower) (Not pictured)
+
+Mounted at the front of the chassis, along the ground. Aids in bringing the game pieces into the chassis.
+
+#### Intake Conveyor 
+
+* 1x SparkMax motor controller for running the belts on the conveyor assembly
+
+#### Intake Conveyor Extend/Retract
+
+* Actuators:
+  * 1x DoubleSolenoid for extending and retracting the assembly
 
 ### Arm
 
