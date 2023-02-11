@@ -46,8 +46,10 @@ public class ClawGrasp
    * Open the claw
    */
   public void open() {
-  }
+    m_clawSolenoid.set(DoubleSolenoid.Value.kForward);
+  } 
   /* Close the Claw */
   public void close() { 
+     m_clawSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 }

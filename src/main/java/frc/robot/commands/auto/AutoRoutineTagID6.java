@@ -10,8 +10,9 @@ import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.intake.IntakePiece;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.waist.SetWaistPosition;
+import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawIntake;
-import frc.robot.commands.claw.ClawGraspCommand;
+import frc.robot.commands.claw.ClawOpen;
 import frc.robot.subsystems.ClawGrasp;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -34,7 +35,7 @@ public class AutoRoutineTagID6 extends SequentialCommandGroup {
       // 4
       new SetArmExtension(1.2192), // 48 inches in meters
       // 5
-      new ClawGraspCommand(true),
+      new ClawClose(),
       Commands.parallel(
         // 6a
         new SetArmExtension(0),
@@ -54,10 +55,10 @@ public class AutoRoutineTagID6 extends SequentialCommandGroup {
         new DriveToPosition(-5.11),
         // 9b
         Commands.sequence( 
-        new SetArmExtension(0.1016),
-        // 10
-        new ClawGraspCommand(true))
-        
+          new SetArmExtension(0.1016),
+          // 10
+         new ClawOpen()
+        )
       ),
         //(Not a written step) arm retracts to pull piece out of intake
         new SetArmExtension(0),

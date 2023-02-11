@@ -74,9 +74,9 @@ public final class Constants {
   }
 
   public static final class PneumaticsDevices {
-    public static final int CLAW_CLOSE = 12;
-    public static final int CLAW_OPEN = 13;
-    public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.REVPH;
+    public static final int CLAW_CLOSE = 0;
+    public static final int CLAW_OPEN = 1;
+    public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
 }
 
 }

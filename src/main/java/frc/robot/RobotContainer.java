@@ -6,7 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -15,6 +17,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
 import frc.robot.subsystems.*;
 import frc.robot.commands.auto.*;
+import frc.robot.commands.claw.ClawClose;
+import frc.robot.commands.claw.ClawOpen;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.shoulder.*;
 import io.github.oblarg.oblog.Loggable;
@@ -44,14 +48,16 @@ public class RobotContainer implements Loggable{
   private final Shoulder m_shoulder = Shoulder.getInstance();
   private final Vision m_vision = Vision.getInstance();
   private final Arm m_arm = Arm.getInstance();
+  private final ClawGrasp m_ClawGrasp = ClawGrasp.getInstance();
   private static DigitalInput m_practiceBotJumper = new DigitalInput(Constants.DiscreteInputs.PBOT_JUMPER_DI);
-
+  private Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+  
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     Logger.configureLoggingAndConfig(this, false);
-
+    m_compressor.enableDigital();
     // Configure the trigger bindings.
     configureBindings();
 
@@ -90,14 +96,16 @@ public class RobotContainer implements Loggable{
     m_driverController.x().onTrue(new InstantCommand(() -> System.out.println(m_vision.getCameraAbsolutePose())));
 
     //Operator Controls
-    m_operatorContoller.a().onTrue(new SetWaistPosition(0));
-    m_operatorContoller.b().onTrue(new SetWaistPosition(180));
-    m_operatorContoller.x().onTrue(new ZeroWaistPosition());
-    m_operatorContoller.y().onTrue(new ZeroWaistPositionCoarse());
+    // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
+    // m_operatorContoller.b().onTrue(new SetWaistPosition(180));
+    // m_operatorContoller.x().onTrue(new ZeroWaistPosition());
+    // m_operatorContoller.y().onTrue(new ZeroWaistPositionCoarse());
 
-    m_operatorContoller.leftBumper().onTrue(new SetArmExtension(0));
-    m_operatorContoller.rightBumper().onTrue(new SetArmExtension(0.5));
+    // m_operatorContoller.leftBumper().onTrue(new SetArmExtension(0));
+    // m_operatorContoller.rightBumper().onTrue(new SetArmExtension(0.5));
     
+    m_operatorContoller.x().onTrue(new ClawOpen());
+    m_operatorContoller.a().onTrue(new ClawClose());
     // m_operatorContoller.x().onTrue(new SetShoulderPosition(90));
     // m_operatorContoller.y().onTrue(new SetShoulderPosition(270));
     // m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
