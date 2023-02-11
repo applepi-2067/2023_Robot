@@ -74,9 +74,12 @@ public final class Constants {
   }
 
   public static final class PneumaticsDevices {
+    public static final int INTAKE_CONVEYOR_IN = 2;
+    public static final int INTAKE_CONVEYOR_OUT = 3;
+    public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
     public static final int CLAW_CLOSE = 0;
     public static final int CLAW_OPEN = 1;
-    public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
+  }
 }
 
-}
+

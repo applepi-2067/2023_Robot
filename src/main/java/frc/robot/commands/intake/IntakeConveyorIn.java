@@ -2,10 +2,10 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeConveyor;
 
-public class IntakeConveyorOut extends CommandBase {
+public class IntakeConveyorIn extends CommandBase {
     private static IntakeConveyor m_IntakeConveyor;
 
-    public IntakeConveyorOut() {
+    public IntakeConveyorIn() {
         m_IntakeConveyor = IntakeConveyor.getInstance();
         addRequirements(m_IntakeConveyor);
     
@@ -18,7 +18,7 @@ public class IntakeConveyorOut extends CommandBase {
 
     @Override
     public void execute() { 
-        m_IntakeConveyor.out();
+        m_IntakeConveyor.in();
     }
 
     @Override

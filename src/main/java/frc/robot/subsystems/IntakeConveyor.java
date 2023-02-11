@@ -11,26 +11,26 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class LowerIntakeMove
+public class IntakeConveyor
     extends SubsystemBase implements Loggable {
 
-  private static LowerIntakeMove instance = null;
+  private static IntakeConveyor instance = null;
   private DoubleSolenoid m_intakSolenoid = new DoubleSolenoid(PneumaticsDevices.MODULE_TYPE,
-      PneumaticsDevices.INTAKE_IN,
-      PneumaticsDevices.INTAKE_OUT);
+      PneumaticsDevices.INTAKE_CONVEYOR_IN,
+      PneumaticsDevices.INTAKE_CONVEYOR_OUT);
 
-  public static LowerIntakeMove getInstance() {
+  public static IntakeConveyor getInstance() {
     if (instance == null) {
-      instance = new LowerIntakeMove();
+      instance = new IntakeConveyor();
     }
     return instance;
   }
 
   /**
-   * Creates a new ClawGrasp
+   * Creates a new intake conveyor
    * .
    */
-  private LowerIntakeMove() {
+  private IntakeConveyor() {
   }
 
   @Override
@@ -43,11 +43,13 @@ public class LowerIntakeMove
   }
 
   /**
-   * Open the claw
+   * pull out the inatke conveyor
    */
-  public void open() {
+  public void out() {
+    m_intakSolenoid.set(DoubleSolenoid.Value.kForward);
   }
-  /* Close the Claw */
-  public void close() { 
+  /* pull in the intake conveyor */
+  public void in() { 
+    m_intakSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 }
