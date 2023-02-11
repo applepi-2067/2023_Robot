@@ -100,13 +100,6 @@ public class Arm extends SubsystemBase implements Loggable{
     return (m_encoder.getVelocity());
   }
   
-  /**
-   * Calibrates the arm extender encoder
-   */
-  public void epicArmExtenionEncoderCalibration() {
-
-  }
-
   public void resetEncoders() {
     m_encoder.setPosition(0);
   }
