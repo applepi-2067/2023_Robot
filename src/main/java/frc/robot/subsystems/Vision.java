@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
   public static Vision instance = null;
+  private Drivetrain m_drivetrain = Drivetrain.getInstance();
 
   private PhotonCamera m_camera = new PhotonCamera("Arducam_1");
   private PhotonPoseEstimator m_photonPoseEstimator;
@@ -133,7 +134,9 @@ public class Vision extends SubsystemBase {
     // This method will be called once per scheduler run
     Optional<EstimatedRobotPose> result = m_photonPoseEstimator.update();
     if (result.isPresent()) {
-      m_lastCameraPoseAbsolute = result.get().estimatedPose;
+      Pose2d estimatedRobotPose2d = result.get().estimatedPose.toPose2d();
+      double timestampSeconds = result.get().timestampSeconds;
+      m_drivetrain.addVisionMeaurement(estimatedRobotPose2d, timestampSeconds);
     }
   }
 }
