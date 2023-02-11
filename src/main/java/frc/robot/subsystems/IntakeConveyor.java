@@ -10,6 +10,7 @@ import frc.robot.Constants.PneumaticsDevices;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
+import com.revrobotics.CANSparkMax;
 
 public class IntakeConveyor
     extends SubsystemBase implements Loggable {
