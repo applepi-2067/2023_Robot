@@ -12,9 +12,10 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.Constants;
 import frc.robot.Constants.CANDeviceIDs;
 import frc.robot.utils.Gains;
 
@@ -29,6 +30,7 @@ public class Waist extends SubsystemBase implements Loggable {
   private final CANSparkMax m_motor;
   private final SparkMaxPIDController m_pidController;
   private final RelativeEncoder m_encoder;
+  private final DigitalInput m_zeroingSensor;
 
   private static final double GEAR_RATIO = 4.0 * 4.0 * (36.0 / 18.0) * (106.0 / 30.0);
   private static final double DEGREES_PER_REV = 360.0;
@@ -54,6 +56,7 @@ public class Waist extends SubsystemBase implements Loggable {
 
     m_pidController = m_motor.getPIDController();
     m_encoder = m_motor.getEncoder();
+    m_zeroingSensor = new DigitalInput(Constants.DiscreteInputs.WAIST_ZEROING_DI);
 
      // Set PID coefficients
      m_pidController.setP(gains.kP);
@@ -79,6 +82,10 @@ public class Waist extends SubsystemBase implements Loggable {
   @Config
   private void setGains(double P, double I, double D, double f, double IZone, double peak) {
 
+  }
+
+  public void setEncoderPosition(double encoderPosition) {
+    m_encoder.setPosition(degreesToMotorRotations(encoderPosition));
   }
 
   /**
@@ -116,5 +123,10 @@ public class Waist extends SubsystemBase implements Loggable {
   @Override
   public void simulationPeriodic() {
     REVPhysicsSim.getInstance().run();
+  }
+
+  @Log (name = "Zero Sensor", rowIndex = 2, columnIndex = 1)
+  public boolean getZeroSensor() {
+    return !m_zeroingSensor.get();
   }
 }

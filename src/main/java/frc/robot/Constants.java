@@ -40,7 +40,8 @@ public final class Constants {
   }
 
   public static class DiscreteInputs {
-    public static final int ARM_END_OF_TRAVEL_DI = 0;
+    public static final int ARM_END_OF_TRAVEL_DI = 1;
+    public static final int WAIST_ZEROING_DI = 0;
 
     public static final int PBOT_JUMPER_DI = 9;
   }
@@ -73,9 +74,9 @@ public final class Constants {
   }
 
   public static final class PneumaticsDevices {
-    public static final int CLAW_CLOSE = 12;
-    public static final int CLAW_OPEN = 13;
-    public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.REVPH;
+    public static final int CLAW_CLOSE = 0;
+    public static final int CLAW_OPEN = 1;
+    public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
 }
 
 }
