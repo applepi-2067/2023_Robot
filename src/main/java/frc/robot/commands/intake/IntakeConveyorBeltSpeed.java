@@ -9,10 +9,12 @@ import frc.robot.subsystems.IntakeConveyorBelt;
 
 public class IntakeConveyorBeltSpeed extends CommandBase {
   private static IntakeConveyorBelt m_IntakeConveyorBelt;
+  Boolean RollersOn1;
 
-  public IntakeConveyorBeltSpeed() {
+  public IntakeConveyorBeltSpeed(Boolean RollersOn) {
     m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
     addRequirements(m_IntakeConveyorBelt);
+    RollersOn1 = RollersOn;
 
   }
 
@@ -21,7 +23,11 @@ public class IntakeConveyorBeltSpeed extends CommandBase {
   
   @Override
   public void execute() {
-    m_IntakeConveyorBelt.setSpeed(0.5);
+    if (RollersOn1 == true) {
+      m_IntakeConveyorBelt.setSpeed(0.3);
+    }
+    else{
+      m_IntakeConveyorBelt.setSpeed(0.0);}
   }
 
   @Override

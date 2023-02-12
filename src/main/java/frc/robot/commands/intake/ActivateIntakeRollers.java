@@ -9,10 +9,11 @@ import frc.robot.subsystems.IntakeRoller;
 
 public class ActivateIntakeRollers extends CommandBase {
  private static IntakeRoller m_IntakeRoller;
- 
-  public ActivateIntakeRollers() {
+ boolean RollersOn1;
+  public ActivateIntakeRollers(Boolean RollersOn) {
     m_IntakeRoller = IntakeRoller.getInstance();
     addRequirements(m_IntakeRoller);
+    RollersOn1 = RollersOn;
   }
 
   @Override
@@ -20,7 +21,11 @@ public class ActivateIntakeRollers extends CommandBase {
   
   @Override
   public void execute() {
-    m_IntakeRoller.setSpeed(0.3);
+    if (RollersOn1 == true) {
+      m_IntakeRoller.setSpeed(0.3);
+    }
+    else{
+      m_IntakeRoller.setSpeed(0.0);}
   }
  
   @Override

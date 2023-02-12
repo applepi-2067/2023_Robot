@@ -4,10 +4,11 @@ import frc.robot.subsystems.IntakeConveyor;
 
 public class IntakeConveyorIn extends CommandBase {
     private static IntakeConveyor m_IntakeConveyor;
-
-    public IntakeConveyorIn() {
+    Boolean ActivateConveyorIn;
+    public IntakeConveyorIn(Boolean ConveyorIn) {
         m_IntakeConveyor = IntakeConveyor.getInstance();
         addRequirements(m_IntakeConveyor);
+        ActivateConveyorIn = ConveyorIn; 
     
     }
 
@@ -18,7 +19,12 @@ public class IntakeConveyorIn extends CommandBase {
 
     @Override
     public void execute() { 
-        m_IntakeConveyor.in();
+        if (ActivateConveyorIn == true){
+            m_IntakeConveyor.in();
+        }
+        else{
+            m_IntakeConveyor.out();
+        }
     }
 
     @Override
