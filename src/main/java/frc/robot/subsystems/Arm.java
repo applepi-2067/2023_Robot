@@ -32,15 +32,17 @@ public class Arm extends SubsystemBase implements Loggable{
   private final RelativeEncoder m_encoder;
   private final DigitalInput m_endOfTravelSensor;
 
-  private static final int CURRENT_LIMIT = 5; //Amps
-  private static final double GEAR_RATIO = 5.0 * 4.0;
-  private static final double METERS_PER_REV = Units.inchesToMeters(5.0/20); //TODO: set
+  private static final int CURRENT_LIMIT = 10; //Amps
+  private static final double GEAR_RATIO = 5.0 * 4.0 * (20.0/34.0);
+  private static final double OUTPUT_SPROCKET_PITCH_DIAMETER_METERS = 0.020574;
+  private static final double RIGGING_EXTENSION_RATIO = 2.0;
+  private static final double METERS_PER_REV = Math.PI * OUTPUT_SPROCKET_PITCH_DIAMETER_METERS * RIGGING_EXTENSION_RATIO;
   private static final boolean INVERT_MOTOR = false;
 
   private static double max_voltage_open_loop = 1.0;
 
   // PID Coefficients.
-  private Gains gains = new Gains(0.1, 1e-4, 1, 0, 1, 0.4);
+  private Gains gains = new Gains(0.1, 1e-4, 1, 0, 1, 1.0);
 
   public static Arm getInstance() {
     if (instance == null) {
@@ -74,8 +76,8 @@ public class Arm extends SubsystemBase implements Loggable{
     }
   }
 
-  private double metersToMotorRotations(double degrees) {
-    return degrees/METERS_PER_REV * GEAR_RATIO;
+  private double metersToMotorRotations(double meters) {
+    return meters/METERS_PER_REV * GEAR_RATIO;
   }
 
   private double motorRotationsToMeters(double rotations) {
