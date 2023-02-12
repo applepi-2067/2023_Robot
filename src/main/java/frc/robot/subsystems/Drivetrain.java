@@ -22,6 +22,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import io.github.oblarg.oblog.Loggable;
@@ -50,6 +52,8 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
   private final DifferentialDrivePoseEstimator m_odometry;
   private Pose2d m_latestRobotPose2d = new Pose2d();
+
+  private final Field2d m_field = new Field2d();
   
   public static Drivetrain getInstance() {
     if (instance == null) {
@@ -98,6 +102,8 @@ public class Drivetrain extends SubsystemBase implements Loggable{
       new DifferentialDriveKinematics(WHEEL_BASE_METERS), new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters(), new Pose2d(),
       new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.0408, 1.2711, 0.1)
     );
+
+    SmartDashboard.putData("Field", m_field);
   }
 
   // Move the robot forward with some rotation.
@@ -108,6 +114,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   @Override
   public void periodic() {
     updateOdometry();
+    m_field.setRobotPose(m_latestRobotPose2d);
   }
 
   /**
