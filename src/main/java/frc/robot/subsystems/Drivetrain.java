@@ -6,8 +6,6 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
-import java.util.ArrayList;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -24,7 +22,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import io.github.oblarg.oblog.Loggable;
@@ -53,10 +50,6 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
   private final DifferentialDrivePoseEstimator m_odometry;
   private Pose2d m_latestRobotPose2d = new Pose2d();
-
-  private ArrayList<Double> visionX = new ArrayList<Double>();
-  private ArrayList<Double> visionY = new ArrayList<Double>();
-  private ArrayList<Double> visionRotations = new ArrayList<Double>();
   
   public static Drivetrain getInstance() {
     if (instance == null) {
@@ -103,7 +96,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     // Initialize pose estimator.
     m_odometry = new DifferentialDrivePoseEstimator(
       new DifferentialDriveKinematics(WHEEL_BASE_METERS), new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters(), new Pose2d(),
-      new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.1)
+      new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.0408, 1.2711, 0.1)
     );
   }
 
@@ -185,52 +178,10 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_latestRobotPose2d = m_odometry.update(
       new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters()
     );
-
-    SmartDashboard.putNumber("Fused Robot X (meters)", m_latestRobotPose2d.getX());
-    SmartDashboard.putNumber("Fused Robot Y (meters)", m_latestRobotPose2d.getY());
-    SmartDashboard.putNumber("Fused Robot Rotation (degrees)", m_latestRobotPose2d.getRotation().getDegrees());
   }
 
   public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds) {
     m_odometry.addVisionMeasurement(visionEstimatedRobotPose2d, timestampSeconds);
-
-    visionX.add(visionEstimatedRobotPose2d.getX());
-    visionY.add(visionEstimatedRobotPose2d.getY());
-    visionRotations.add(visionEstimatedRobotPose2d.getRotation().getDegrees());
-
-    if (visionX.size() % 1_000 == 0) {
-      SmartDashboard.putNumber("Vision X Standard Deviation", getStandardDeviation(visionX));
-      SmartDashboard.putNumber("Vision X Measurements", visionX.size());
-
-      SmartDashboard.putNumber("Vision Y Standard Deviation", getStandardDeviation(visionY));
-      SmartDashboard.putNumber("Vision Y Measurements", visionY.size());
-
-      SmartDashboard.putNumber("Vision Rotations Standard Deviation", getStandardDeviation(visionRotations));
-      SmartDashboard.putNumber("Vision Rotation Measurements", visionRotations.size());
-    } 
-
-    SmartDashboard.putNumber("Vision Robot X (meters)", visionEstimatedRobotPose2d.getX());
-    SmartDashboard.putNumber("Vision Robot Y (meters)", visionEstimatedRobotPose2d.getY());
-    SmartDashboard.putNumber("Vision Robot Rotation (degrees)", visionEstimatedRobotPose2d.getRotation().getDegrees());
-  }
-
-  private double getStandardDeviation(ArrayList<Double> vals) {
-    double mean = getMean(vals);
-
-    double sum = 0.0;
-    for (double x : vals) {
-      sum += Math.pow(x - mean, 2.0);
-    }
-
-    return Math.sqrt(sum / vals.size());
-  }
-
-  private double getMean(ArrayList<Double> vals) {
-    double mean = 0.0;
-    for (double x : vals) {
-      mean += x;
-    }
-    return mean / vals.size();
   }
 
   public Pose2d getLatestRobotPose2d() {
