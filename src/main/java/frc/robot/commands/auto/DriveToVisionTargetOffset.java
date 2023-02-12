@@ -16,7 +16,7 @@ public class DriveToVisionTargetOffset extends SequentialCommandGroup {
 
     Pose2d destinationPoseRelativeToCamera = null;
     while (true) {
-      destinationPoseRelativeToCamera = m_vision.getCameraToDestPose(targetID, destinationPoseRelativeToTarget);
+      // destinationPoseRelativeToCamera = m_vision.getCameraToDestPose(targetID, destinationPoseRelativeToTarget);
       System.out.println("Looking for target.     ");
       if (destinationPoseRelativeToCamera != null) {
         break;
