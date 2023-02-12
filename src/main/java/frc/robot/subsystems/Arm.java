@@ -11,6 +11,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,13 +32,17 @@ public class Arm extends SubsystemBase implements Loggable{
   private final RelativeEncoder m_encoder;
   private final DigitalInput m_endOfTravelSensor;
 
-  public static final double GEAR_RATIO = 36.0;  //TODO: set
-  public static final double METERS_PER_REV = 1.0; //TODO: set
+  private static final int CURRENT_LIMIT = 10; //Amps
+  private static final double GEAR_RATIO = 5.0 * 4.0 * (20.0/34.0);
+  private static final double OUTPUT_SPROCKET_PITCH_DIAMETER_METERS = 0.020574;
+  private static final double RIGGING_EXTENSION_RATIO = 2.0;
+  private static final double METERS_PER_REV = Math.PI * OUTPUT_SPROCKET_PITCH_DIAMETER_METERS * RIGGING_EXTENSION_RATIO;
+  private static final boolean INVERT_MOTOR = false;
 
-  public static double max_voltage_open_loop = 1.0;
+  private static double max_voltage_open_loop = 1.0;
 
   // PID Coefficients.
-  private Gains gains = new Gains(0.1, 1e-4, 1, 0, 1, 0.4);
+  private Gains gains = new Gains(0.1, 1e-4, 1, 0, 1, 1.0);
 
   public static Arm getInstance() {
     if (instance == null) {
@@ -52,6 +57,8 @@ public class Arm extends SubsystemBase implements Loggable{
 
     m_motor = new CANSparkMax(CANDeviceIDs.ARM_MOTOR_ID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
+    m_motor.setSmartCurrentLimit(CURRENT_LIMIT);
+    m_motor.setInverted(INVERT_MOTOR);
 
     m_pidController = m_motor.getPIDController();
     m_encoder = m_motor.getEncoder();
@@ -69,8 +76,8 @@ public class Arm extends SubsystemBase implements Loggable{
     }
   }
 
-  private double metersToMotorRotations(double degrees) {
-    return degrees/METERS_PER_REV * GEAR_RATIO;
+  private double metersToMotorRotations(double meters) {
+    return meters/METERS_PER_REV * GEAR_RATIO;
   }
 
   private double motorRotationsToMeters(double rotations) {
@@ -93,6 +100,16 @@ public class Arm extends SubsystemBase implements Loggable{
     Util.limit(speed);
     m_pidController.setReference(speed * max_voltage_open_loop, CANSparkMax.ControlType.kVoltage);
   }
+
+  @Log (name = "Velocity (V)", rowIndex = 2, columnIndex = 0)
+  double getVelocity() {
+    return (m_encoder.getVelocity());
+  }
+  
+  public void resetEncoders() {
+    m_encoder.setPosition(0);
+  }
+  
 
   /**
    *  Get arm position.
