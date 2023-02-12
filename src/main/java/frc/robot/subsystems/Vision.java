@@ -16,7 +16,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -26,7 +25,6 @@ public class Vision extends SubsystemBase {
 
   private PhotonCamera m_camera = new PhotonCamera("Arducam_1");
   private PhotonPoseEstimator m_photonPoseEstimator;
-  private Pose3d m_lastCameraPoseAbsolute = new Pose3d();
   
   // Get a new object through singleton method
   public static Vision getInstance() {
@@ -72,10 +70,6 @@ public class Vision extends SubsystemBase {
   //   Pose2d cameraToDestPose = new Pose2d(destinationXCamera, destinationYCamera, new Rotation2d(destinationRotationRadiansCamera));
   //   return cameraToDestPose;
   // }
-
-  public Pose3d getCameraAbsolutePose() {
-    return m_lastCameraPoseAbsolute;
-  }
 
   @Override
   public void periodic() {
