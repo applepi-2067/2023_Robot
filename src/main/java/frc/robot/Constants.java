@@ -43,6 +43,7 @@ public final class Constants {
     public static final int INTAKE_RIGHT_EXTENSION_MOTOR_ID = 13;
     public static final int INTAKE_LEFT_ROLLER_MOTOR_ID = 14;
     public static final int INTAKE_RIGHT_ROLLER_MOTOR_ID = 15;
+    public static final int INTAKE_EXTENSION_MOTOR_ID = 16;
   }
 
   public static class DiscreteInputs {

@@ -5,15 +5,14 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeConveyorBelt;
+import frc.robot.subsystems.IntakeRoller;
 
-public class IntakeConveyorBeltSpeed extends CommandBase {
-  private static IntakeConveyorBelt m_IntakeConveyorBelt;
-
-  public IntakeConveyorBeltSpeed() {
-    m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
-    addRequirements(m_IntakeConveyorBelt);
-
+public class ActivateIntakeRollers extends CommandBase {
+ private static IntakeRoller m_IntakeRoller;
+ 
+  public ActivateIntakeRollers() {
+    m_IntakeRoller = IntakeRoller.getInstance();
+    addRequirements(m_IntakeRoller);
   }
 
   @Override
@@ -21,9 +20,9 @@ public class IntakeConveyorBeltSpeed extends CommandBase {
   
   @Override
   public void execute() {
-    m_IntakeConveyorBelt.setSpeed(0.5);
+    m_IntakeRoller.setSpeed(0.3);
   }
-
+ 
   @Override
   public void end(boolean interrupted) {}
 

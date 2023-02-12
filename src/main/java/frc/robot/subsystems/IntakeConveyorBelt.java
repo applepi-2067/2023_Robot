@@ -27,7 +27,6 @@ public class IntakeConveyorBelt extends SubsystemBase implements Loggable{
         
         
 
-      /** Creates a new ClawBelt. */
       private IntakeConveyorBelt() {
         m_motor = new CANSparkMax(CANDeviceIDs.INTAKE_CONVEYOR_MOTOR_ID, MotorType.kBrushless);
         m_motor.restoreFactoryDefaults();
