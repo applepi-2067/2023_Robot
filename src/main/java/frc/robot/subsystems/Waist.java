@@ -35,6 +35,7 @@ public class Waist extends SubsystemBase implements Loggable {
   private static final double GEAR_RATIO = 4.0 * 4.0 * (36.0 / 18.0) * (106.0 / 30.0);
   private static final double DEGREES_PER_REV = 360.0;
   private static final int CURRENT_LIMIT_AMPS = 30;
+  private static final boolean INVERT_MOTOR = false;
 
   // PID Coefficients.
   private Gains gains = new Gains(0.1, 5e-4, 0, 0, 3, 0.7);
@@ -53,6 +54,7 @@ public class Waist extends SubsystemBase implements Loggable {
     m_motor.restoreFactoryDefaults();
     m_motor.setIdleMode(IdleMode.kBrake);
     m_motor.setSmartCurrentLimit(CURRENT_LIMIT_AMPS);
+    m_motor.setInverted(INVERT_MOTOR);
 
     m_pidController = m_motor.getPIDController();
     m_encoder = m_motor.getEncoder();

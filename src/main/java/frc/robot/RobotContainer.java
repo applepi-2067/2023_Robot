@@ -40,7 +40,7 @@ public class RobotContainer implements Loggable{
   // Instantiate subsystems, controllers, and commands.
   private final CommandXboxController m_driverController = new CommandXboxController(
     Constants.OperatorConstants.kDriverControllerPort);
-  private final CommandXboxController m_operatorContoller = new CommandXboxController(
+  private final CommandXboxController m_operatorController = new CommandXboxController(
     Constants.OperatorConstants.kOperatorControllerPort);
 
   private final Drivetrain m_robotDrive = Drivetrain.getInstance();
@@ -75,9 +75,9 @@ public class RobotContainer implements Loggable{
         );
   
 
-    m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorContoller.getLeftX() / 4.0));
-    m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorContoller.getRightY()));
-    m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorContoller.getLeftY()));
+    m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
+    m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
+    m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorController.getLeftY()));
   }
 
   /**
@@ -90,12 +90,12 @@ public class RobotContainer implements Loggable{
    */
   private void configureBindings() {
     //Driver Controls
-    m_driverController.a().onTrue(new SetArmExtension(0.0));
-    m_driverController.b().onTrue(new SetArmExtension(1.0));
-
     m_driverController.x().onTrue(new InstantCommand(() -> System.out.println(m_vision.getCameraAbsolutePose())));
 
     //Operator Controls
+    m_operatorController.a().onTrue(new SetArmExtension(0.0));
+    m_operatorController.b().onTrue(new SetArmExtension(0.5));
+
     // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
     // m_operatorContoller.b().onTrue(new SetWaistPosition(180));
     // m_operatorContoller.x().onTrue(new ZeroWaistPosition());
@@ -104,10 +104,10 @@ public class RobotContainer implements Loggable{
     // m_operatorContoller.leftBumper().onTrue(new SetArmExtension(0));
     // m_operatorContoller.rightBumper().onTrue(new SetArmExtension(0.5));
     
-    m_operatorContoller.x().onTrue(new ClawOpen());
-    m_operatorContoller.a().onTrue(new ClawClose());
-    // m_operatorContoller.x().onTrue(new SetShoulderPosition(90));
-    // m_operatorContoller.y().onTrue(new SetShoulderPosition(270));
+    // m_operatorContoller.x().onTrue(new ClawOpen());
+    // m_operatorContoller.a().onTrue(new ClawClose());
+    // m_operatorContoller.x().onTrue(new SetShoulderPosition(0));
+    // m_operatorContoller.y().onTrue(new SetShoulderPosition(90));
     // m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
   }
 
