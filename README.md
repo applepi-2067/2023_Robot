@@ -58,7 +58,7 @@ We should set one up as a follower to the other so that the two motors stay sync
    * 2x TalonFX motor controllers for moving the intake in & out
 
 
-### Intake Conveyor (lower) (Not pictured)
+### Intake Conveyor (lower)
 
 Mounted at the front of the chassis, along the ground. Aids in bringing the game pieces into the chassis.
 
@@ -87,7 +87,7 @@ Game piece manipulator mounted on the arm
 
 * Actuators:
 
-  * 2x SparkMAX motor controllers
+  * 1x TalonSRX motor controller
   * 1x Solenoid (open/close)
 
 * Sensors: 
@@ -122,7 +122,6 @@ Container for interacting with camera based sensor(s)
 
   * Sensors:
     * 1x photonvision camera
-    * 🤷‍♀️ 1x Limelight?
 
 ## Getting Started
 
