@@ -82,17 +82,6 @@ public class CornerStartRoutine extends SequentialCommandGroup {
         new SetArmExtension(1.2192),
         // 13
         new ClawIntake(false)
-      
-        //Driving on to the chargepad:
-        //new SetArmExtension(0.0),
-        //new SetWaistPosition(0),
-        //new SetShoulderPosition(25.0),
-        //new DriveToPosition(0.1524),
-        //new RotateToPosition(-90),
-        //new DriveToPosition(1.55),
-        //new RotateToPosition(90),
-        //new DriveToPosition(2.6),
-        //Gyro to test if level
     );  
   
   }
