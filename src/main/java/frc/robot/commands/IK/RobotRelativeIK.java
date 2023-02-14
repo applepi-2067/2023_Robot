@@ -20,6 +20,9 @@ public class RobotRelativeIK extends CommandBase {
   private double m_waistAngle;
   /** Creates a new RobotRelativeIK. */
   public RobotRelativeIK(double x, double y, double z) {
+    // Convert from Z relative to floor to Z relative to shoulder
+    z = z - Constants.SetpointTolerances.SHOULDER_HEIGHT;
+
     addRequirements(m_arm);
     addRequirements(m_shoulder);
     addRequirements(m_waist);
