@@ -47,7 +47,7 @@ public class CornerStartRoutine extends SequentialCommandGroup {
       // 4
       new SetArmExtension(1.2192), // 48 inches in meters
       // 5
-      new ClawClose(),
+      new ClawOpen(),
       Commands.parallel(
         // 6a
         new SetArmExtension(0),
@@ -69,7 +69,7 @@ public class CornerStartRoutine extends SequentialCommandGroup {
         Commands.sequence( 
           new SetArmExtension(0.1016),
           // 10
-         new ClawOpen()
+         new ClawClose()
         )
       ),
         //(Not a written step) arm retracts to pull piece out of intake
