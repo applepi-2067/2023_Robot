@@ -19,16 +19,16 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 
-public class AutoRoutineTagID7 extends SequentialCommandGroup {
+public class CenterTagID2And7 extends SequentialCommandGroup {
   private Arm arm;
   /** Creates a new TwoBall. */
-  public AutoRoutineTagID7(Drivetrain drivetrain) { 
+  public CenterTagID2And7(Drivetrain drivetrain) { 
     addCommands(
       // 2a
       new SetShoulderPosition(80.0),
       Commands.parallel(
         // 3a
-        new SetWaistPosition(-150.0),
+        new SetWaistPosition(150.0),
         // 3b
         new SetShoulderPosition(135.0)
       ),

@@ -19,22 +19,34 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 
-public class AutoRoutineTagID6 extends SequentialCommandGroup {
+public class CornerStartRoutine extends SequentialCommandGroup {
   private Arm arm;
   /** Creates a new TwoBall. */
-  public AutoRoutineTagID6(Drivetrain drivetrain) { 
+  public CornerStartRoutine(Drivetrain drivetrain, boolean BlueAlliance, boolean isBottomRoutine) { 
+    double invertWaistOne;
+    if (isBottomRoutine) {
+      invertWaistOne = -1;
+    } else {
+      invertWaistOne = 1;
+    }
+    double invertWaistTwo;
+    if (BlueAlliance) {
+      invertWaistTwo = 1;
+    } else {
+      invertWaistTwo = -1;
+    }
+    double invertWaist = invertWaistOne * invertWaistTwo;
     addCommands(
       // 2a
       new SetShoulderPosition(80.0),
       Commands.parallel(
-        // 3a
-        new SetWaistPosition(150.0),
-        // 3b
-        new SetShoulderPosition(135.0)
+        // 3 and b
+        new SetShoulderPosition(130.0),
+        new SetWaistPosition(-30*invertWaist)
       ),
       // 4
       new SetArmExtension(1.2192), // 48 inches in meters
-      // 5
+      // 58
       new ClawGraspCommand(true),
       Commands.parallel(
         // 6a
@@ -65,7 +77,7 @@ public class AutoRoutineTagID6 extends SequentialCommandGroup {
         // 11b
         new SetShoulderPosition(135.0),
         // 12b
-        new SetWaistPosition(30),
+        new SetWaistPosition(30*invertWaist),
         // 12a
         new SetArmExtension(1.2192),
         // 13
