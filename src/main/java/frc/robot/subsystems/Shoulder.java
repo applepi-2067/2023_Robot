@@ -31,14 +31,16 @@ public class Shoulder extends SubsystemBase implements Loggable {
   private final SparkMaxPIDController m_pidController;
   private final RelativeEncoder m_encoder;
 
-  public static final double GEAR_RATIO = 36.0;
-  public static final double DEGREES_PER_REV = 360.0;
+  private static final double GEAR_RATIO = (5.0/1.0) * (3.0/1.0) * (66.0 / 22.0) * (74.0 / 16.0);
+  private static final double DEGREES_PER_REV = 360.0;
+  private static final int CURRENT_LIMIT = 13; //Amps
+  private static final boolean INVERT_MOTOR = true;
 
   // Voltage needed to maintain horizontal arm position.
-  private static final double horizontalArbFF = 0.30;
+  private static final double horizontalArbFF = 0.00;
 
   // PID Coefficients.
-  private Gains gains = new Gains(0.11, 0.001, 0, 0, 1, 0.4);
+  private static Gains gains = new Gains(0.11, 0.001, 0, 0, 1, 0.65);
   private static final int kSlotIdx = 0;
 
   public static Shoulder getInstance() {
@@ -53,6 +55,8 @@ public class Shoulder extends SubsystemBase implements Loggable {
   private Shoulder() {
     m_motor = new CANSparkMax(Constants.CANDeviceIDs.MOTOR_SHOULDER_ID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
+    m_motor.setSmartCurrentLimit(CURRENT_LIMIT);
+    m_motor.setInverted(INVERT_MOTOR);
 
     m_pidController = m_motor.getPIDController();
     m_encoder = m_motor.getEncoder();
@@ -99,6 +103,10 @@ public class Shoulder extends SubsystemBase implements Loggable {
       kSlotIdx,
       getArbFF()
     );
+  }
+
+  public void resetEncoders() {
+    m_encoder.setPosition(0.0);
   }
 
   /**

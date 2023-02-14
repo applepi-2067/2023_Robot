@@ -15,7 +15,8 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class RotateToPosition extends CommandBase implements Loggable {
-    private Drivetrain m_driveTrain;
+    private Drivetrain m_drivetrain;
+    private double m_startingDegrees;
     private double m_degrees;
     private final double m_acceptableErrorDegrees = 1;
     private final double m_acceptableErrorDegreesPerSecond = 5;
@@ -37,7 +38,7 @@ public class RotateToPosition extends CommandBase implements Loggable {
     public RotateToPosition(double degrees) { 
         Drivetrain drivetrain = Drivetrain.getInstance(); 
         addRequirements(drivetrain);
-        m_driveTrain = drivetrain;
+        m_drivetrain = drivetrain;
         m_degrees = optimizeRotation(degrees);
     }
 
@@ -55,21 +56,20 @@ public class RotateToPosition extends CommandBase implements Loggable {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_driveTrain.resetGyro();
+        m_startingDegrees = m_drivetrain.getYawDegrees();
         m_pidController.reset(0);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_driveTrain.arcadeDrive(0, getRotationPower());
+        m_drivetrain.arcadeDrive(0, getRotationPower());
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_driveTrain.arcadeDrive(0, 0);
-        m_driveTrain.resetGyro();
+        m_drivetrain.arcadeDrive(0, 0);
     }
 
     // Returns true when we are within an acceptable distance of our target position
@@ -83,12 +83,12 @@ public class RotateToPosition extends CommandBase implements Loggable {
 
     @Log
     private double getAngleError() {
-        return m_degrees - m_driveTrain.getYaw();
+        return m_degrees - (m_drivetrain.getYawDegrees() - m_startingDegrees);
     }
 
     @Log
     private double getRotationPower() {
-        double rotationPower = m_pidController.calculate(m_driveTrain.getYaw(), m_degrees);
+        double rotationPower = m_pidController.calculate(m_drivetrain.getYawDegrees() - m_startingDegrees, m_degrees);
 
         // Set "floor" of power output to start at m_minimumPower, the minimum power % to move the robot at all
         if (rotationPower > 0) {

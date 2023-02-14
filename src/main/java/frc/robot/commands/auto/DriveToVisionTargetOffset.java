@@ -16,7 +16,7 @@ public class DriveToVisionTargetOffset extends SequentialCommandGroup {
 
     Pose2d destinationPoseRelativeToCamera = null;
     while (true) {
-      destinationPoseRelativeToCamera = m_vision.getCameraToDestPose(targetID, destinationPoseRelativeToTarget);
+      // destinationPoseRelativeToCamera = m_vision.getCameraToDestPose(targetID, destinationPoseRelativeToTarget);
       System.out.println("Looking for target.     ");
       if (destinationPoseRelativeToCamera != null) {
         break;
@@ -31,13 +31,13 @@ public class DriveToVisionTargetOffset extends SequentialCommandGroup {
 
     addCommands(
       // Turn to face destination.
-      new RotateToPosition( Math.toDegrees(angleToDestinationRadians)),
+      new RotateToPosition(Math.toDegrees(angleToDestinationRadians)),
 
       // Drive hypotenuse to desination.
-      new DriveToPosition( Math.sqrt(destinationCameraX * destinationCameraX + destinationCameraY * destinationCameraY)),
+      new DriveToPosition(Math.sqrt(destinationCameraX * destinationCameraX + destinationCameraY * destinationCameraY)),
 
       // Unturn to vertical, and turn to face destination.
-      new RotateToPosition( Math.toDegrees(rotationAngleRadians))
+      new RotateToPosition(Math.toDegrees(rotationAngleRadians))
     );
   }
 }
