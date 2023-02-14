@@ -36,7 +36,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_1_ID);
   private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_2_ID);
   private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_2_ID);
-  private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
+  private final DifferentialDrive m_drivetrain = new DifferentialDrive(m_leftMotor, m_rightMotor);
   private static PigeonIMU m_pidgey;
   private static TalonSRX m_pidgeyController;
 
@@ -74,7 +74,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
       m_pidgey = new PigeonIMU(m_pidgeyController);
     }
 
-    m_robotDrive.setSafetyEnabled(false);
+    m_drivetrain.setSafetyEnabled(false);
     m_leftMotor.configFactoryDefault();
     m_rightMotor.configFactoryDefault();
     m_leftMotorFollower.configFactoryDefault();
@@ -106,15 +106,64 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     SmartDashboard.putData("Field", m_field);
   }
 
-  // Move the robot forward with some rotation.
-  public void arcadeDrive(double fwd, double rot) {
-    m_robotDrive.arcadeDrive(fwd, rot);
-  }
-
   @Override
   public void periodic() {
     updateOdometry();
     m_field.setRobotPose(m_latestRobotPose2d);
+  }
+
+  /**
+   * Tank drive the robot, passing in left and right stick y values.
+   * 
+   * @param leftStickY: left stick y value on [-1, 1].
+   * @param rightStickY: right stick y value on [-1, 1].
+   */
+  public void tankDrive(double leftStickY, double rightStickY) {
+    setSetPointVelocity(
+      clampStickY(leftStickY) * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY,
+      clampStickY(rightStickY) * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY
+    );
+  }
+
+  /**
+   * Clamp the stick y-value by zeroing the value on the deadband and rescaling to get full stick dynamic range.
+   * 
+   * @param stickY: unclamped stick y-value, on [-1, 1].
+   * @return: clamped stick y.
+   */
+  public double clampStickY(double stickY) {
+    // Return 0 if the stick is in the deadband.
+    if (Math.abs(stickY) < Constants.Drivetrain.DRIVETRAIN_CONTROLLER_DEADBAND) {
+      return 0.0;
+    }
+    // Compensate for the deadband by rescaling stick value to get full stick dynamic range.
+    else {
+      double shiftedStickY;
+      if (stickY > 0.0) {
+        shiftedStickY = stickY - Constants.Drivetrain.DRIVETRAIN_CONTROLLER_DEADBAND;
+      }
+      else {
+        shiftedStickY = stickY + Constants.Drivetrain.DRIVETRAIN_CONTROLLER_DEADBAND;
+      }
+      
+      return shiftedStickY / (1.0 - Constants.Drivetrain.DRIVETRAIN_CONTROLLER_DEADBAND);
+    }
+  }
+
+  /**
+   * Set the left and right motor velocities.
+   * 
+   * @param leftMotorVelocity_MetersPerSec: left motor target velocity in meters per second.
+   * @param rightMotorVelocity_MetersPerSec: right motor target velocity in meters per second.
+   */
+  public void setSetPointVelocity(double leftMotorVelocity_MetersPerSec, double rightMotorVelocity_MetersPerSec) {
+    m_leftMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(leftMotorVelocity_MetersPerSec));
+    m_rightMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(rightMotorVelocity_MetersPerSec));
+  }
+
+  // Move the robot forward with some rotation.
+  public void arcadeDrive(double fwd, double rot) {
+    m_drivetrain.arcadeDrive(fwd, rot);
   }
 
   /**

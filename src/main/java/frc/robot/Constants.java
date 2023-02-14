@@ -71,12 +71,18 @@ public final class Constants {
      * Gains(kp, ki, kd, kf, izone, peak output);
      */
     public static final Gains kGains = new Gains(0.1, 0.001, 0.0, 0.0, 300, 1.0);
+
+    // Maximum drivetrain velocity in meters per seconds.
+    public static final double MAX_DRIVETRAIN_VELOCITY = 5.0;
+    
+    // Drivetrain only moves when abs(stick) > deadband. Compensates for stick drift.
+    public static final double DRIVETRAIN_CONTROLLER_DEADBAND = 0.1;
   }
 
   public static final class PneumaticsDevices {
     public static final int CLAW_CLOSE = 0;
     public static final int CLAW_OPEN = 1;
     public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
-}
+  }
 
 }
