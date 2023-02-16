@@ -97,11 +97,11 @@ public class RobotContainer implements Loggable{
     m_operatorController.b().onTrue(new SetArmExtension(0.5));
 
     // Arm low pose for scoring
-    m_operatorController.a().onTrue(new RobotRelativeIK(0.6858, 0, 0.1651));
+    m_operatorController.a().onTrue(new RobotRelativeIK(0.6858, 0, 0.2158));
     // Arm mid pose for scoring
-    m_operatorController.x().onTrue(new RobotRelativeIK(1.0668, 0, 1.0289));
+    m_operatorController.x().onTrue(new RobotRelativeIK(1.0668, 0, 1.0797));
     // Arm high pose for scoring
-    m_operatorController.y().onTrue(new RobotRelativeIK(1.4732, 0, 1.3335));
+    m_operatorController.y().onTrue(new RobotRelativeIK(1.4732, 0, 1.3843));
 
     // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
     // m_operatorContoller.b().onTrue(new SetWaistPosition(180));
