@@ -37,7 +37,7 @@ public final class Constants {
     public static final int MOTOR_SHOULDER_ID = 10;
 
     public static final int PIGEON_IMU_ID = 0;
-  
+
     public static final int INTAKE_CONVEYOR_MOTOR_ID = 11;
     public static final int INTAKE_LEFT_EXTENSION_MOTOR_ID = 12;
     public static final int INTAKE_RIGHT_EXTENSION_MOTOR_ID = 13;
@@ -51,8 +51,7 @@ public final class Constants {
     public static final int WAIST_ZEROING_DI = 0;
 
     public static final int PBOT_JUMPER_DI = 9;
-  
-  
+
   }
 
   public static class Drivetrain {
@@ -89,6 +88,15 @@ public final class Constants {
     public static final int CLAW_CLOSE = 0;
     public static final int CLAW_OPEN = 1;
   }
+
+  public static final class SetpointTolerances {
+    public static final double SHOULDER_ANGLE_TOLERANCE = 0.1;
+    public static final double ARM_METERS_TOLERANCE = 0.005;
+    public static final double WAIST_ANGLE_TOLERANCE = 0.1;
+    public static final double SHOULDER_HEIGHT = 0.9779;
+  }
+
+  public static final class IKConstraints {
+    public static final double MINIMUM_Z_HEIGHT = 0.28;
+  }
 }
-
-

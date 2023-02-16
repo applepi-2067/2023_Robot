@@ -5,11 +5,12 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
 
 public class SetArmExtension extends CommandBase {
 
-  private Arm arm;
+  private Arm m_arm;
   private double targetPositionMeters = 0.0;
   // private double positionToleranceMeters = 0.1;
 
@@ -20,8 +21,8 @@ public class SetArmExtension extends CommandBase {
    */
   public SetArmExtension(double positionMeters) {
     // Use addRequirements() here to declare subsystem dependencies.
-    arm = Arm.getInstance();
-    addRequirements(arm);
+    m_arm = Arm.getInstance();
+    addRequirements(m_arm);
 
     targetPositionMeters = positionMeters;
   }
@@ -35,7 +36,7 @@ public class SetArmExtension extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    arm.setPosition(targetPositionMeters);
+    m_arm.setPosition(targetPositionMeters);
   }
 
   // Called once the command ends or is interrupted.
@@ -43,7 +44,7 @@ public class SetArmExtension extends CommandBase {
   public void end(boolean interrupted) {
     if(interrupted) {
       // stop moving
-      arm.setSpeed(0);
+      m_arm.setSpeed(0);
     }
     //otherwise, do nothing... i.e. keep holding last commanded position on exit
   }
@@ -51,7 +52,7 @@ public class SetArmExtension extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false; // never finish - to maintain position after we get to destination
+    return Math.abs(targetPositionMeters - m_arm.getPosition()) < Constants.SetpointTolerances.ARM_METERS_TOLERANCE; // never finish - to maintain position after we get to destination
     // return Math.abs(targetPositionMeters - arm.getPosition()) < positionToleranceMeters;
   }
 }

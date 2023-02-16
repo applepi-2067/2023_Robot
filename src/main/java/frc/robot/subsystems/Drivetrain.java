@@ -14,18 +14,22 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class Drivetrain extends SubsystemBase {
+public class Drivetrain extends SubsystemBase implements Loggable{
   /** Creates a new DriveTrain. */
   private static Drivetrain instance = null;
   private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_1_ID);
@@ -46,8 +50,10 @@ public class Drivetrain extends SubsystemBase {
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
   public static final double WHEEL_BASE_METERS = Units.inchesToMeters(24.0); // distance between wheels (width) in meters
 
-  private DifferentialDriveOdometry m_odometry;
+  private final DifferentialDrivePoseEstimator m_odometry;
   private Pose2d m_latestRobotPose2d = new Pose2d();
+
+  private final Field2d m_field = new Field2d();
   
   public static Drivetrain getInstance() {
     if (instance == null) {
@@ -59,15 +65,15 @@ public class Drivetrain extends SubsystemBase {
 
   private Drivetrain() {  // Constructor is private since this class is singleton
     // Set values to factory default.
-    if (RobotContainer.isPracticeBot()){
+    if (RobotContainer.isPracticeBot()) {
       m_pidgey = new PigeonIMU(Constants.CANDeviceIDs.PIGEON_IMU_ID);
     }
-    else{
+    else {
       //This is for the 2022 robot testing
       m_pidgeyController = new TalonSRX(11);
       m_pidgey = new PigeonIMU(m_pidgeyController);
     }
-    m_odometry = new DifferentialDriveOdometry(new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters(), new Pose2d());
+
     m_robotDrive.setSafetyEnabled(false);
     m_leftMotor.configFactoryDefault();
     m_rightMotor.configFactoryDefault();
@@ -90,6 +96,14 @@ public class Drivetrain extends SubsystemBase {
 
     resetEncoders();
     resetGyro();
+
+    // Initialize pose estimator.
+    m_odometry = new DifferentialDrivePoseEstimator(
+      new DifferentialDriveKinematics(WHEEL_BASE_METERS), new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters(), new Pose2d(),
+      new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.0408, 1.2711, 0.1)
+    );
+
+    SmartDashboard.putData("Field", m_field);
   }
 
   // Move the robot forward with some rotation.
@@ -100,6 +114,7 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     updateOdometry();
+    m_field.setRobotPose(m_latestRobotPose2d);
   }
 
   /**
@@ -170,10 +185,10 @@ public class Drivetrain extends SubsystemBase {
     m_latestRobotPose2d = m_odometry.update(
       new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters()
     );
+  }
 
-    SmartDashboard.putNumber("Robot X (meters)", m_latestRobotPose2d.getX());
-    SmartDashboard.putNumber("Robot Y (meters)", m_latestRobotPose2d.getY());
-    SmartDashboard.putNumber("Robot Rotation (degrees)", m_latestRobotPose2d.getRotation().getDegrees());
+  public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds) {
+    m_odometry.addVisionMeasurement(visionEstimatedRobotPose2d, timestampSeconds);
   }
 
   public Pose2d getLatestRobotPose2d() {
