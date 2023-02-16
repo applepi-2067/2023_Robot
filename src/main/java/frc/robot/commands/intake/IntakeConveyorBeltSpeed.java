@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeConveyorBelt;
 
 public class IntakeConveyorBeltSpeed extends CommandBase {
-  private static IntakeConveyorBelt m_IntakeConveyorBelt;
-  Boolean RollersOn1;
+  private static IntakeConveyorBelt m_intakeConveyorBelt;
+  double m_rollerSpeed;
 
-  public IntakeConveyorBeltSpeed(Boolean RollersOn) {
-    m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
-    addRequirements(m_IntakeConveyorBelt);
-    RollersOn1 = RollersOn;
+  public IntakeConveyorBeltSpeed(double rollerSpeed) {
+    m_intakeConveyorBelt = IntakeConveyorBelt.getInstance();
+    addRequirements(m_intakeConveyorBelt);
+    m_rollerSpeed = rollerSpeed;
 
   }
 
@@ -23,18 +23,17 @@ public class IntakeConveyorBeltSpeed extends CommandBase {
   
   @Override
   public void execute() {
-    if (RollersOn1 == true) {
-      m_IntakeConveyorBelt.setSpeed(0.3);
-    }
-    else{
-      m_IntakeConveyorBelt.setSpeed(0.0);}
+      m_intakeConveyorBelt.setSpeed(m_rollerSpeed);
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    if (interrupted)
+    {m_intakeConveyorBelt.setSpeed(0.0);}
+  }
 
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
