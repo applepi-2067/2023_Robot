@@ -5,19 +5,19 @@
 package frc.robot.commands.shoulder;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Shoulder;
 
 public class SetShoulderPosition extends CommandBase {
 
-  private Shoulder shoulder;
+  private Shoulder m_shoulder;
   private double targetPositionDegrees = 0.0;
-  private double positionToleranceDegrees = 0.1;
 
   /** Creates a new SetShoulderPosition. */
   public SetShoulderPosition(double positionDegrees) {
     // Use addRequirements() here to declare subsystem dependencies.
-    shoulder = Shoulder.getInstance();
-    addRequirements(shoulder);
+    m_shoulder = Shoulder.getInstance();
+    addRequirements(m_shoulder);
 
     targetPositionDegrees = positionDegrees;
   }
@@ -31,7 +31,7 @@ public class SetShoulderPosition extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shoulder.setPosition(targetPositionDegrees);
+    m_shoulder.setPosition(targetPositionDegrees);
   }
 
   // Called once the command ends or is interrupted.
@@ -47,6 +47,6 @@ public class SetShoulderPosition extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(targetPositionDegrees - shoulder.getPosition()) < positionToleranceDegrees;
+    return Math.abs(targetPositionDegrees - m_shoulder.getPosition()) < Constants.SetpointTolerances.SHOULDER_ANGLE_TOLERANCE;
   }
 }

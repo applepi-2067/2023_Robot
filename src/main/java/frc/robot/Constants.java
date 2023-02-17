@@ -87,4 +87,15 @@ public final class Constants {
     public static final int CLAW_OPEN = 1;
     public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
   }
+
+  public static final class SetpointTolerances {
+    public static final double SHOULDER_ANGLE_TOLERANCE = 0.1;
+    public static final double ARM_METERS_TOLERANCE = 0.005;
+    public static final double WAIST_ANGLE_TOLERANCE = 0.1;
+    public static final double SHOULDER_HEIGHT = 0.9779;
+  }
+
+  public static final class IKConstraints {
+    public static final double MINIMUM_Z_HEIGHT = 0.28; 
+  }
 }

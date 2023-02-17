@@ -26,6 +26,7 @@ import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.IK.RobotRelativeIK;
 import frc.robot.commands.arm.*;
 
 /**
@@ -93,6 +94,13 @@ public class RobotContainer implements Loggable{
     m_operatorController.a().onTrue(new SetArmExtension(0.0));
     m_operatorController.b().onTrue(new SetArmExtension(0.5));
 
+    // Arm low pose for scoring
+    m_operatorController.a().onTrue(new RobotRelativeIK(0.6858, 0, 0.2158));
+    // Arm mid pose for scoring
+    m_operatorController.x().onTrue(new RobotRelativeIK(1.0668, 0, 1.0797));
+    // Arm high pose for scoring
+    m_operatorController.y().onTrue(new RobotRelativeIK(1.4732, 0, 1.3843));
+
     // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
     // m_operatorContoller.b().onTrue(new SetWaistPosition(180));
     // m_operatorContoller.x().onTrue(new ZeroWaistPosition());
@@ -101,7 +109,6 @@ public class RobotContainer implements Loggable{
     // m_operatorContoller.leftBumper().onTrue(new SetArmExtension(0));
     // m_operatorContoller.rightBumper().onTrue(new SetArmExtension(0.5));
     
-    // m_operatorContoller.x().onTrue(new ClawOpen());
     // m_operatorContoller.a().onTrue(new ClawClose());
     // m_operatorContoller.x().onTrue(new SetShoulderPosition(0));
     // m_operatorContoller.y().onTrue(new SetShoulderPosition(90));

@@ -5,19 +5,19 @@
 package frc.robot.commands.waist;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Waist;
 
 public class SetWaistPosition extends CommandBase {
 
-  private Waist waist;
+  private Waist m_waist;
   private double targetPositionDegrees = 0.0;
-  private double positionToleranceDegrees = 0.1;
 
   /** Creates a new SetWaistPosition. */
   public SetWaistPosition(double positionDegrees) {
     // Use addRequirements() here to declare subsystem dependencies.
-    waist = Waist.getInstance();
-    addRequirements(waist);
+    m_waist = Waist.getInstance();
+    addRequirements(m_waist);
 
     targetPositionDegrees = positionDegrees;
   }
@@ -31,7 +31,7 @@ public class SetWaistPosition extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    waist.setPosition(targetPositionDegrees);
+    m_waist.setPosition(targetPositionDegrees);
   }
 
   // Called once the command ends or is interrupted.
@@ -39,7 +39,7 @@ public class SetWaistPosition extends CommandBase {
   public void end(boolean interrupted) {
     if(interrupted) {
       // stop moving
-      waist.setSpeed(0);
+      m_waist.setSpeed(0);
     }
     //otherwise, do nothing... i.e. keep holding last commanded position on exit
   }
@@ -47,6 +47,6 @@ public class SetWaistPosition extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(targetPositionDegrees - waist.getPosition()) < positionToleranceDegrees;
+    return Math.abs(targetPositionDegrees - m_waist.getPosition()) < Constants.SetpointTolerances.WAIST_ANGLE_TOLERANCE;
   }
 }
