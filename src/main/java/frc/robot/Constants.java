@@ -52,7 +52,8 @@ public final class Constants {
      * 0,1,2 or 3. Only the first two (0,1) are visible in web-based
      * configuration.
      */
-    public static final int kSlotIdx = 0;
+    public static final int kPositionSlotIdx = 0;
+    public static final int kVelocitySlotIdx = 1;
 
     /**
      * Talon FX supports multiple (cascaded) PID loops. For
@@ -70,14 +71,23 @@ public final class Constants {
      * Gains used in Motion Magic, to be adjusted accordingly
      * Gains(kp, ki, kd, kf, izone, peak output);
      */
-    public static final Gains kGains = new Gains(0.1, 0.001, 0.0, 0.0, 300, 1.0);
+    public static final Gains kPositionGains = new Gains(0.1, 0.001, 0.0, 0.0, 300.0, 1.0);
+    public static final Gains kVelocityGains = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0); 
+
+    // Maximum drivetrain velocity in meters per seconds.
+    public static final double MAX_DRIVETRAIN_VELOCITY = 5.0;
+    
+    // Drivetrain only moves when abs(stick) > deadband. Compensates for stick drift.
+    public static final double DRIVETRAIN_CONTROLLER_DEADBAND = 0.03;
+
+    public static final double MOTOR_ACCELERATION = 5.0;
   }
 
   public static final class PneumaticsDevices {
     public static final int CLAW_CLOSE = 0;
     public static final int CLAW_OPEN = 1;
     public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
-}
+  }
 
   public static final class SetpointTolerances {
     public static final double SHOULDER_ANGLE_TOLERANCE = 0.1;
