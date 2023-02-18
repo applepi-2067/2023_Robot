@@ -93,9 +93,12 @@ public final class Constants {
     public static final double SHOULDER_ANGLE_TOLERANCE = 0.1;
     public static final double ARM_METERS_TOLERANCE = 0.005;
     public static final double WAIST_ANGLE_TOLERANCE = 0.1;
+  }
+  
+  public static final class IKOffsets {
+    public static final double MINIMUM_ARM_LENGTH = 0.5334;  // Arm length when at zero
     public static final double SHOULDER_HEIGHT = 0.9779;
   }
-
   public static final class IKConstraints {
     public static final double MINIMUM_Z_HEIGHT = 0.28; 
   }
