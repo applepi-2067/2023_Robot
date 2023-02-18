@@ -3,14 +3,12 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands.intake;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.IntakeExtensionMotor;
 
 public class SetIntakeExtension extends CommandBase {
 
-  private IntakeExtensionMotor intakeextensionmotor;
+  private IntakeExtensionMotor intakeExtensionMotor;
   private double targetPositionMeters = 0.0;
   // private double positionToleranceMeters = 0.1;
 
@@ -21,8 +19,8 @@ public class SetIntakeExtension extends CommandBase {
    */
   public SetIntakeExtension(double positionMeters) {
     // Use addRequirements() here to declare subsystem dependencies.
-    intakeextensionmotor = IntakeExtensionMotor.getInstance();
-    addRequirements(intakeextensionmotor);
+    intakeExtensionMotor = IntakeExtensionMotor.getInstance();
+    addRequirements(intakeExtensionMotor);
 
     targetPositionMeters = positionMeters;
   }
@@ -36,7 +34,7 @@ public class SetIntakeExtension extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakeextensionmotor.setPosition(targetPositionMeters);
+    intakeExtensionMotor.setPosition(targetPositionMeters);
   }
 
   // Called once the command ends or is interrupted.
@@ -44,7 +42,7 @@ public class SetIntakeExtension extends CommandBase {
   public void end(boolean interrupted) {
     if(interrupted) {
       // stop moving
-      intakeextensionmotor.setSpeed(0);
+      intakeExtensionMotor.setSpeed(0);
     }
     //otherwise, do nothing... i.e. keep holding last commanded position on exit
   }

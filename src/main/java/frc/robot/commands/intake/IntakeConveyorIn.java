@@ -1,14 +1,18 @@
 package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeConveyor;
+import frc.robot.subsystems.IntakeConveyorExtension;
 
 public class IntakeConveyorIn extends CommandBase {
-    private static IntakeConveyor m_IntakeConveyor;
-    Boolean ActivateConveyorIn;
-    public IntakeConveyorIn(Boolean ConveyorIn) {
-        m_IntakeConveyor = IntakeConveyor.getInstance();
+    enum ConveyorDirection {
+        RETRACTED,
+        EXTENDED
+      }
+    private static IntakeConveyorExtension m_IntakeConveyor;
+    ConveyorDirection m_conveyorDirection;
+    public IntakeConveyorIn(ConveyorDirection conveyorDirection) {
+        m_IntakeConveyor = IntakeConveyorExtension.getInstance();
         addRequirements(m_IntakeConveyor);
-        ActivateConveyorIn = ConveyorIn; 
+        m_conveyorDirection = conveyorDirection; 
     
     }
 
@@ -19,7 +23,7 @@ public class IntakeConveyorIn extends CommandBase {
 
     @Override
     public void execute() { 
-        if (ActivateConveyorIn == true){
+        if (m_conveyorDirection == ConveyorDirection.RETRACTED){
             m_IntakeConveyor.in();
         }
         else{

@@ -18,6 +18,8 @@ public class IntakeConveyorBelt extends SubsystemBase implements Loggable {
 
   private final CANSparkMax m_motor;
   private final RelativeEncoder m_encoder;
+  private static final boolean INVERT_MOTOR = false;
+  private static final int CURRENT_LIMIT = 10; //Amps
 
   public static IntakeConveyorBelt getInstance() {
     if (instance == null) {
@@ -29,6 +31,8 @@ public class IntakeConveyorBelt extends SubsystemBase implements Loggable {
   private IntakeConveyorBelt() {
     m_motor = new CANSparkMax(CANDeviceIDs.INTAKE_CONVEYOR_MOTOR_ID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
+    m_motor.setSmartCurrentLimit(CURRENT_LIMIT);
+    m_motor.setInverted(INVERT_MOTOR);
     m_encoder = m_motor.getEncoder();
   }
 

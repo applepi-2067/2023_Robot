@@ -15,7 +15,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
 import frc.robot.Constants.CANDeviceIDs;
 import frc.robot.commands.intake.SetIntakeExtension;
-import frc.robot.utils.Util; 
+import frc.robot.utils.Util;
 import frc.robot.utils.Gains;
 
 public class IntakeExtensionMotor extends SubsystemBase {
@@ -26,48 +26,48 @@ public class IntakeExtensionMotor extends SubsystemBase {
   private final RelativeEncoder m_encoder;
   private final SparkMaxPIDController m_pidController;
 
-  public static final double GEAR_RATIO = 36.0;  //TODO: set
-  public static final double METERS_PER_REV = 1.0; //TODO: set
+  public static final double GEAR_RATIO = 36.0; // TODO: set
+  public static final double METERS_PER_REV = 1.0; // TODO: set
 
   public static double max_voltage_open_loop = 1.0;
 
   // PID Coefficients.
   private Gains gains = new Gains(0.1, 1e-4, 1, 0, 1, 0.4);
 
-
   public static IntakeExtensionMotor getInstance() {
     if (instance == null) {
       instance = new IntakeExtensionMotor();
     }
     return instance;
-}
+  }
 
-      private IntakeExtensionMotor() {
-        m_motor = new CANSparkMax(CANDeviceIDs.INTAKE_EXTENSION_MOTOR_ID, MotorType.kBrushless);
-        m_motor.restoreFactoryDefaults();
-        m_encoder = m_motor.getEncoder();
-        m_pidController = m_motor.getPIDController();
-    
-        // Set PID coefficients
-        m_pidController.setP(gains.kP);
-        m_pidController.setI(gains.kI);
-        m_pidController.setD(gains.kD);
-        m_pidController.setIZone(gains.kIzone);
-        m_pidController.setFF(gains.kF);
-        m_pidController.setOutputRange(-gains.kPeakOutput, gains.kPeakOutput);
-   
-      }
-      
-      private double metersToMotorRotations(double degrees) {
-        return degrees/METERS_PER_REV * GEAR_RATIO;
-      }
-    
-      private double motorRotationsToMeters(double rotations) {
-        return (rotations / GEAR_RATIO) * METERS_PER_REV;
-      }
+  private IntakeExtensionMotor() {
+    m_motor = new CANSparkMax(CANDeviceIDs.INTAKE_EXTENSION_MOTOR_ID, MotorType.kBrushless);
+    m_motor.restoreFactoryDefaults();
+    m_encoder = m_motor.getEncoder();
+    m_pidController = m_motor.getPIDController();
 
-        /**
+    // Set PID coefficients
+    m_pidController.setP(gains.kP);
+    m_pidController.setI(gains.kI);
+    m_pidController.setD(gains.kD);
+    m_pidController.setIZone(gains.kIzone);
+    m_pidController.setFF(gains.kF);
+    m_pidController.setOutputRange(-gains.kPeakOutput, gains.kPeakOutput);
+
+  }
+
+  private double metersToMotorRotations(double degrees) {
+    return degrees / METERS_PER_REV * GEAR_RATIO;
+  }
+
+  private double motorRotationsToMeters(double rotations) {
+    return (rotations / GEAR_RATIO) * METERS_PER_REV;
+  }
+
+  /**
    * Set motor speed.
+   * 
    * @param speed (-1.0 to 1.0)
    */
   public void setSpeed(double speed) {
@@ -75,19 +75,19 @@ public class IntakeExtensionMotor extends SubsystemBase {
     m_pidController.setReference(speed * max_voltage_open_loop, CANSparkMax.ControlType.kVoltage);
   }
 
-  @Config (name = "Output Limit (V)", rowIndex = 2, columnIndex = 2, defaultValueNumeric = 1.0)
+  @Config(name = "Output Limit (V)", rowIndex = 2, columnIndex = 2, defaultValueNumeric = 1.0)
   public void setMaxVoltage(double v) {
     max_voltage_open_loop = v;
   }
 
-   /**
+  /**
    * Set intake position.
+   * 
    * @param meters
    */
   public void setPosition(double meters) {
     m_pidController.setReference(metersToMotorRotations(meters), CANSparkMax.ControlType.kPosition);
   }
-
 
   @Override
   public void periodic() {

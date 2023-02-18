@@ -8,30 +8,27 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PneumaticsDevices;
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
-import io.github.oblarg.oblog.annotations.Log;
-import com.revrobotics.CANSparkMax;
 
-public class IntakeConveyor
+public class IntakeConveyorExtension
     extends SubsystemBase implements Loggable {
 
-  private static IntakeConveyor instance = null;
-  private DoubleSolenoid m_intakSolenoid = new DoubleSolenoid(PneumaticsDevices.MODULE_TYPE,
-      PneumaticsDevices.INTAKE_CONVEYOR_IN,
-      PneumaticsDevices.INTAKE_CONVEYOR_OUT);
-
-  public static IntakeConveyor getInstance() {
+  private static IntakeConveyorExtension instance = null;
+  private DoubleSolenoid m_intakeSolenoid;
+  public static IntakeConveyorExtension getInstance() {
     if (instance == null) {
-      instance = new IntakeConveyor();
+      instance = new IntakeConveyorExtension();
     }
     return instance;
   }
-
+  
   /**
    * Creates a new intake conveyor
    * .
    */
-  private IntakeConveyor() {
+  private IntakeConveyorExtension() {
+    m_intakeSolenoid = new DoubleSolenoid(PneumaticsDevices.MODULE_TYPE,
+        PneumaticsDevices.INTAKE_CONVEYOR_IN,
+        PneumaticsDevices.INTAKE_CONVEYOR_OUT);
   }
 
   @Override
@@ -47,10 +44,11 @@ public class IntakeConveyor
    * pull out the inatke conveyor
    */
   public void out() {
-    m_intakSolenoid.set(DoubleSolenoid.Value.kForward);
+    m_intakeSolenoid.set(DoubleSolenoid.Value.kForward);
   }
-  /* pull in the intake conveyor */
+  /* 
+  pull in the intake conveyor */
   public void in() { 
-    m_intakSolenoid.set(DoubleSolenoid.Value.kReverse);
+    m_intakeSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 }
