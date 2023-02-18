@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
 import frc.robot.subsystems.*;
+import frc.robot.utils.Util;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
@@ -66,13 +67,12 @@ public class RobotContainer implements Loggable{
     // Set the default drive command to tank drive.
     m_drivetrain.setDefaultCommand(
         Commands.run(
-          () -> m_drivetrain.tankDrive(
-                  -m_driverController.getLeftY(),
-                  -m_driverController.getRightY()
+          () -> m_drivetrain.arcadeDrive(
+                  Util.clampStickValue(-m_driverController.getLeftY()),
+                  Util.clampStickValue(-m_driverController.getRightX())
                 ),
           m_drivetrain)
         );
-  
 
     m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
     m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));

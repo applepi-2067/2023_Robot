@@ -52,7 +52,8 @@ public final class Constants {
      * 0,1,2 or 3. Only the first two (0,1) are visible in web-based
      * configuration.
      */
-    public static final int kSlotIdx = 0;
+    public static final int kPositionSlotIdx = 0;
+    public static final int kVelocitySlotIdx = 1;
 
     /**
      * Talon FX supports multiple (cascaded) PID loops. For
