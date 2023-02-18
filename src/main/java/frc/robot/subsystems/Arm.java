@@ -89,6 +89,7 @@ public class Arm extends SubsystemBase implements Loggable{
    * @param meters
    */
   public void setPosition(double meters) {
+    meters = Math.max(meters, 0.0);  // Eventually this will be clamp() with [0, max arm length]
     m_pidController.setReference(metersToMotorRotations(meters), CANSparkMax.ControlType.kPosition);
   }
 
