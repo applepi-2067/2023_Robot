@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
 import frc.robot.subsystems.*;
+import frc.robot.utils.Util;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
@@ -44,7 +45,7 @@ public class RobotContainer implements Loggable{
   private final CommandXboxController m_operatorController = new CommandXboxController(
     Constants.OperatorConstants.kOperatorControllerPort);
 
-  private final Drivetrain m_robotDrive = Drivetrain.getInstance();
+  private final Drivetrain m_drivetrain = Drivetrain.getInstance();
   private final Waist m_waist = Waist.getInstance();
   private final Shoulder m_shoulder = Shoulder.getInstance();
   private final Vision m_vision = Vision.getInstance();
@@ -63,18 +64,15 @@ public class RobotContainer implements Loggable{
     configureBindings();
 
     // Configure default commands.
-    // Set the default drive command to split-stick arcade drive.
-    m_robotDrive.setDefaultCommand(
-        // A split-stick arcade command.
-        // Forward/backward controlled by the left hand, turning controlled by the right.
+    // Set the default drive command to tank drive.
+    m_drivetrain.setDefaultCommand(
         Commands.run(
-          () -> m_robotDrive.arcadeDrive(
-                  -m_driverController.getLeftY() / 1.5,
-                  -m_driverController.getRightX() / 2.0
+          () -> m_drivetrain.arcadeDrive(
+                  Util.clampStickValue(-m_driverController.getLeftY()),
+                  Util.clampStickValue(-m_driverController.getRightX())
                 ),
-          m_robotDrive)
+          m_drivetrain)
         );
-  
 
     m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
     m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
@@ -123,10 +121,10 @@ public class RobotContainer implements Loggable{
    */
   public void setCoastEnabled(boolean coastEnabled) {
     if (coastEnabled) {
-      m_robotDrive.setMotorsCoast();
+      m_drivetrain.setMotorsCoast();
     }
     else {
-      m_robotDrive.setMotorsBrake();
+      m_drivetrain.setMotorsBrake();
     }
   }
 
