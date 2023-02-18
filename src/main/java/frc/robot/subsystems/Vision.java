@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -25,6 +26,8 @@ public class Vision extends SubsystemBase {
 
   private PhotonCamera m_camera = new PhotonCamera("Arducam_1");
   private PhotonPoseEstimator m_photonPoseEstimator;
+
+  private AprilTagFieldLayout aprilTagFieldLayout = null;
   
   // Get a new object through singleton method
   public static Vision getInstance() {
@@ -36,7 +39,6 @@ public class Vision extends SubsystemBase {
 
   // Constructor is private since this class is singleton
   private Vision() {
-    AprilTagFieldLayout aprilTagFieldLayout = null;
     try {
       aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
       m_photonPoseEstimator = new PhotonPoseEstimator(
@@ -51,25 +53,40 @@ public class Vision extends SubsystemBase {
     }
   }
 
-  // TODO: Transform destination pose relative to target (give ID) to absolute field pose.
-  // public Pose2d getCameraToDestPose(int targetID, Pose2d destination) {
-  //   double targetX = cameraToTargetTransform.getX();
-  //   double targetY = cameraToTargetTransform.getY();
-  //   double targetRotationRadians = cameraToTargetTransform.getRotation().toRotation2d().getRadians();
+  /**
+   * Transform target relative pose (with target ID) to absolute field pose.
+   * 
+   * @param targetID: target ID.
+   * @param targetRelativePose: pose in target coordinates.
+   * @return: absolute field pose.
+   */
+  public Pose2d getAbsoluteFieldPoseFromTargetRelativePose(int targetID, Pose2d targetRelativePose) {
+    Optional<Pose3d> result = aprilTagFieldLayout.getTagPose(targetID);
+    Pose2d targetAbsolutePose = result.get().toPose2d();
 
-  //   // Coords of destination in target reference frame.
-  //   double destinationXTarget = destination.getX();
-  //   double destinationYTarget = destination.getY();
-  //   double destinationRotationRadiansTarget = destination.getRotation().getRadians();
+    double targetAbsolutePoseX = targetAbsolutePose.getX();
+    double targetAbsolutePoseY = targetAbsolutePose.getY();
+    double targetAbsolutePoseRotation = targetAbsolutePose.getRotation().getRadians();    
 
-  //   // Coords of destination in camera reference frame.
-  //   double destinationXCamera = targetX + (destinationXTarget * Math.cos(targetRotationRadians)) + (destinationYTarget * Math.sin(targetRotationRadians));
-  //   double destinationYCamera = targetY + (destinationYTarget * Math.cos(targetRotationRadians)) + (destinationXTarget * Math.sin(targetRotationRadians));
-  //   double destinationRotationRadiansCamera = targetRotationRadians + destinationRotationRadiansTarget;
+    double targetRelativePoseX = targetRelativePose.getX();
+    double targetRelativePoseY = targetRelativePose.getY();
+    double targetRelativePoseRotation = targetRelativePose.getRotation().getRadians();
+    
+    double absoluteFieldPoseX = (
+      targetAbsolutePoseX + 
+      (targetRelativePoseX * Math.sin(targetRelativePoseRotation)) + 
+      (targetRelativePoseY * Math.cos(targetRelativePoseRotation))
+    );
+    double absoluteFieldPoseY = (
+      targetAbsolutePoseY + 
+      (targetRelativePoseY * Math.sin(targetRelativePoseRotation)) + 
+      (targetRelativePoseX * Math.cos(targetRelativePoseRotation))
+    );
+    double absoluteFieldPoseRotation = targetAbsolutePoseRotation + targetRelativePoseRotation;
 
-  //   Pose2d cameraToDestPose = new Pose2d(destinationXCamera, destinationYCamera, new Rotation2d(destinationRotationRadiansCamera));
-  //   return cameraToDestPose;
-  // }
+    Pose2d absoluteFieldPose = new Pose2d(absoluteFieldPoseX, absoluteFieldPoseY, new Rotation2d(absoluteFieldPoseRotation));
+    return absoluteFieldPose;
+  }
 
   @Override
   public void periodic() {
