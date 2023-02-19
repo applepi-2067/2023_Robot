@@ -222,6 +222,14 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   }
 
   /**
+   * @return current yaw in degrees (CCW is positive)
+   */
+  @Log
+  public double getPitchDegrees() {
+    return m_pidgey.getPitch();
+  }
+
+  /**
    * @return current yaw in radians (CCW is positive)
    */
   public double getYawRadians() {
