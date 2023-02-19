@@ -24,17 +24,20 @@ public class RobotRelativeIK extends CommandBase {
 
 
     // Convert from Z relative to floor to Z relative to shoulder
-    z = z - Constants.SetpointTolerances.SHOULDER_HEIGHT;
+    z = z - Constants.IKOffsets.SHOULDER_HEIGHT;
     z = Math.max(z, Constants.IKConstraints.MINIMUM_Z_HEIGHT);
 
     addRequirements(m_arm);
     addRequirements(m_shoulder);
     addRequirements(m_waist);
-    // Use addRequirements() here to declare subsystem dependencies.
 
-    m_armLength = getArmLength(x, y, z);
     m_shoulderAngle = getThetaShoulder(x, y, z);
     m_waistAngle = getThetaWaist(x, y, z);
+    m_armLength = getArmLength(x, y, z);  // Total length of arm from axis of shoulder
+
+    // Calculate length the arm needs to extend
+    m_armLength -= Constants.IKOffsets.MINIMUM_ARM_LENGTH;
+    m_armLength = Math.max(m_armLength, 0);
   }
 
   private double getArmLength(double x, double y, double z) {

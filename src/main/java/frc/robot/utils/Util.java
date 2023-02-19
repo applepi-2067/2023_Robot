@@ -2,6 +2,8 @@ package frc.robot.utils;
 
 import java.util.Vector;
 
+import frc.robot.Constants;
+
 /**
  * Contains basic functions that are used often.
  *
@@ -207,5 +209,30 @@ public class Util {
 	 */
 	public static double runningAverage(double value, double sum, double gain) {
 		return (sum * gain) + (value * (1 - gain));
+	}
+
+	/**
+	 * Clamp the stick by zeroing the value on the deadband and rescaling to get full stick dynamic range.
+	 * 
+	 * @param stickValue: unclamped stick value, on [-1, 1].
+	 * @return: clamped stick value.
+	 */
+	public static double clampStickValue(double stickValue) {
+		// Return 0 if the stick is in the deadband.
+		if (Math.abs(stickValue) < Constants.Drivetrain.DRIVETRAIN_CONTROLLER_DEADBAND) {
+			return 0.0;
+		}
+		// Compensate for the deadband by rescaling stick value to get full stick dynamic range.
+		else {
+			double shiftedStick;
+			if (stickValue > 0.0) {
+				shiftedStick = stickValue - Constants.Drivetrain.DRIVETRAIN_CONTROLLER_DEADBAND;
+			}
+			else {
+				shiftedStick = stickValue + Constants.Drivetrain.DRIVETRAIN_CONTROLLER_DEADBAND;
+			}
+			
+			return shiftedStick / (1.0 - Constants.Drivetrain.DRIVETRAIN_CONTROLLER_DEADBAND);
+		}
 	}
 }

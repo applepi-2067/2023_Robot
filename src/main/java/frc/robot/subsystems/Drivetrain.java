@@ -17,11 +17,13 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,19 +38,23 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_1_ID);
   private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_2_ID);
   private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_2_ID);
-  private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
+  private final DifferentialDrive m_drivetrain = new DifferentialDrive(m_leftMotor, m_rightMotor);
+
+  private final SlewRateLimiter m_leftAccelerationLimiter = new SlewRateLimiter(Constants.Drivetrain.MOTOR_ACCELERATION);
+  private final SlewRateLimiter m_rightAccelerationLimiter = new SlewRateLimiter(Constants.Drivetrain.MOTOR_ACCELERATION);
+
   private static PigeonIMU m_pidgey;
   private static TalonSRX m_pidgeyController;
 
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
-  public static final double GEAR_RATIO = 10.0;
-  public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(6.0);
+  public static final double GEAR_RATIO = 8.0;
+  public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4.0);
   public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI; // meters
   public static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
   public static final double DEGREES_PER_REV = 360.0;
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
-  public static final double WHEEL_BASE_METERS = Units.inchesToMeters(24.0); // distance between wheels (width) in meters
+  public static final double WHEEL_BASE_METERS = Units.inchesToMeters(22.0); // distance between wheels (width) in meters
 
   private final DifferentialDrivePoseEstimator m_odometry;
   private Pose2d m_latestRobotPose2d = new Pose2d();
@@ -74,7 +80,8 @@ public class Drivetrain extends SubsystemBase implements Loggable{
       m_pidgey = new PigeonIMU(m_pidgeyController);
     }
 
-    m_robotDrive.setSafetyEnabled(false);
+    m_drivetrain.setSafetyEnabled(false);
+
     m_leftMotor.configFactoryDefault();
     m_rightMotor.configFactoryDefault();
     m_leftMotorFollower.configFactoryDefault();
@@ -84,7 +91,10 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_leftMotorFollower.follow(m_leftMotor);
     m_rightMotorFollower.follow(m_rightMotor);
 
-    // Set motion magic related parameters
+    configVelocityControl(m_leftMotor);
+    configVelocityControl(m_rightMotor);
+
+    // Set motion magic related parameters.
     configMotionMagic(m_leftMotor);
     configMotionMagic(m_rightMotor);
 
@@ -106,15 +116,49 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     SmartDashboard.putData("Field", m_field);
   }
 
-  // Move the robot forward with some rotation.
-  public void arcadeDrive(double fwd, double rot) {
-    m_robotDrive.arcadeDrive(fwd, rot);
-  }
-
   @Override
   public void periodic() {
     updateOdometry();
     m_field.setRobotPose(m_latestRobotPose2d);
+  }
+
+  // Move the robot forward with some rotation.
+  public void arcadeDrive(double fwd, double rot) {
+    WheelSpeeds motorVelocities = DifferentialDrive.arcadeDriveIK(fwd, rot, true);
+    double leftVelocity = motorVelocities.left * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY;
+    double rightVelocity = motorVelocities.right * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY;
+
+    setSetPointVelocity(leftVelocity, rightVelocity);
+  }
+
+  /**
+   * Tank drive the robot, passing in left and right stick y values.
+   * 
+   * @param leftStickY: left stick y value on [-1, 1].
+   * @param rightStickY: right stick y value on [-1, 1].
+   */
+  public void tankDrive(double leftStickY, double rightStickY) {
+    setSetPointVelocity(
+      leftStickY * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY,
+      rightStickY * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY
+    );
+  }
+
+  /**
+   * Set the left and right motor velocities.
+   * 
+   * @param leftMotorVelocity_MetersPerSec: left motor target velocity in meters per second.
+   * @param rightMotorVelocity_MetersPerSec: right motor target velocity in meters per second.
+   */
+  public void setSetPointVelocity(double leftMotorVelocity_MetersPerSec, double rightMotorVelocity_MetersPerSec) {
+    m_leftMotor.selectProfileSlot(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kPIDLoopIdx);
+    m_rightMotor.selectProfileSlot(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kPIDLoopIdx);
+
+    double filteredLeftMotorVelocity_MetersPerSec = m_leftAccelerationLimiter.calculate(leftMotorVelocity_MetersPerSec);
+    double filteredRightMotorVelocity_MetersPerSec = m_rightAccelerationLimiter.calculate(rightMotorVelocity_MetersPerSec);
+
+    m_leftMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(filteredLeftMotorVelocity_MetersPerSec));
+    m_rightMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(filteredRightMotorVelocity_MetersPerSec));
   }
 
   /**
@@ -122,6 +166,9 @@ public class Drivetrain extends SubsystemBase implements Loggable{
    * @param setPoint distance in meters (fwd positive)
    */
   public void setSetPointDistance(double setPoint) {
+    m_leftMotor.selectProfileSlot(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPIDLoopIdx);
+    m_rightMotor.selectProfileSlot(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPIDLoopIdx);
+
     double setPointTicks = metersToTicks(setPoint);
     // Flipped the signs to mirror robot driving patterns
     m_leftMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
@@ -248,17 +295,46 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     _talon.configPeakOutputReverse(-1, Constants.Drivetrain.kTimeoutMs);
 
     /* Set Motion Magic gains in slot0 - see documentation */
-    _talon.selectProfileSlot(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kPIDLoopIdx);
-    _talon.config_kF(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kGains.kF, Constants.Drivetrain.kTimeoutMs);
-    _talon.config_kP(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kGains.kP, Constants.Drivetrain.kTimeoutMs);
-    _talon.config_kI(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kGains.kI, Constants.Drivetrain.kTimeoutMs);
-    _talon.config_kD(Constants.Drivetrain.kSlotIdx, Constants.Drivetrain.kGains.kD, Constants.Drivetrain.kTimeoutMs);
+    _talon.selectProfileSlot(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPIDLoopIdx);
+    _talon.config_kF(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPositionGains.kF, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_kP(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPositionGains.kP, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_kI(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPositionGains.kI, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_kD(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPositionGains.kD, Constants.Drivetrain.kTimeoutMs);
 
     /* Set acceleration and vcruise velocity - see documentation */
     // Constants stolen from team 2168's 2022 repo
     _talon.configMotionAcceleration((int) (metersPerSecToTicksPer100ms(Units.inchesToMeters(4.0 * 12.0)))); //(distance units per 100 ms) per second
     _talon.configMotionCruiseVelocity((int) (metersPerSecToTicksPer100ms(Units.inchesToMeters(10.0 * 12.0)))); //distance units per 100 ms
     _talon.configMotionSCurveStrength(8);
+  
+
+    /* Zero the sensor once on robot boot up */
+    _talon.setSelectedSensorPosition(0, Constants.Drivetrain.kPIDLoopIdx, Constants.Drivetrain.kTimeoutMs);
+  }
+
+  private void configVelocityControl(WPI_TalonFX _talon) {
+
+    /* Configure Sensor Source for Primary PID */
+    _talon.configSelectedFeedbackSensor(
+      TalonFXFeedbackDevice.IntegratedSensor, Constants.Drivetrain.kPIDLoopIdx, Constants.Drivetrain.kTimeoutMs
+    );
+    
+    _talon.configNeutralDeadband(0.001, Constants.Drivetrain.kTimeoutMs);
+
+    _talon.setSensorPhase(false);
+    _talon.setInverted(false);
+
+    /* Set the peak and nominal outputs */
+    _talon.configNominalOutputForward(0, Constants.Drivetrain.kTimeoutMs);
+    _talon.configNominalOutputReverse(0, Constants.Drivetrain.kTimeoutMs);
+    _talon.configPeakOutputForward(1, Constants.Drivetrain.kTimeoutMs);
+    _talon.configPeakOutputReverse(-1, Constants.Drivetrain.kTimeoutMs);
+
+    _talon.selectProfileSlot(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kPIDLoopIdx);
+    _talon.config_kF(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kVelocityGains.kF, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_kP(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kVelocityGains.kP, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_kI(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kVelocityGains.kI, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_kD(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kVelocityGains.kD, Constants.Drivetrain.kTimeoutMs);
   
 
     /* Zero the sensor once on robot boot up */
