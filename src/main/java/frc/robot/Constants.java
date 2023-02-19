@@ -38,11 +38,11 @@ public final class Constants {
 
     public static final int PIGEON_IMU_ID = 0;
 
-    public static final int INTAKE_CONVEYOR_MOTOR_ID = 11;
+    public static final int INTAKE_CONVEYOR_MOTOR_ID = 9;
     public static final int INTAKE_LEFT_EXTENSION_MOTOR_ID = 12;
     public static final int INTAKE_RIGHT_EXTENSION_MOTOR_ID = 13;
-    public static final int INTAKE_LEFT_ROLLER_MOTOR_ID = 14;
-    public static final int INTAKE_RIGHT_ROLLER_MOTOR_ID = 15;
+    public static final int INTAKE_LEFT_ROLLER_MOTOR_ID = 7;
+    public static final int INTAKE_RIGHT_ROLLER_MOTOR_ID = 6;
     public static final int INTAKE_EXTENSION_MOTOR_ID = 16;
   }
 
@@ -82,8 +82,8 @@ public final class Constants {
   }
 
   public static final class PneumaticsDevices {
-    public static final int INTAKE_CONVEYOR_IN = 2;
-    public static final int INTAKE_CONVEYOR_OUT = 3;
+    public static final int INTAKE_CONVEYOR_IN = 7;
+    public static final int INTAKE_CONVEYOR_OUT = 7;
     public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
     public static final int CLAW_CLOSE = 0;
     public static final int CLAW_OPEN = 1;
