@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import java.io.IOException;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.utils.Gains;
 
@@ -105,7 +109,22 @@ public final class Constants {
     public static final double MINIMUM_ARM_LENGTH = 0.5334;  // Arm length when at zero
     public static final double SHOULDER_HEIGHT = 0.9779;
   }
+
   public static final class IKConstraints {
     public static final double MINIMUM_Z_HEIGHT = 0.28; 
+  }
+
+  public static final class Field {
+    public static AprilTagFieldLayout aprilTagFieldLayout = loadFieldLayout();
+
+    public static AprilTagFieldLayout loadFieldLayout() {
+      try {
+        return AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+      }
+      catch (IOException e) {
+        System.out.println("Couldn't load April Tag Field Layout.");
+        return null;
+      }
+    }
   }
 }

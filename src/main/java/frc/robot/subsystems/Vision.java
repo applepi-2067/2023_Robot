@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
@@ -13,12 +12,9 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Vision extends SubsystemBase {
   public static Vision instance = null;
@@ -26,8 +22,6 @@ public class Vision extends SubsystemBase {
 
   private PhotonCamera m_camera = new PhotonCamera("Arducam_1");
   private PhotonPoseEstimator m_photonPoseEstimator;
-
-  private AprilTagFieldLayout aprilTagFieldLayout = null;
   
   // Get a new object through singleton method
   public static Vision getInstance() {
@@ -39,53 +33,12 @@ public class Vision extends SubsystemBase {
 
   // Constructor is private since this class is singleton
   private Vision() {
-    try {
-      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-      m_photonPoseEstimator = new PhotonPoseEstimator(
-        aprilTagFieldLayout,
-        PoseStrategy.LOWEST_AMBIGUITY,
-        m_camera,
-        new Transform3d()
-      );
-    }
-    catch (IOException e) {
-      System.out.println("Couldn't load April Tag Field Layout.");
-    }
-  }
-
-  /**
-   * Transform target relative pose (with target ID) to absolute field pose.
-   * 
-   * @param targetID: target ID.
-   * @param targetRelativePose: pose in target coordinates.
-   * @return: absolute field pose.
-   */
-  public Pose2d getAbsoluteFieldPoseFromTargetRelativePose(int targetID, Pose2d targetRelativePose) {
-    Optional<Pose3d> result = aprilTagFieldLayout.getTagPose(targetID);
-    Pose2d targetAbsolutePose = result.get().toPose2d();
-
-    double targetAbsolutePoseX = targetAbsolutePose.getX();
-    double targetAbsolutePoseY = targetAbsolutePose.getY();
-    double targetAbsolutePoseRotation = targetAbsolutePose.getRotation().getRadians();    
-
-    double targetRelativePoseX = targetRelativePose.getX();
-    double targetRelativePoseY = targetRelativePose.getY();
-    double targetRelativePoseRotation = targetRelativePose.getRotation().getRadians();
-    
-    double absoluteFieldPoseX = (
-      targetAbsolutePoseX + 
-      (targetRelativePoseX * Math.sin(targetRelativePoseRotation)) + 
-      (targetRelativePoseY * Math.cos(targetRelativePoseRotation))
+    m_photonPoseEstimator = new PhotonPoseEstimator(
+      Constants.Field.aprilTagFieldLayout,
+      PoseStrategy.LOWEST_AMBIGUITY,
+      m_camera,
+      new Transform3d()
     );
-    double absoluteFieldPoseY = (
-      targetAbsolutePoseY + 
-      (targetRelativePoseY * Math.sin(targetRelativePoseRotation)) + 
-      (targetRelativePoseX * Math.cos(targetRelativePoseRotation))
-    );
-    double absoluteFieldPoseRotation = targetAbsolutePoseRotation + targetRelativePoseRotation;
-
-    Pose2d absoluteFieldPose = new Pose2d(absoluteFieldPoseX, absoluteFieldPoseY, new Rotation2d(absoluteFieldPoseRotation));
-    return absoluteFieldPose;
   }
 
   @Override
