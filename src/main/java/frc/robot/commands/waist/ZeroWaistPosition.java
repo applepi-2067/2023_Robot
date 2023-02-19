@@ -6,6 +6,7 @@ package frc.robot.commands.waist;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Waist;
 
 public class ZeroWaistPosition extends CommandBase {
@@ -59,7 +60,7 @@ public class ZeroWaistPosition extends CommandBase {
     double sensorPosition = (magnetRangeEnd - magnetRangeStart) / 2.0;
     m_waist.setEncoderPosition(sensorPosition);
     while (Math.abs(m_waist.getPosition()) > ZEROING_TOLERANCE_DEGREES) {
-      m_waist.setPosition(0.0);
+      m_waist.setPosition(Constants.ZeroingOffsets.WAIST_ZERO_SENSOR_OFFSET);
     }
   }
 

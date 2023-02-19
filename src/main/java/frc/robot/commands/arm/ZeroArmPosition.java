@@ -10,6 +10,7 @@ import frc.robot.subsystems.Arm;
 public class ZeroArmPosition extends CommandBase {
 
   private Arm m_arm;
+  private double m_positionSetPoint = 0.0;
 
   public ZeroArmPosition() {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -20,19 +21,20 @@ public class ZeroArmPosition extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    m_arm.resetEncoders();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_arm.setSpeed(-0.6);
+    m_arm.setPosition(m_positionSetPoint);
+    m_positionSetPoint -= 0.01;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_arm.setSpeed(0.0);
+    m_arm.setPosition(0.0);
     m_arm.resetEncoders();
   }
 
