@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.arm.ZeroArmPosition;
 import frc.robot.commands.auto.DriveSquareAuto;
-import frc.robot.commands.auto.DriveToVisionTargetOffset;
+import frc.robot.commands.auto.DriveToTargetOffset;
 import frc.robot.commands.auto.RotationTest;
 import frc.robot.commands.auto.ZeroAll;
 import frc.robot.subsystems.Drivetrain;
