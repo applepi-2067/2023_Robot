@@ -10,6 +10,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -38,6 +39,7 @@ public class Arm extends SubsystemBase implements Loggable{
   private static final double RIGGING_EXTENSION_RATIO = 2.0;
   private static final double METERS_PER_REV = Math.PI * OUTPUT_SPROCKET_PITCH_DIAMETER_METERS * RIGGING_EXTENSION_RATIO;
   private static final boolean INVERT_MOTOR = false;
+  public static final double MAX_ARM_EXTENSION_METERS = Units.inchesToMeters(36.25);
 
   private static double max_voltage_open_loop = 1.0;
 
@@ -89,7 +91,8 @@ public class Arm extends SubsystemBase implements Loggable{
    * @param meters
    */
   public void setPosition(double meters) {
-    meters = Math.max(meters, 0.0);  // Eventually this will be clamp() with [0, max arm length]
+    // Clamp arm extension on [0.0, max extension].
+    meters = MathUtil.clamp(meters, 0.0, MAX_ARM_EXTENSION_METERS);
     m_pidController.setReference(metersToMotorRotations(meters), CANSparkMax.ControlType.kPosition);
   }
 
