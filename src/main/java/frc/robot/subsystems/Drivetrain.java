@@ -58,6 +58,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
   private final DifferentialDrivePoseEstimator m_odometry;
   private Pose2d m_latestRobotPose2d = new Pose2d();
+  private Waist m_waist = Waist.getInstance();
 
   private final Field2d m_field = new Field2d();
   
@@ -229,8 +230,14 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   }
 
   public void updateOdometry() {
-    m_latestRobotPose2d = m_odometry.update(
+    Pose2d m_latestCameraPose2d = m_odometry.update(
       new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters()
+    );
+
+    // Correct for waist rotation.
+    m_latestRobotPose2d = new Pose2d(
+      m_latestCameraPose2d.getX(), m_latestCameraPose2d.getY(), 
+      Rotation2d.fromDegrees(m_latestCameraPose2d.getRotation().getDegrees() - m_waist.getPosition())
     );
   }
 
