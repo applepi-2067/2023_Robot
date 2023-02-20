@@ -22,14 +22,20 @@ public class balanceOnCharge extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (m_driveTrain.getPitchDegrees() < -5){
-            m_driveTrain.arcadeDrive(-0.2, 0);
+        if (m_driveTrain.getPitchDegrees() < -5 && m_driveTrain.getPitchDegrees() > -10){
+            m_driveTrain.arcadeDrive(-0.4, 0);
         }
-        else if (m_driveTrain.getPitchDegrees() > 5){
-            m_driveTrain.arcadeDrive(0.2, 0);
+        else if (m_driveTrain.getPitchDegrees() > 5 && m_driveTrain.getPitchDegrees() < 10){
+            m_driveTrain.arcadeDrive(0.4, 0);
         }
         else if (m_driveTrain.getPitchDegrees() <=5 && m_driveTrain.getPitchDegrees() >=-5){
             m_driveTrain.arcadeDrive(0, 0);
+        }
+        else if (m_driveTrain.getPitchDegrees() > 10){
+            m_driveTrain.arcadeDrive(0.6, 0);
+        }
+        else if (m_driveTrain.getPitchDegrees() < -10){
+            m_driveTrain.arcadeDrive(-0.6, 0);
         }
 
     }
