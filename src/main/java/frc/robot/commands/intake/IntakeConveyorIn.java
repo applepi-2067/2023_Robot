@@ -8,8 +8,8 @@ public class IntakeConveyorIn extends CommandBase {
         //EXTENDED
       //}
     private static IntakeConveyorExtension m_IntakeConveyor;
-    Boolean m_conveyorDirection;
-    public IntakeConveyorIn(Boolean conveyorDirection) {
+    boolean m_conveyorDirection;
+    public IntakeConveyorIn(boolean conveyorDirection) {
         m_IntakeConveyor = IntakeConveyorExtension.getInstance();
         addRequirements(m_IntakeConveyor);
         m_conveyorDirection = conveyorDirection; 
@@ -23,7 +23,7 @@ public class IntakeConveyorIn extends CommandBase {
 
     @Override
     public void execute() { 
-        if (m_conveyorDirection == true){
+        if (m_conveyorDirection){
             m_IntakeConveyor.in();
         }
         else{

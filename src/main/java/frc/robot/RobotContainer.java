@@ -94,8 +94,8 @@ public class RobotContainer implements Loggable{
     //Driver Controls
 
     //Operator Controls
-    //m_operatorController.a().onTrue(new SetArmExtension(0.0));
-    //m_operatorController.b().onTrue(new SetArmExtension(0.5));
+    m_operatorController.a().onTrue(new SetArmExtension(0.0));
+    m_operatorController.b().onTrue(new SetArmExtension(0.5));
 
     // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
     // m_operatorContoller.b().onTrue(new SetWaistPosition(180));
