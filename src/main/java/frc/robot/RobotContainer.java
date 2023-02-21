@@ -104,6 +104,8 @@ public class RobotContainer implements Loggable{
     // Arm high pose for scoring
     m_operatorController.y().onTrue(new RobotRelativeIK(1.4732, 0, 1.3843));
 
+    m_operatorController.leftBumper().onTrue(new balanceOnCharge());
+
     // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
     // m_operatorContoller.b().onTrue(new SetWaistPosition(180));
     // m_operatorContoller.x().onTrue(new ZeroWaistPosition());
