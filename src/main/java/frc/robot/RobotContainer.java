@@ -21,6 +21,7 @@ import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.intake.ActivateIntakeRollers;
+import frc.robot.commands.intake.IntakeConveyorBeltSpeed;
 import frc.robot.commands.intake.IntakeConveyorIn;
 
 import frc.robot.commands.shoulder.*;
@@ -98,6 +99,13 @@ public class RobotContainer implements Loggable{
     //m_operatorController.a().onTrue(new SetArmExtension(0.0));
     //m_operatorController.b().onTrue(new SetArmExtension(0.5));
     m_operatorController.a().onTrue(new ActivateIntakeRollers(true));
+    m_operatorController.a().onFalse(new ActivateIntakeRollers(false));
+
+    m_operatorController.b().onTrue(new IntakeConveyorBeltSpeed(1.0));
+    m_operatorController.b().onFalse(new IntakeConveyorBeltSpeed(0.0));
+
+    m_operatorController.x().onTrue(new IntakeConveyorIn(true));
+    m_operatorController.y().onTrue(new IntakeConveyorIn(false));
     
     
 
