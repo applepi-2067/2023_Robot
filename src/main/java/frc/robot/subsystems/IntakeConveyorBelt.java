@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
+
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
@@ -16,8 +19,7 @@ public class IntakeConveyorBelt extends SubsystemBase implements Loggable {
 
   private static IntakeConveyorBelt instance = null;
 
-  private final CANSparkMax m_motor;
-  private final RelativeEncoder m_encoder;
+  private final TalonSRX m_motor;
   private static final boolean INVERT_MOTOR = false;
   private static final int CURRENT_LIMIT = 10; //Amps
 
@@ -29,11 +31,9 @@ public class IntakeConveyorBelt extends SubsystemBase implements Loggable {
   }
 
   private IntakeConveyorBelt() {
-    m_motor = new CANSparkMax(CANDeviceIDs.INTAKE_CONVEYOR_MOTOR_ID, MotorType.kBrushless);
-    m_motor.restoreFactoryDefaults();
-    m_motor.setSmartCurrentLimit(CURRENT_LIMIT);
+    m_motor = new TalonSRX(CANDeviceIDs.INTAKE_CONVEYOR_MOTOR_ID);
     m_motor.setInverted(INVERT_MOTOR);
-    m_encoder = m_motor.getEncoder();
+
   }
 
   /**
@@ -43,7 +43,7 @@ public class IntakeConveyorBelt extends SubsystemBase implements Loggable {
    */
   public void setSpeed(double speed) {
     Util.limit(speed);
-    m_motor.set(speed);
+    m_motor.set(TalonSRXControlMode.PercentOutput, speed);
   }
 
   @Override

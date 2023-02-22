@@ -22,7 +22,7 @@ public class ActivateIntakeRollers extends CommandBase {
   @Override
   public void execute() {
     if (RollersOn1 == true) {
-      m_IntakeRoller.setSpeed(0.7);
+      m_IntakeRoller.setSpeed(1.0);
     }
     else{
       m_IntakeRoller.setSpeed(0.0);

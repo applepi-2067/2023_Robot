@@ -82,11 +82,11 @@ public final class Constants {
   }
 
   public static final class PneumaticsDevices {
-    public static final int INTAKE_CONVEYOR_IN = 7;
-    public static final int INTAKE_CONVEYOR_OUT = 7;
+    public static final int INTAKE_CONVEYOR_IN = 0;
+    public static final int INTAKE_CONVEYOR_OUT = 1;
     public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
-    public static final int CLAW_CLOSE = 0;
-    public static final int CLAW_OPEN = 1;
+    public static final int CLAW_CLOSE = 7;
+    public static final int CLAW_OPEN = 7;
   }
 
   public static final class SetpointTolerances {

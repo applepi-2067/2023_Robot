@@ -20,8 +20,8 @@ import frc.robot.Constants;
 public class IntakeRoller extends SubsystemBase implements Loggable {
   
   private static IntakeRoller instance = null;
-  private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDeviceIDs.INTAKE_LEFT_ROLLER_MOTOR_ID);
-  private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(Constants.CANDeviceIDs.INTAKE_RIGHT_ROLLER_MOTOR_ID);
+  private final TalonFX m_leftMotor = new TalonFX(Constants.CANDeviceIDs.INTAKE_LEFT_ROLLER_MOTOR_ID);
+  private final TalonFX m_rightMotor = new TalonFX(Constants.CANDeviceIDs.INTAKE_RIGHT_ROLLER_MOTOR_ID);
 
   public static IntakeRoller getInstance() {
     if (instance == null) {
