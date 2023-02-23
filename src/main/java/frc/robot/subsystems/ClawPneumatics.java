@@ -12,16 +12,16 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class ClawGrasp
+public class ClawPneumatics
     extends SubsystemBase implements Loggable {
 
-  private static ClawGrasp instance = null;
+  private static ClawPneumatics instance = null;
   private Solenoid m_clawSolenoid = new Solenoid(PneumaticsDevices.MODULE_TYPE,
-      PneumaticsDevices.CLAW_OPEN);
+      PneumaticsDevices.CLAW);
 
-  public static ClawGrasp getInstance() {
+  public static ClawPneumatics getInstance() {
     if (instance == null) {
-      instance = new ClawGrasp();
+      instance = new ClawPneumatics();
     }
     return instance;
   }
@@ -30,7 +30,7 @@ public class ClawGrasp
    * Creates a new ClawGrasp
    * .
    */
-  private ClawGrasp() {
+  private ClawPneumatics() {
   }
 
   @Override

@@ -32,6 +32,8 @@ public final class Constants {
     public static final int MOTOR_LEFT_2_ID = 3;
     public static final int MOTOR_RIGHT_2_ID = 4;
 
+    public static final int MOTOR_CLAWBELT_ID = 17;
+
     public static final int MOTOR_WAIST_ID = 5;
     public static final int ARM_MOTOR_ID = 8;
     public static final int MOTOR_SHOULDER_ID = 10;
@@ -85,8 +87,7 @@ public final class Constants {
     public static final int INTAKE_CONVEYOR_IN = 0;
     public static final int INTAKE_CONVEYOR_OUT = 1;
     public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
-    public static final int CLAW_CLOSE = 7;
-    public static final int CLAW_OPEN = 7;
+    public static final int CLAW = 7;
   }
 
   public static final class SetpointTolerances {
