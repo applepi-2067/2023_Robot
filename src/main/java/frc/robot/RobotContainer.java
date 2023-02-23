@@ -121,7 +121,7 @@ public class RobotContainer implements Loggable{
       //  m_operatorController.a().onFalse(new IntakeConveyorBeltSpeed(0.0));
        m_operatorController.y().onTrue(new SetClawBeltSpeed(1.0));
        m_operatorController.y().onFalse(new SetClawBeltSpeed(0.0));
-       m_operatorController.a().onTrue(new SetClawBeltSpeed(-1.0));
+       m_operatorController.a().onTrue(new SetClawBeltSpeed(-1.0));   
       }
 
 
