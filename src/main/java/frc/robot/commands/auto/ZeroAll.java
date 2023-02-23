@@ -18,7 +18,7 @@ public class ZeroAll extends SequentialCommandGroup {
             new ZeroShoulderPosition(Constants.ZeroingOffsets.SHOULDER_FRONT_MINIMUM_ANGLE),
             new SetShoulderPosition(Constants.ZeroingOffsets.SHOULDER_FRONT_MINIMUM_ANGLE + 4.0), // Arm must clear a sprocket
             Commands.parallel(
-                new ZeroArmPosition(),
+                new ZeroArmPosition().andThen(new SetArmExtension(0.0)),
                 new WaitCommand(0.5).andThen(new SetShoulderPosition(0.0)),
                 new ZeroWaistPosition().andThen(new WaitCommand(0.5)).andThen(new SetWaistPosition(0))
             )
