@@ -21,7 +21,6 @@ public class IntakeConveyorBelt extends SubsystemBase implements Loggable {
 
   private final TalonSRX m_motor;
   private static final boolean INVERT_MOTOR = false;
-  private static final int CURRENT_LIMIT = 10; //Amps
 
   public static IntakeConveyorBelt getInstance() {
     if (instance == null) {

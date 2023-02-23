@@ -47,6 +47,8 @@ public class IntakeExtensionMotor extends SubsystemBase {
     m_encoder = m_motor.getEncoder();
     m_pidController = m_motor.getPIDController();
 
+    int CURRENT_LIMIT = 10; //Amps
+
     // Set PID coefficients
     m_pidController.setP(gains.kP);
     m_pidController.setI(gains.kI);

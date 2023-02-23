@@ -23,6 +23,7 @@ public class IntakeRoller extends SubsystemBase implements Loggable {
   private final TalonFX m_leftMotor = new TalonFX(Constants.CANDeviceIDs.INTAKE_LEFT_ROLLER_MOTOR_ID);
   private final TalonFX m_rightMotor = new TalonFX(Constants.CANDeviceIDs.INTAKE_RIGHT_ROLLER_MOTOR_ID);
 
+
   public static IntakeRoller getInstance() {
     if (instance == null) {
       instance = new IntakeRoller();
@@ -32,20 +33,13 @@ public class IntakeRoller extends SubsystemBase implements Loggable {
 
   /** Creates a new Intake. */
   private IntakeRoller() {
-
     m_leftMotor.configFactoryDefault();
     m_rightMotor.configFactoryDefault();
     m_leftMotor.setInverted(false);
     m_rightMotor.setInverted(true);
   }
-  public void resetEncoders() {
-    m_leftMotor.getSensorCollection().setIntegratedSensorPosition(0, Constants.Drivetrain.kTimeoutMs);
-    m_rightMotor.getSensorCollection().setIntegratedSensorPosition(0, Constants.Drivetrain.kTimeoutMs);
 
-    m_leftMotor.setSelectedSensorPosition(0.0);
-    m_rightMotor.setSelectedSensorPosition(0.0);
-  }
-            /**
+    /**
      * Set motor speed.
      * @param speed (-1.0 to 1.0)       
      */
