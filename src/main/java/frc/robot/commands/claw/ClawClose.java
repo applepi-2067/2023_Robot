@@ -5,14 +5,14 @@
 package frc.robot.commands.claw;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ClawGrasp;
+import frc.robot.subsystems.ClawPneumatics;
 
 public class ClawClose extends CommandBase {
-    private static ClawGrasp m_Claw;
+    private static ClawPneumatics m_Claw;
     
  
   public ClawClose() {
-    m_Claw = ClawGrasp.getInstance();
+    m_Claw = ClawPneumatics.getInstance();
     addRequirements(m_Claw);
   }
 

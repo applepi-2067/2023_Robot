@@ -1,14 +1,14 @@
 package frc.robot.commands.claw;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ClawGrasp;
+import frc.robot.subsystems.ClawPneumatics;
 
 public class ClawOpen extends CommandBase {
-    private static ClawGrasp m_claw;
+    private static ClawPneumatics m_claw;
 
     public ClawOpen() {
         // Use addRequirements() here to declare subsystem dependencies.
-        m_claw = ClawGrasp.getInstance();
+        m_claw = ClawPneumatics.getInstance();
         addRequirements(m_claw);
     }
     

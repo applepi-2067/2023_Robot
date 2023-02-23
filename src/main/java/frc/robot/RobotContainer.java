@@ -19,6 +19,7 @@ import frc.robot.subsystems.*;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
+import frc.robot.commands.claw.SetClawBeltSpeed;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.intake.ActivateIntakeRollers;
 import frc.robot.commands.intake.IntakeConveyorBeltSpeed;
@@ -52,7 +53,7 @@ public class RobotContainer implements Loggable{
   private final Shoulder m_shoulder = Shoulder.getInstance();
   private final Vision m_vision = Vision.getInstance();
   private final Arm m_arm = Arm.getInstance();
-  private final ClawGrasp m_ClawGrasp = ClawGrasp.getInstance();
+  private final ClawPneumatics m_ClawGrasp = ClawPneumatics.getInstance();
   private static DigitalInput m_practiceBotJumper = new DigitalInput(Constants.DiscreteInputs.PBOT_JUMPER_DI);
   private Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
   
@@ -107,18 +108,22 @@ public class RobotContainer implements Loggable{
     // m_operatorContoller.leftBumper().onTrue(new SetArmExtension(0));
     // m_operatorContoller.rightBumper().onTrue(new SetArmExtension(0.5));
     
-     //m_operatorController.x().onTrue(new ClawOpen());
-     //m_operatorController.a().onTrue(new ClawClose());
+     m_operatorController.x().onTrue(new ClawOpen());
+    m_operatorController.b().onTrue(new ClawClose());
     // m_operatorContoller.x().onTrue(new SetShoulderPosition(0));
     // m_operatorContoller.y().onTrue(new SetShoulderPosition(90));
     // m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
-       m_operatorController.a().onTrue (new ActivateIntakeRollers(true));
-       m_operatorController.a().onFalse(new ActivateIntakeRollers(false));
-      m_operatorController.a().onTrue(new IntakeConveyorIn(true));
-       m_operatorController.a().onFalse(new IntakeConveyorIn(false));
-       m_operatorController.a().onTrue(new IntakeConveyorBeltSpeed(-1.0));
-       m_operatorController.a().onFalse(new IntakeConveyorBeltSpeed(0.0));
+      //  m_operatorController.a().onTrue (new ActivateIntakeRollers(true));
+      //  m_operatorController.a().onFalse(new ActivateIntakeRollers(false));
+      //  m_operatorController.a().onTrue(new IntakeConveyorIn(true));
+      //  m_operatorController.a().onFalse(new IntakeConveyorIn(false));
+      //  m_operatorController.a().onTrue(new IntakeConveyorBeltSpeed(-1.0));
+      //  m_operatorController.a().onFalse(new IntakeConveyorBeltSpeed(0.0));
+       m_operatorController.y().onTrue(new SetClawBeltSpeed(1.0));
+       m_operatorController.y().onFalse(new SetClawBeltSpeed(0.0));
+       m_operatorController.a().onTrue(new SetClawBeltSpeed(-1.0));
       }
+
 
   /**
    * Sets motors to coast or brake mode
