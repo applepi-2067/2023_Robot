@@ -11,6 +11,7 @@ import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Waist;
+import frc.robot.utils.InverseKinematics;
 
 public class RobotRelativeIK extends CommandBase {
   private Arm m_arm = Arm.getInstance();
@@ -32,25 +33,13 @@ public class RobotRelativeIK extends CommandBase {
     addRequirements(m_shoulder);
     addRequirements(m_waist);
 
-    m_shoulderAngleDegrees = Units.radiansToDegrees(getThetaShoulder(x, y, z));
-    m_waistAngleDegrees = Units.radiansToDegrees(getThetaWaist(x, y, z));
-    m_armLength = getArmLength(x, y, z);  // Total length of arm from axis of shoulder
+    m_shoulderAngleDegrees = InverseKinematics.getThetaShoulder(x, y, z);
+    m_waistAngleDegrees = InverseKinematics.getThetaWaist(x, y, z);
+    m_armLength = InverseKinematics.getArmLength(x, y, z);  // Total length of arm from axis of shoulder
 
     // Calculate length the arm needs to extend
     m_armLength -= Constants.IKOffsets.MINIMUM_ARM_LENGTH;
     m_armLength = Math.max(m_armLength, 0);
-  }
-
-  private double getArmLength(double x, double y, double z) {
-    return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
-  }
-
-  private double getThetaShoulder(double x, double y, double z) {
-    return Math.atan2(z, Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
-  }
-
-  private double getThetaWaist(double x, double y, double z) {
-    return Math.atan2(y, x);
   }
 
   // Called when the command is initially scheduled.

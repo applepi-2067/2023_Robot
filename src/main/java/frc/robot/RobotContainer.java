@@ -27,6 +27,7 @@ import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.IK.DriveIKWithStick;
 import frc.robot.commands.IK.RobotRelativeIK;
 import frc.robot.commands.arm.*;
 
@@ -74,9 +75,8 @@ public class RobotContainer implements Loggable{
           m_drivetrain)
         );
 
-    m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
-    m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
-    m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorController.getLeftY()));
+    DriveIKWithStick driveIKWithStick = new DriveIKWithStick(m_operatorController.getHID());
+    m_waist.setDefaultCommand(driveIKWithStick);
   }
 
   /**
