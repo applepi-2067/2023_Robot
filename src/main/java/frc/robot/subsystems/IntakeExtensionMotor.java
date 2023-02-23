@@ -30,6 +30,8 @@ public class IntakeExtensionMotor extends SubsystemBase {
   public static final double METERS_PER_REV = 1.0; // TODO: set
 
   public static double max_voltage_open_loop = 1.0;
+  private final  int CURRENT_LIMIT = 10; //Amps
+
 
   // PID Coefficients.
   private Gains gains = new Gains(0.1, 1e-4, 1, 0, 1, 0.4);
@@ -44,10 +46,9 @@ public class IntakeExtensionMotor extends SubsystemBase {
   private IntakeExtensionMotor() {
     m_motor = new CANSparkMax(CANDeviceIDs.INTAKE_EXTENSION_MOTOR_ID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
+    m_motor.setSmartCurrentLimit(CURRENT_LIMIT);
     m_encoder = m_motor.getEncoder();
     m_pidController = m_motor.getPIDController();
-
-    int CURRENT_LIMIT = 10; //Amps
 
     // Set PID coefficients
     m_pidController.setP(gains.kP);

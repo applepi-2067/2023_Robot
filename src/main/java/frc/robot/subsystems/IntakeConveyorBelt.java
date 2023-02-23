@@ -41,7 +41,7 @@ public class IntakeConveyorBelt extends SubsystemBase implements Loggable {
    * @param speed (-1.0 to 1.0)
    */
   public void setSpeed(double speed) {
-    Util.limit(speed);
+    speed = Util.limit(speed);
     m_motor.set(TalonSRXControlMode.PercentOutput, speed);
   }
 
@@ -53,10 +53,5 @@ public class IntakeConveyorBelt extends SubsystemBase implements Loggable {
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
-  }
-
-  @Config(rowIndex = 0, columnIndex = 5, width = 1, height = 1)
-  public void clawIntake(boolean push) {
-
   }
 }
