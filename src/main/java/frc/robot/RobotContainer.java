@@ -18,6 +18,7 @@ import frc.robot.commands.waist.*;
 import frc.robot.subsystems.*;
 import frc.robot.utils.Util;
 import frc.robot.commands.auto.*;
+import frc.robot.commands.chargestation.*;
 import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
 import frc.robot.commands.drivetrain.*;
@@ -27,7 +28,6 @@ import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.drivetrain.*;
-import frc.robot.commands.balanceOnCharge;
 import frc.robot.commands.IK.RobotRelativeIK;
 import frc.robot.commands.arm.*;
 
@@ -103,8 +103,6 @@ public class RobotContainer implements Loggable{
     m_operatorController.x().onTrue(new RobotRelativeIK(1.0668, 0, 1.0797));
     // Arm high pose for scoring
     m_operatorController.y().onTrue(new RobotRelativeIK(1.4732, 0, 1.3843));
-
-    m_operatorController.leftBumper().onTrue(new balanceOnCharge());
 
     // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
     // m_operatorContoller.b().onTrue(new SetWaistPosition(180));
