@@ -109,6 +109,10 @@ public class Shoulder extends SubsystemBase implements Loggable {
     m_encoder.setPosition(0.0);
   }
 
+  public void setEncoderAngle(double encoderPositionDegrees) {
+    m_encoder.setPosition(degreesToMotorRotations(encoderPositionDegrees));
+  }
+
   /**
    * Get the Arbitrary Feed-Forward term, voltage needed to maintain arm positon. 
 

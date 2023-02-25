@@ -10,6 +10,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -38,8 +39,9 @@ public class Arm extends SubsystemBase implements Loggable{
   private static final double RIGGING_EXTENSION_RATIO = 2.0;
   private static final double METERS_PER_REV = Math.PI * OUTPUT_SPROCKET_PITCH_DIAMETER_METERS * RIGGING_EXTENSION_RATIO;
   private static final boolean INVERT_MOTOR = false;
+  public static final double MAX_ARM_EXTENSION_METERS = Units.inchesToMeters(36.25);
 
-  private static double max_voltage_open_loop = 1.0;
+  private static double max_voltage_open_loop = 2.0;
 
   // PID Coefficients.
   private Gains gains = new Gains(0.1, 1e-4, 1, 0, 1, 1.0);
@@ -89,6 +91,8 @@ public class Arm extends SubsystemBase implements Loggable{
    * @param meters
    */
   public void setPosition(double meters) {
+    // Clamp arm extension on [0.0, max extension].
+    meters = MathUtil.clamp(meters, 0.0, MAX_ARM_EXTENSION_METERS);
     m_pidController.setReference(metersToMotorRotations(meters), CANSparkMax.ControlType.kPosition);
   }
 
@@ -97,8 +101,8 @@ public class Arm extends SubsystemBase implements Loggable{
    * @param speed (-1.0 to 1.0)
    */
   public void setSpeed(double speed) {
-    Util.limit(speed);
-    m_pidController.setReference(speed * max_voltage_open_loop, CANSparkMax.ControlType.kVoltage);
+    double voltage = Util.limit(speed) * max_voltage_open_loop;
+    m_pidController.setReference(voltage, CANSparkMax.ControlType.kVoltage);
   }
 
   @Log (name = "Velocity (V)", rowIndex = 2, columnIndex = 0)
@@ -120,10 +124,6 @@ public class Arm extends SubsystemBase implements Loggable{
     return motorRotationsToMeters(m_encoder.getPosition());
   }
 
-  @Config (name = "Output Limit (V)", rowIndex = 2, columnIndex = 2, defaultValueNumeric = 1.0)
-  public void setMaxVoltage(double v) {
-    max_voltage_open_loop = v;
-  }
 
   @Override
   public void periodic() {

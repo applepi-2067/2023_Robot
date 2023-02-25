@@ -10,8 +10,10 @@ import frc.robot.subsystems.Shoulder;
 public class ZeroShoulderPosition extends CommandBase {
 
   private Shoulder m_shoulder;
+  private double m_currentShoulderPosition;
 
-  public ZeroShoulderPosition() {
+  public ZeroShoulderPosition(double currentShoulderPosition) {
+    m_currentShoulderPosition = currentShoulderPosition;
     // Use addRequirements() here to declare subsystem dependencies.
     m_shoulder = Shoulder.getInstance();
     addRequirements(m_shoulder);
@@ -20,7 +22,7 @@ public class ZeroShoulderPosition extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shoulder.resetEncoders();
+    m_shoulder.setEncoderAngle(m_currentShoulderPosition);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
