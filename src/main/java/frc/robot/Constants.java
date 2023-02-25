@@ -108,4 +108,13 @@ public final class Constants {
   public static final class IKConstraints {
     public static final double MINIMUM_Z_HEIGHT = 0.28; 
   }
+
+  public static final class ScoringPositionsID6 {
+    /* Scoring positions in the format of waist degrees, shoulder degrees, and arm extension in meters
+     *C1: 
+     *C2: 0, 190, 0.3
+     *C3: 0, 170, 0.65
+     * 
+     */
+  }
 }

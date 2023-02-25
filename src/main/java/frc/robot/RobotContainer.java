@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -93,12 +94,12 @@ public class RobotContainer implements Loggable{
     m_driverController.a().onTrue(new balanceOnCharge());
 
     //Operator Controls
-    m_operatorController.a().onTrue(new SetArmExtension(0.0));
-    m_operatorController.b().onTrue(new SetArmExtension(0.5));
+    // m_operatorController.a().onTrue(new SetArmExtension(0.0));
+    // m_operatorController.b().onTrue(new SetArmExtension(0.5));
 
     // Arm low pose for scoring
     
-    m_operatorController.a().onTrue(new RobotRelativeIK(0.6858, 0, 0.2158));
+    m_operatorController.a().onTrue(new RobotRelativeIK(0, 0, 0.2158));
     // Arm mid pose for scoring
     m_operatorController.x().onTrue(new RobotRelativeIK(1.0668, 0, 1.0797));
     // Arm high pose for scoring
@@ -134,5 +135,14 @@ public class RobotContainer implements Loggable{
   @Log
   public static boolean isPracticeBot() {
     return !m_practiceBotJumper.get();
+  }
+  public void periodic() {
+    SmartDashboard.putNumber("Xposition", Util.getIKX(m_arm.getPosition(), m_waist.getPosition(), m_shoulder.getPosition()));
+    SmartDashboard.putNumber("Yposition", Util.getIKY(m_arm.getPosition(), m_waist.getPosition(), m_shoulder.getPosition()));
+    SmartDashboard.putNumber("Zposition", Util.getIKZ(m_arm.getPosition(), m_waist.getPosition(), m_shoulder.getPosition()));
+    
+    SmartDashboard.putNumber("Arm Length (m)", m_arm.getPosition());
+    SmartDashboard.putNumber("Waist Rotation (deg)", m_waist.getPosition());
+    SmartDashboard.putNumber("Shoulder Rotation (deg)", m_shoulder.getPosition());
   }
 }
