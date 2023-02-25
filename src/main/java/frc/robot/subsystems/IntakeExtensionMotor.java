@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
@@ -31,14 +32,15 @@ public class IntakeExtensionMotor extends SubsystemBase implements Loggable {
   private static final boolean INVERT_MOTOR_RIGHT = false;
   private static final boolean INVERT_MOTOR_LEFT = true;
 
-  public static final double GEAR_RATIO = 36.0; // TODO: set
-  public static final double METERS_PER_REV = 1.0; // TODO: set
+  public static final double SPOCKET_PITCH_DIAMETER_METERS = Units.inchesToMeters(1.751);
+  public static final double GEAR_RATIO = 5.23 * 3.61 * 2.89; 
+  public static final double METERS_PER_REV = Math.PI * SPOCKET_PITCH_DIAMETER_METERS;
 
-  public static double max_voltage_open_loop = 10;
+  public static double max_voltage_open_loop = 5;
   private final int CURRENT_LIMIT = 10; // Amps
 
   // PID Coefficients.
-  private Gains gains = new Gains(0.1, 1e-4, 1, 0, 1, 0.4);
+  private Gains gains = new Gains(0.1, 0, 0, 0, 0, 0.8);
 
   public static IntakeExtensionMotor getInstance() {
     if (instance == null) {
@@ -105,6 +107,7 @@ public class IntakeExtensionMotor extends SubsystemBase implements Loggable {
   }
 
   public void setSpeedRight(double speed) {
+    speed = Util.limit(speed);
     m_pidControllerRight.setReference(speed * max_voltage_open_loop, CANSparkMax.ControlType.kVoltage);
   }
 
@@ -125,19 +128,13 @@ public class IntakeExtensionMotor extends SubsystemBase implements Loggable {
   }
 
   @Log
-  public double getLeftRawPosition() {
-    return m_encoderLeft.getPosition();
+  public double getLeftPositionMeters() {
+    return motorRotationsToMeters(m_encoderLeft.getPosition());
   }
 
   @Log
-  public double getRightRawPosition() {
-    return m_encoderRight.getPosition();
-  }
-
-
-  @Config(name = "Output Limit (V)", rowIndex = 2, columnIndex = 2, defaultValueNumeric = 1.0)
-  public void setMaxVoltage(double v) {
-    max_voltage_open_loop = v;
+  public double getRightPositionMeters() {
+    return motorRotationsToMeters(m_encoderRight.getPosition());
   }
 
   /**

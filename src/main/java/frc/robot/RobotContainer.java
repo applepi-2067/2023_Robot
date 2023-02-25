@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -26,6 +27,7 @@ import frc.robot.commands.intake.ActivateIntakeRollers;
 import frc.robot.commands.intake.IntakeConveyorBeltSpeed;
 import frc.robot.commands.intake.IntakeConveyorIn;
 import frc.robot.commands.intake.IntakePiece;
+import frc.robot.commands.intake.SetIntakeExtension;
 import frc.robot.commands.intake.ZeroTopLeftIntake;
 import frc.robot.commands.shoulder.*;
 import io.github.oblarg.oblog.Loggable;
@@ -37,19 +39,19 @@ import frc.robot.commands.IK.RobotRelativeIK;
 import frc.robot.commands.arm.*;
 
 /**
- * This class is where the bulk of the robot should be declared. 
- * Since Command-based is a "declarative" paradigm, very little robot logic 
+ * This class is where the bulk of the robot should be declared.
+ * Since Command-based is a "declarative" paradigm, very little robot logic
  * should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls).
  * Instead, the robot structure (including subsystems, commands,
  * and trigger mappings) should be declared here.
  */
-public class RobotContainer implements Loggable{
+public class RobotContainer implements Loggable {
   // Instantiate subsystems, controllers, and commands.
   private final CommandXboxController m_driverController = new CommandXboxController(
-    Constants.OperatorConstants.kDriverControllerPort);
+      Constants.OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_operatorController = new CommandXboxController(
-    Constants.OperatorConstants.kOperatorControllerPort);
+      Constants.OperatorConstants.kOperatorControllerPort);
 
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
   private final Waist m_waist = Waist.getInstance();
@@ -63,7 +65,7 @@ public class RobotContainer implements Loggable{
   private final IntakeConveyorBelt m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
   private final IntakeRoller m_IntakeRoller = IntakeRoller.getInstance();
   private final IntakeConveyorExtension m_IntakeConveyorExtension = IntakeConveyorExtension.getInstance();
-  
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -77,12 +79,10 @@ public class RobotContainer implements Loggable{
     // Set the default drive command to tank drive.
     m_drivetrain.setDefaultCommand(
         Commands.run(
-          () -> m_drivetrain.arcadeDrive(
-                  Util.clampStickValue(-m_driverController.getLeftY()),
-                  Util.clampStickValue(-m_driverController.getRightX())
-                ),
-          m_drivetrain)
-        );
+            () -> m_drivetrain.arcadeDrive(
+                Util.clampStickValue(-m_driverController.getLeftY()),
+                Util.clampStickValue(-m_driverController.getRightX())),
+            m_drivetrain));
 
     m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
     m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
@@ -126,23 +126,25 @@ public class RobotContainer implements Loggable{
     // m_operatorContoller.x().onTrue(new SetShoulderPosition(0));
     // m_operatorContoller.y().onTrue(new SetShoulderPosition(90));
     // m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
-       m_operatorController.a().onTrue (new ActivateIntakeRollers(true));
-       m_operatorController.a().onFalse(new ActivateIntakeRollers(false));
+      m_operatorController.a().onTrue (new ActivateIntakeRollers(true));
+      m_operatorController.a().onFalse(new ActivateIntakeRollers(false));
       m_operatorController.a().onTrue(new IntakeConveyorIn(true));
-       m_operatorController.a().onFalse(new IntakeConveyorIn(false));
-       m_operatorController.a().onTrue(new IntakeConveyorBeltSpeed(-1.0));
-       m_operatorController.a().onFalse(new IntakeConveyorBeltSpeed(0.0));
+      m_operatorController.a().onFalse(new IntakeConveyorIn(false));
+      m_operatorController.a().onTrue(new IntakeConveyorBeltSpeed(-1.0));
+      m_operatorController.a().onFalse(new IntakeConveyorBeltSpeed(0.0));
+      m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.05));
+      m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.3));
       }
 
   /**
    * Sets motors to coast or brake mode
+   * 
    * @param coastEnabled Set coast enabled if true, otherwise set brake mode
    */
   public void setCoastEnabled(boolean coastEnabled) {
     if (coastEnabled) {
       m_drivetrain.setMotorsCoast();
-    }
-    else {
+    } else {
       m_drivetrain.setMotorsBrake();
     }
   }
@@ -150,5 +152,9 @@ public class RobotContainer implements Loggable{
   @Log
   public static boolean isPracticeBot() {
     return !m_practiceBotJumper.get();
+  }
+
+  public void periodic() {
+    SmartDashboard.putData(m_IntakeExtensionMotor);
   }
 }
