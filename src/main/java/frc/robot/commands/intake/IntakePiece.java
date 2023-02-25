@@ -1,14 +1,14 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeRoller;
 
 public class IntakePiece extends CommandBase {
-    private static Intake m_intake;
+    private static IntakeRoller m_intake;
 
     public IntakePiece(Boolean on) {
         // Use addRequirements() here to declare subsystem dependencies.
-        Intake intake = Intake.getInstance();
+        IntakeRoller intake = IntakeRoller.getInstance();
         addRequirements(intake);
         m_intake = intake;
     }

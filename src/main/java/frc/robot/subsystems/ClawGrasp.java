@@ -4,19 +4,16 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PneumaticsDevices;
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
-import io.github.oblarg.oblog.annotations.Log;
 
 public class ClawGrasp
     extends SubsystemBase implements Loggable {
 
   private static ClawGrasp instance = null;
-  private DoubleSolenoid m_clawSolenoid = new DoubleSolenoid(PneumaticsDevices.MODULE_TYPE,
-      PneumaticsDevices.CLAW_CLOSE,
+  private Solenoid m_clawSolenoid = new Solenoid(PneumaticsDevices.MODULE_TYPE,
       PneumaticsDevices.CLAW_OPEN);
 
   public static ClawGrasp getInstance() {
@@ -46,10 +43,10 @@ public class ClawGrasp
    * Open the claw
    */
   public void open() {
-    m_clawSolenoid.set(DoubleSolenoid.Value.kForward);
+    m_clawSolenoid.set(true);
   } 
   /* Close the Claw */
   public void close() { 
-     m_clawSolenoid.set(DoubleSolenoid.Value.kReverse);
+     m_clawSolenoid.set(false);
   }
 }
