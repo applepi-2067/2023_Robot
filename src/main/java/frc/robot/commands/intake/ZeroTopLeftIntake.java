@@ -6,36 +6,48 @@ package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeExtensionMotor;
+import frc.robot.utils.Util;
 
-public class ZeroTopIntake extends CommandBase {
+public class ZeroTopLeftIntake extends CommandBase {
 
   private IntakeExtensionMotor intakeExtensionMotor;
-  private final double SPEED = 0.2;
+  private final double SPEED = -0.6;
   private final double zeroMotorCurrent = 10.0; //AMPS
 
-  public ZeroTopIntake() {
+  private double averaged_current = 0.0;
+  private final double AVG_GAIN = 0.8;
+
+  public ZeroTopLeftIntake() {
    intakeExtensionMotor = IntakeExtensionMotor.getInstance();
    
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    averaged_current = 0.0;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     intakeExtensionMotor.setSpeedLeft(SPEED);
-    intakeExtensionMotor.setSpeedRight(SPEED);
-    if ()
+    if (intakeExtensionMotor.getLeftMotorCurrent() >= zeroMotorCurrent){
+      intakeExtensionMotor.setSpeedLeft(0.0);
+      intakeExtensionMotor.zeroLeftEncoder();
+    }
+
+    averaged_current = Util.runningAverage(intakeExtensionMotor.getLeftMotorCurrent(), averaged_current,AVG_GAIN );
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    intakeExtensionMotor.zeroLeftEncoder();
+  }
 
-  // Returns true when the command should end.
+ 
+
   @Override
   public boolean isFinished() {
-    return (intakeExtensionMotor.getLeftMotorCurrent() >= zeroMotorCurrent)
-     && (intakeExtensionMotor.getRightMotorCurrent() >= zeroMotorCurrent);
+    return (averaged_current >= zeroMotorCurrent);
   }
 }

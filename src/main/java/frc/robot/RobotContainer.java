@@ -26,6 +26,7 @@ import frc.robot.commands.intake.ActivateIntakeRollers;
 import frc.robot.commands.intake.IntakeConveyorBeltSpeed;
 import frc.robot.commands.intake.IntakeConveyorIn;
 import frc.robot.commands.intake.IntakePiece;
+import frc.robot.commands.intake.ZeroTopLeftIntake;
 import frc.robot.commands.shoulder.*;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
@@ -58,6 +59,10 @@ public class RobotContainer implements Loggable{
   private final ClawGrasp m_ClawGrasp = ClawGrasp.getInstance();
   private static DigitalInput m_practiceBotJumper = new DigitalInput(Constants.DiscreteInputs.PBOT_JUMPER_DI);
   private Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+  private final IntakeExtensionMotor m_IntakeExtensionMotor = IntakeExtensionMotor.getInstance();
+  private final IntakeConveyorBelt m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
+  private final IntakeRoller m_IntakeRoller = IntakeRoller.getInstance();
+  private final IntakeConveyorExtension m_IntakeConveyorExtension = IntakeConveyorExtension.getInstance();
   
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

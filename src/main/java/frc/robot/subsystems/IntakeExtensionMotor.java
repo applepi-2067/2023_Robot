@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
+import io.github.oblarg.oblog.annotations.Log;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
@@ -18,7 +20,7 @@ import frc.robot.commands.intake.SetIntakeExtension;
 import frc.robot.utils.Util;
 import frc.robot.utils.Gains;
 
-public class IntakeExtensionMotor extends SubsystemBase {
+public class IntakeExtensionMotor extends SubsystemBase implements Loggable {
 
   public static IntakeExtensionMotor instance = null;
 
@@ -27,12 +29,12 @@ public class IntakeExtensionMotor extends SubsystemBase {
   private final RelativeEncoder m_encoderLeft , m_encoderRight;
   private final SparkMaxPIDController m_pidControllerLeft , m_pidControllerRight;
   private static final boolean INVERT_MOTOR_RIGHT = false;
-  private static final boolean INVERT_MOTOR_LEFT = false;
+  private static final boolean INVERT_MOTOR_LEFT = true;
 
   public static final double GEAR_RATIO = 36.0; // TODO: set
   public static final double METERS_PER_REV = 1.0; // TODO: set
 
-  public static double max_voltage_open_loop = 1.0;
+  public static double max_voltage_open_loop = 10;
   private final int CURRENT_LIMIT = 10; // Amps
 
   // PID Coefficients.
@@ -113,6 +115,25 @@ public class IntakeExtensionMotor extends SubsystemBase {
   public double getLeftMotorCurrent() {
     return m_motorLeft.getOutputCurrent();
   }
+
+  public void zeroLeftEncoder() {
+    m_encoderLeft.setPosition(0.0);
+  }
+
+  public void zeroRightEncoder() {
+    m_encoderRight.setPosition(0.0);
+  }
+
+  @Log
+  public double getLeftRawPosition() {
+    return m_encoderLeft.getPosition();
+  }
+
+  @Log
+  public double getRightRawPosition() {
+    return m_encoderRight.getPosition();
+  }
+
 
   @Config(name = "Output Limit (V)", rowIndex = 2, columnIndex = 2, defaultValueNumeric = 1.0)
   public void setMaxVoltage(double v) {
