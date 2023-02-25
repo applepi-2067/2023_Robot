@@ -21,9 +21,9 @@ public class IntakeRoller extends SubsystemBase implements Loggable {
   // Current limit configuration
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
   private final boolean ENABLE_CURRENT_LIMIT = true;
-  private final double CONTINUOUS_CURRENT_LIMIT = 15; // amps
-  private final double TRIGGER_THRESHOLD_LIMIT = 30; // amp
-  private final double TRIGGER_THRESHOLD_TIME = 0.2; // s
+  private final double CONTINUOUS_CURRENT_LIMIT = 30; // amps
+  private final double TRIGGER_THRESHOLD_LIMIT = 60; // amp
+  private final double TRIGGER_THRESHOLD_TIME = 0.5; // s
 
   public static IntakeRoller getInstance() {
     if (instance == null) {
