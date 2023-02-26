@@ -64,7 +64,7 @@ public class ClawBelt extends SubsystemBase implements Loggable {
 
   @Log
   public boolean isGamePieceInClaw() {
-    return !m_gamePieceSensor.get();
+    return m_gamePieceSensor.get();
   }
 
   @Override

@@ -24,6 +24,7 @@ import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.Lighting;
 import frc.robot.commands.IK.IKCoordinate;
 import frc.robot.commands.IK.RobotRelativeIK;
 import frc.robot.commands.arm.*;
@@ -53,7 +54,7 @@ public class RobotContainer implements Loggable {
   private final IntakeConveyorBelt m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
   private final IntakeRoller m_IntakeRoller = IntakeRoller.getInstance();
   private final IntakeConveyorExtension m_IntakeConveyorExtension = IntakeConveyorExtension.getInstance();
-
+  private final Lights m_Lights = Lights.getInstance();
   private static DigitalInput m_practiceBotJumper = new DigitalInput(Constants.DiscreteInputs.PBOT_JUMPER_DI);
   private Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
@@ -78,6 +79,7 @@ public class RobotContainer implements Loggable {
     m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
     m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
     m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorController.getLeftY()));
+    m_Lights.setDefaultCommand(new Lighting(""));
   }
 
   /**
@@ -91,7 +93,10 @@ public class RobotContainer implements Loggable {
   private void configureBindings() {
     //Driver Controls
     m_driverController.a().onTrue(new balanceOnCharge());
-
+    m_driverController.b().onTrue(new Lighting("white"));
+    m_driverController.y().onTrue(new Lighting("purple"));
+    m_driverController.x().onTrue(new Lighting("yellow"));
+    
     //Operator Controls
     m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.05));
     m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.3));
