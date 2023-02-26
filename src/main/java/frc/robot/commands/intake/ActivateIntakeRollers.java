@@ -8,8 +8,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeRoller;
 
 public class ActivateIntakeRollers extends CommandBase {
- private static IntakeRoller m_IntakeRoller;
- boolean RollersOn1;
+  private static IntakeRoller m_IntakeRoller;
+  boolean RollersOn1;
+
   public ActivateIntakeRollers(Boolean RollersOn) {
     m_IntakeRoller = IntakeRoller.getInstance();
     addRequirements(m_IntakeRoller);
@@ -23,8 +24,7 @@ public class ActivateIntakeRollers extends CommandBase {
   public void execute() {
     if (RollersOn1 == true) {
       m_IntakeRoller.setSpeed(1.0);
-    }
-    else{
+    } else{
       m_IntakeRoller.setSpeed(0.0);
     }
   }
