@@ -4,10 +4,9 @@
 
 package frc.robot.commands.auto;
 
-import frc.robot.subsystems.Arm;
 import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.drivetrain.DriveToPosition;
-import frc.robot.commands.intake.IntakePiece;
+import frc.robot.commands.intake.ActivateIntakeRollers;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.commands.claw.ClawClose;
@@ -19,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 
 public class CornerStartRoutine extends SequentialCommandGroup {
-  private Arm arm;
   /** Creates a new TwoBall. */
   public CornerStartRoutine(Drivetrain drivetrain, boolean BlueAlliance, boolean isBottomRoutine) { 
     double invertWaistOne;
@@ -59,7 +57,7 @@ public class CornerStartRoutine extends SequentialCommandGroup {
         // 7a and 8a
         new DriveToPosition(5.11), // Distance in meters to travel
         // 7b
-        new IntakePiece(true)
+        new ActivateIntakeRollers(true) 
       ),
       Commands.parallel( 
         // 9a
