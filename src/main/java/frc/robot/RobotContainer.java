@@ -4,31 +4,20 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
 import frc.robot.subsystems.*;
 import frc.robot.utils.Util;
-import frc.robot.commands.auto.*;
 import frc.robot.commands.chargestation.*;
-import frc.robot.commands.claw.ClawClose;
-import frc.robot.commands.claw.ClawOpen;
+import frc.robot.commands.claw.*;
 import frc.robot.commands.drivetrain.*;
-import frc.robot.commands.intake.ActivateIntakeRollers;
-import frc.robot.commands.intake.IntakeConveyorBeltSpeed;
-import frc.robot.commands.intake.IntakeConveyorIn;
-import frc.robot.commands.intake.IntakePiece;
-import frc.robot.commands.intake.SetIntakeExtension;
-import frc.robot.commands.intake.ZeroTopLeftIntake;
+import frc.robot.commands.intake.*;
 import frc.robot.commands.shoulder.*;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
@@ -59,12 +48,13 @@ public class RobotContainer implements Loggable {
   private final Vision m_vision = Vision.getInstance();
   private final Arm m_arm = Arm.getInstance();
   private final ClawGrasp m_ClawGrasp = ClawGrasp.getInstance();
-  private static DigitalInput m_practiceBotJumper = new DigitalInput(Constants.DiscreteInputs.PBOT_JUMPER_DI);
-  private Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
   private final IntakeExtensionMotor m_IntakeExtensionMotor = IntakeExtensionMotor.getInstance();
   private final IntakeConveyorBelt m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
   private final IntakeRoller m_IntakeRoller = IntakeRoller.getInstance();
   private final IntakeConveyorExtension m_IntakeConveyorExtension = IntakeConveyorExtension.getInstance();
+
+  private static DigitalInput m_practiceBotJumper = new DigitalInput(Constants.DiscreteInputs.PBOT_JUMPER_DI);
+  private Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
