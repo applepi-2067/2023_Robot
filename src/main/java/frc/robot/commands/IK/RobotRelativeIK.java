@@ -4,9 +4,9 @@
 
 package frc.robot.commands.IK;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Waist;
@@ -16,25 +16,33 @@ public class RobotRelativeIK extends CommandBase {
   private Waist m_waist = Waist.getInstance();
   private Shoulder m_shoulder = Shoulder.getInstance();
   private double m_armLength;
-  private double m_shoulderAngle;
-  private double m_waistAngle;
+  private double m_shoulderAngleDegrees;
+  private double m_waistAngleDegrees;
+
+  public RobotRelativeIK(IKCoordinate coord) {
+    this(coord.x, coord.y, coord.z);
+  }
+
   /** Creates a new RobotRelativeIK. */
   public RobotRelativeIK(double x, double y, double z) {
     // bounds checks
-
+    // Enforce minimum Z height
+    z = Math.max(z, Constants.IKConstraints.MINIMUM_Z_HEIGHT);
 
     // Convert from Z relative to floor to Z relative to shoulder
-    z = z - Constants.SetpointTolerances.SHOULDER_HEIGHT;
-    z = Math.max(z, Constants.IKConstraints.MINIMUM_Z_HEIGHT);
+    z = z - Constants.IKOffsets.SHOULDER_HEIGHT;
 
     addRequirements(m_arm);
     addRequirements(m_shoulder);
     addRequirements(m_waist);
-    // Use addRequirements() here to declare subsystem dependencies.
 
-    m_armLength = getArmLength(x, y, z);
-    m_shoulderAngle = getThetaShoulder(x, y, z);
-    m_waistAngle = getThetaWaist(x, y, z);
+    m_shoulderAngleDegrees = Units.radiansToDegrees(getThetaShoulder(x, y, z));
+    m_waistAngleDegrees = Units.radiansToDegrees(getThetaWaist(x, y, z));
+    m_armLength = getArmLength(x, y, z);  // Total length of arm from axis of shoulder
+
+    // Calculate length the arm needs to extend
+    m_armLength -= Constants.IKOffsets.MINIMUM_ARM_LENGTH;
+    m_armLength = Math.max(m_armLength, 0);
   }
 
   private double getArmLength(double x, double y, double z) {
@@ -59,8 +67,8 @@ public class RobotRelativeIK extends CommandBase {
   @Override
   public void execute() {
     m_arm.setPosition(m_armLength);
-    m_shoulder.setPosition(m_shoulderAngle);
-    m_waist.setPosition(m_waistAngle);
+    m_shoulder.setPosition(m_shoulderAngleDegrees);
+    m_waist.setPosition(m_waistAngleDegrees);
   }
 
   // Called once the command ends or is interrupted.
@@ -70,8 +78,8 @@ public class RobotRelativeIK extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(m_shoulderAngle - m_shoulder.getPosition()) < Constants.SetpointTolerances.SHOULDER_ANGLE_TOLERANCE && 
+    return Math.abs(m_shoulderAngleDegrees - m_shoulder.getPosition()) < Constants.SetpointTolerances.SHOULDER_ANGLE_TOLERANCE && 
     Math.abs(m_armLength - m_arm.getPosition()) < Constants.SetpointTolerances.ARM_METERS_TOLERANCE && 
-    Math.abs(m_waistAngle - m_waist.getPosition()) < Constants.SetpointTolerances.WAIST_ANGLE_TOLERANCE;
+    Math.abs(m_waistAngleDegrees - m_waist.getPosition()) < Constants.SetpointTolerances.WAIST_ANGLE_TOLERANCE;
   }
 }

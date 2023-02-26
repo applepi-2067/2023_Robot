@@ -4,55 +4,59 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
 import frc.robot.subsystems.*;
-import frc.robot.commands.auto.*;
-import frc.robot.commands.claw.ClawClose;
-import frc.robot.commands.claw.ClawOpen;
+import frc.robot.utils.Util;
+import frc.robot.commands.chargestation.*;
+import frc.robot.commands.claw.*;
 import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.intake.*;
 import frc.robot.commands.shoulder.*;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.IK.IKCoordinate;
 import frc.robot.commands.IK.RobotRelativeIK;
 import frc.robot.commands.arm.*;
 
 /**
- * This class is where the bulk of the robot should be declared. 
- * Since Command-based is a "declarative" paradigm, very little robot logic 
+ * This class is where the bulk of the robot should be declared.
+ * Since Command-based is a "declarative" paradigm, very little robot logic
  * should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls).
  * Instead, the robot structure (including subsystems, commands,
  * and trigger mappings) should be declared here.
  */
-public class RobotContainer implements Loggable{
+public class RobotContainer implements Loggable {
   // Instantiate subsystems, controllers, and commands.
   private final CommandXboxController m_driverController = new CommandXboxController(
-    Constants.OperatorConstants.kDriverControllerPort);
+      Constants.OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_operatorController = new CommandXboxController(
-    Constants.OperatorConstants.kOperatorControllerPort);
+      Constants.OperatorConstants.kOperatorControllerPort);
 
-  private final Drivetrain m_robotDrive = Drivetrain.getInstance();
+  private final Drivetrain m_drivetrain = Drivetrain.getInstance();
   private final Waist m_waist = Waist.getInstance();
   private final Shoulder m_shoulder = Shoulder.getInstance();
   private final Vision m_vision = Vision.getInstance();
   private final Arm m_arm = Arm.getInstance();
   private final ClawGrasp m_ClawGrasp = ClawGrasp.getInstance();
+  private final IntakeExtensionMotor m_IntakeExtensionMotor = IntakeExtensionMotor.getInstance();
+  private final IntakeConveyorBelt m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
+  private final IntakeRoller m_IntakeRoller = IntakeRoller.getInstance();
+  private final IntakeConveyorExtension m_IntakeConveyorExtension = IntakeConveyorExtension.getInstance();
+
   private static DigitalInput m_practiceBotJumper = new DigitalInput(Constants.DiscreteInputs.PBOT_JUMPER_DI);
   private Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
-  
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -63,18 +67,13 @@ public class RobotContainer implements Loggable{
     configureBindings();
 
     // Configure default commands.
-    // Set the default drive command to split-stick arcade drive.
-    m_robotDrive.setDefaultCommand(
-        // A split-stick arcade command.
-        // Forward/backward controlled by the left hand, turning controlled by the right.
+    // Set the default drive command to tank drive.
+    m_drivetrain.setDefaultCommand(
         Commands.run(
-          () -> m_robotDrive.arcadeDrive(
-                  -m_driverController.getLeftY() / 1.5,
-                  -m_driverController.getRightX() / 2.0
-                ),
-          m_robotDrive)
-        );
-  
+            () -> m_drivetrain.arcadeDrive(
+                Util.clampStickValue(-m_driverController.getLeftY()),
+                Util.clampStickValue(-m_driverController.getRightX())),
+            m_drivetrain));
 
     m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
     m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
@@ -91,47 +90,55 @@ public class RobotContainer implements Loggable{
    */
   private void configureBindings() {
     //Driver Controls
+    m_driverController.a().onTrue(new balanceOnCharge());
 
     //Operator Controls
-    m_operatorController.a().onTrue(new SetArmExtension(0.0));
-    m_operatorController.b().onTrue(new SetArmExtension(0.5));
+    m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.05));
+    m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.3));
 
-    // Arm low pose for scoring
-    m_operatorController.a().onTrue(new RobotRelativeIK(0.6858, 0, 0.2158));
-    // Arm mid pose for scoring
-    m_operatorController.x().onTrue(new RobotRelativeIK(1.0668, 0, 1.0797));
-    // Arm high pose for scoring
-    m_operatorController.y().onTrue(new RobotRelativeIK(1.4732, 0, 1.3843));
+    m_operatorController.povLeft().onTrue(new IntakeConveyorIn(true));
+    m_operatorController.povRight().onFalse(new IntakeConveyorIn(false));
 
-    // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
-    // m_operatorContoller.b().onTrue(new SetWaistPosition(180));
-    // m_operatorContoller.x().onTrue(new ZeroWaistPosition());
-    // m_operatorContoller.y().onTrue(new ZeroWaistPositionCoarse());
+    //Intake game piece
+    m_operatorController.leftBumper().onTrue (new SetIntakeRollerSpeed(1.0));
+    m_operatorController.leftBumper().onFalse(new SetIntakeRollerSpeed(0.0));
+    m_operatorController.leftBumper().onTrue(new IntakeConveyorBeltSpeed(-1.0));
+    m_operatorController.leftBumper().onFalse(new IntakeConveyorBeltSpeed(0.0));
+    //Outtake game piece
+    m_operatorController.rightBumper().onTrue (new SetIntakeRollerSpeed(-1.0));
+    m_operatorController.rightBumper().onFalse(new SetIntakeRollerSpeed(0.0));
+    m_operatorController.rightBumper().onTrue(new IntakeConveyorBeltSpeed(1.0));
+    m_operatorController.rightBumper().onFalse(new IntakeConveyorBeltSpeed(0.0));
+  
+    m_operatorController.start().onTrue(new ClawOpen());
+    m_operatorController.back().onTrue(new ClawClose());
 
-    // m_operatorContoller.leftBumper().onTrue(new SetArmExtension(0));
-    // m_operatorContoller.rightBumper().onTrue(new SetArmExtension(0.5));
-    
-    // m_operatorContoller.a().onTrue(new ClawClose());
-    // m_operatorContoller.x().onTrue(new SetShoulderPosition(0));
-    // m_operatorContoller.y().onTrue(new SetShoulderPosition(90));
-    // m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
+    //Arm locations
+    m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
+    m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));
+    m_operatorController.a().onTrue(new RobotRelativeIK(Constants.IKPositions.LOW_SCORING_POSITION));
+    m_operatorController.x().onTrue(new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
   }
 
   /**
    * Sets motors to coast or brake mode
+   * 
    * @param coastEnabled Set coast enabled if true, otherwise set brake mode
    */
   public void setCoastEnabled(boolean coastEnabled) {
     if (coastEnabled) {
-      m_robotDrive.setMotorsCoast();
-    }
-    else {
-      m_robotDrive.setMotorsBrake();
+      m_drivetrain.setMotorsCoast();
+    } else {
+      m_drivetrain.setMotorsBrake();
     }
   }
 
   @Log
   public static boolean isPracticeBot() {
     return !m_practiceBotJumper.get();
+  }
+
+  public void periodic() {
+    SmartDashboard.putData(m_IntakeExtensionMotor);
   }
 }

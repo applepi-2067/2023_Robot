@@ -11,8 +11,6 @@ import frc.robot.subsystems.Vision;
 public class DriveToVisionTargetOffset extends SequentialCommandGroup {
 
   public DriveToVisionTargetOffset(Drivetrain drivetrain, Vision vision, int targetID, Pose2d destinationPoseRelativeToTarget) {    
-    Drivetrain m_drivetrain = drivetrain;
-    Vision m_vision = vision;
 
     Pose2d destinationPoseRelativeToCamera = null;
     while (true) {

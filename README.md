@@ -4,6 +4,7 @@
 
 Code for FRC 2067's 2023 Robot for the game [Charged Up](https://youtu.be/0zpflsYc4PA)
 
+[Controller button map](https://applepi-2067.github.io/2023_Robot/)
 
 ## Useful links:
 

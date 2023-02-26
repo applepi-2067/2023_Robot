@@ -17,6 +17,8 @@ import frc.robot.commands.arm.ZeroArmPosition;
 import frc.robot.commands.auto.DriveSquareAuto;
 import frc.robot.commands.auto.DriveToVisionTargetOffset;
 import frc.robot.commands.auto.RotationTest;
+import frc.robot.commands.auto.ZeroAll;
+import frc.robot.commands.chargestation.BalanceOnChargeStation;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
 import io.github.oblarg.oblog.Logger;
@@ -68,6 +70,8 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     Logger.updateEntries();
+
+    m_robotContainer.periodic();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -92,6 +96,8 @@ public class Robot extends TimedRobot {
     m_autoChooser.setDefaultOption("Rotate Test", new RotationTest(Drivetrain.getInstance()));
     m_autoChooser.addOption("Zero Arm", new ZeroArmPosition());
     m_autoChooser.addOption("Drive Square", new DriveSquareAuto());
+    m_autoChooser.addOption("Zero All", new ZeroAll());
+    m_autoChooser.addOption("Balance", new BalanceOnChargeStation());
   }
 
   /**

@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -20,7 +21,6 @@ import frc.robot.utils.Gains;
 import java.lang.Math;
 
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Shoulder extends SubsystemBase implements Loggable {
@@ -39,9 +39,17 @@ public class Shoulder extends SubsystemBase implements Loggable {
   // Voltage needed to maintain horizontal arm position.
   private static final double horizontalArbFF = 0.00;
 
+  private static final int SMART_MOTION_SLOT = 0;
+
   // PID Coefficients.
-  private static Gains gains = new Gains(0.11, 0.001, 0, 0, 1, 0.65);
-  private static final int kSlotIdx = 0;
+  // private static Gains gains = new Gains(0.11, 0.001, 0, 0, 1, 0.65); //raw PI controller gains (non-smart motion)
+  private Gains gains = new Gains(1e-4, 3e-6, 0.000156, 0, 1, 0.65); //smart motion gains
+  
+  // SmartMotion configs
+  private static final double MAX_VELOCITY_RPM = 5_000; // NEO free speed 5676 RPM
+  private static final double MIN_VELOCITY_RPM = 0;
+  private static final double MAXX_ACCELERATION_RPM_PER_SEC = 20_000;
+  private static final double ALLOWED_ERROR = 0.1; //motor rotations
 
   public static Shoulder getInstance() {
     if (instance == null) {
@@ -53,21 +61,27 @@ public class Shoulder extends SubsystemBase implements Loggable {
   
   /** Creates a new Shoulder. */
   private Shoulder() {
-    m_motor = new CANSparkMax(Constants.CANDeviceIDs.MOTOR_SHOULDER_ID, MotorType.kBrushless);
+    m_motor = new CANSparkMax(Constants.CANDeviceIDs.SHOULDER_MOTOR_ID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
     m_motor.setSmartCurrentLimit(CURRENT_LIMIT);
     m_motor.setInverted(INVERT_MOTOR);
+    m_motor.setIdleMode(IdleMode.kBrake);
 
     m_pidController = m_motor.getPIDController();
     m_encoder = m_motor.getEncoder();
 
      // Set PID coefficients
-     m_pidController.setP(gains.kP);
-     m_pidController.setI(gains.kI);
-     m_pidController.setD(gains.kD);
-     m_pidController.setIZone(gains.kIzone);
-     m_pidController.setFF(gains.kF);
-     m_pidController.setOutputRange(-gains.kPeakOutput, gains.kPeakOutput);
+     m_pidController.setP(gains.kP, SMART_MOTION_SLOT);
+     m_pidController.setI(gains.kI, SMART_MOTION_SLOT);
+     m_pidController.setD(gains.kD, SMART_MOTION_SLOT);
+     m_pidController.setIZone(gains.kIzone, SMART_MOTION_SLOT);
+     m_pidController.setFF(gains.kF, SMART_MOTION_SLOT);
+     m_pidController.setOutputRange(-gains.kPeakOutput, gains.kPeakOutput, SMART_MOTION_SLOT);
+
+     m_pidController.setSmartMotionMaxVelocity(MAX_VELOCITY_RPM, SMART_MOTION_SLOT);
+     m_pidController.setSmartMotionMinOutputVelocity(MIN_VELOCITY_RPM, SMART_MOTION_SLOT);
+     m_pidController.setSmartMotionMaxAccel(MAXX_ACCELERATION_RPM_PER_SEC, SMART_MOTION_SLOT);
+     m_pidController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERROR, SMART_MOTION_SLOT);
 
      if (RobotBase.isSimulation()) {
       REVPhysicsSim.getInstance().addSparkMax(m_motor, DCMotor.getNEO(1));
@@ -87,11 +101,6 @@ public class Shoulder extends SubsystemBase implements Loggable {
     return m_motor.getOutputCurrent();
   }
 
-  @Config
-  private void setGains(double P, double I, double D, double f, double IZone, double peak) {
-
-  }
-
   /**
    * Set shoulder rotation.
    * @param degrees
@@ -99,14 +108,19 @@ public class Shoulder extends SubsystemBase implements Loggable {
   public void setPosition(double degrees) {
     m_pidController.setReference(
       degreesToMotorRotations(degrees),
-      CANSparkMax.ControlType.kPosition,
-      kSlotIdx,
+      // CANSparkMax.ControlType.kPosition,
+      CANSparkMax.ControlType.kSmartMotion,
+      SMART_MOTION_SLOT,
       getArbFF()
     );
   }
 
   public void resetEncoders() {
     m_encoder.setPosition(0.0);
+  }
+
+  public void setEncoderAngle(double encoderPositionDegrees) {
+    m_encoder.setPosition(degreesToMotorRotations(encoderPositionDegrees));
   }
 
   /**
