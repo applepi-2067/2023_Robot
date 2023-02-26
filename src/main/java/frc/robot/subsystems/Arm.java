@@ -41,7 +41,7 @@ public class Arm extends SubsystemBase implements Loggable{
   private static final boolean INVERT_MOTOR = false;
   public static final double MAX_ARM_EXTENSION_METERS = Units.inchesToMeters(36.25);
 
-  private static double max_voltage_open_loop = 2.0;
+  private static double max_voltage_open_loop = 6.0;
 
   // PID Coefficients.
   private Gains gains = new Gains(0.1, 1e-4, 1, 0, 1, 1.0);
