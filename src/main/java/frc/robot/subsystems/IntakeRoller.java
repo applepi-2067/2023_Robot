@@ -6,17 +6,17 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
+import frc.robot.utils.TalonFXHelper;
 import frc.robot.utils.Util;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import frc.robot.Constants;
 
 public class IntakeRoller extends SubsystemBase implements Loggable {
 
   private static IntakeRoller instance = null;
-  private final TalonFX m_leftMotor = new TalonFX(Constants.CANDeviceIDs.INTAKE_LEFT_ROLLER_MOTOR_ID);
-  private final TalonFX m_rightMotor = new TalonFX(Constants.CANDeviceIDs.INTAKE_RIGHT_ROLLER_MOTOR_ID);
+  private final TalonFXHelper m_leftMotor = new TalonFXHelper(Constants.CANDeviceIDs.INTAKE_LEFT_ROLLER_MOTOR_ID);
+  private final TalonFXHelper m_rightMotor = new TalonFXHelper(Constants.CANDeviceIDs.INTAKE_RIGHT_ROLLER_MOTOR_ID);
 
   // Current limit configuration
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
@@ -38,12 +38,15 @@ public class IntakeRoller extends SubsystemBase implements Loggable {
     m_rightMotor.configFactoryDefault();
     m_leftMotor.setInverted(false);
     m_rightMotor.setInverted(true);
+
+    m_leftMotor.configOpenLoopStatusFrameRates();
+    m_rightMotor.configOpenLoopStatusFrameRates();
+
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
         CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
     m_rightMotor.configSupplyCurrentLimit(talonCurrentLimit);
     m_leftMotor.configSupplyCurrentLimit(talonCurrentLimit);
-
   }
 
   /**
