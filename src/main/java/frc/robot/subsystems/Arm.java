@@ -41,7 +41,7 @@ public class Arm extends SubsystemBase implements Loggable{
   private static final boolean INVERT_MOTOR = false;
   public static final double MAX_ARM_EXTENSION_METERS = Units.inchesToMeters(36.25);
 
-  private static double max_voltage_open_loop = 1.0;
+  private static double max_voltage_open_loop = 2.0;
 
   // PID Coefficients.
   private Gains gains = new Gains(0.1, 1e-4, 1, 0, 1, 1.0);
@@ -101,8 +101,8 @@ public class Arm extends SubsystemBase implements Loggable{
    * @param speed (-1.0 to 1.0)
    */
   public void setSpeed(double speed) {
-    Util.limit(speed);
-    m_pidController.setReference(speed * max_voltage_open_loop, CANSparkMax.ControlType.kVoltage);
+    double voltage = Util.limit(speed) * max_voltage_open_loop;
+    m_pidController.setReference(voltage, CANSparkMax.ControlType.kVoltage);
   }
 
   @Log (name = "Velocity (V)", rowIndex = 2, columnIndex = 0)
@@ -124,10 +124,6 @@ public class Arm extends SubsystemBase implements Loggable{
     return motorRotationsToMeters(m_encoder.getPosition());
   }
 
-  @Config (name = "Output Limit (V)", rowIndex = 2, columnIndex = 2, defaultValueNumeric = 1.0)
-  public void setMaxVoltage(double v) {
-    max_voltage_open_loop = v;
-  }
 
   @Override
   public void periodic() {
