@@ -118,6 +118,10 @@ public final class Constants {
     public static final IKCoordinate ABOVE_INTAKE_BEFORE_ACQUISITION = new IKCoordinate(0, 0.2, 0.169); //TODO: SET
     public static final IKCoordinate ACQUIRING_PIECE_FROM_INTAKE = new IKCoordinate(0, 0.238, 0.169); //TODO: SET
     public static final IKCoordinate STOWED_WITH_GAME_PIECE_CLEAR_OF_INTAKE = new IKCoordinate(0, 0, 0); //TODO: SET
+
+    public static final IKCoordinate HIGH_SCORING_POSITION = new IKCoordinate(1.4732, 0, 1.3843); //TODO: SET
+    public static final IKCoordinate MID_SCORING_POSITION = new IKCoordinate(1.0668, 0, 1.0797); //TODO: SET
+    public static final IKCoordinate LOW_SCORING_POSITION = new IKCoordinate(0.6858, 0, 0.2158); //TODO: SET
   }
 
   public static final class IKOffsets {
