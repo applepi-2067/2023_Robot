@@ -34,10 +34,10 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Drivetrain extends SubsystemBase implements Loggable{
   /** Creates a new DriveTrain. */
   private static Drivetrain instance = null;
-  private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_1_ID);
-  private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_1_ID);
-  private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_LEFT_2_ID);
-  private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.MOTOR_RIGHT_2_ID);
+  private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDeviceIDs.DT_MOTOR_LEFT_1_ID);
+  private final WPI_TalonFX m_rightMotor = new WPI_TalonFX(Constants.CANDeviceIDs.DT_MOTOR_RIGHT_1_ID);
+  private final WPI_TalonFX m_leftMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.DT_MOTOR_LEFT_2_ID);
+  private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.DT_MOTOR_RIGHT_2_ID);
   private final DifferentialDrive m_drivetrain = new DifferentialDrive(m_leftMotor, m_rightMotor);
 
   private final SlewRateLimiter m_leftAccelerationLimiter = new SlewRateLimiter(Constants.Drivetrain.MOTOR_ACCELERATION);
