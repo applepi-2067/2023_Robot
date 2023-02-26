@@ -44,7 +44,7 @@ public final class Constants {
 
     public static final int INTAKE_LEFT_EXTENSION_MOTOR_ID = 12;
     public static final int INTAKE_RIGHT_EXTENSION_MOTOR_ID = 13;
-    public static final int MOTOR_SHOULDER_ID = 14;
+    public static final int SHOULDER_MOTOR_ID = 14;
 
     public static final int INTAKE_EXTENSION_MOTOR_LEFT_ID = 16;
     public static final int INTAKE_EXTENSION_MOTOR_RIGHT_ID = 17;
