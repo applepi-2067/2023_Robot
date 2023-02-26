@@ -7,7 +7,6 @@ package frc.robot.commands.IK;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Waist;
@@ -19,6 +18,11 @@ public class RobotRelativeIK extends CommandBase {
   private double m_armLength;
   private double m_shoulderAngleDegrees;
   private double m_waistAngleDegrees;
+
+  public RobotRelativeIK(IKCoordinate coord) {
+    this(coord.x, coord.y, coord.z);
+  }
+
   /** Creates a new RobotRelativeIK. */
   public RobotRelativeIK(double x, double y, double z) {
     // bounds checks
