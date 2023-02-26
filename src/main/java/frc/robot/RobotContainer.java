@@ -121,20 +121,20 @@ public class RobotContainer implements Loggable {
     // m_operatorContoller.leftBumper().onTrue(new SetArmExtension(0));
     // m_operatorContoller.rightBumper().onTrue(new SetArmExtension(0.5));
     
-     //m_operatorController.x().onTrue(new ClawOpen());
-     //m_operatorController.a().onTrue(new ClawClose());
+    //m_operatorController.x().onTrue(new ClawOpen());
+    //m_operatorController.a().onTrue(new ClawClose());
     // m_operatorContoller.x().onTrue(new SetShoulderPosition(0));
     // m_operatorContoller.y().onTrue(new SetShoulderPosition(90));
     // m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
-      m_operatorController.a().onTrue (new ActivateIntakeRollers(true));
-      m_operatorController.a().onFalse(new ActivateIntakeRollers(false));
-      m_operatorController.a().onTrue(new IntakeConveyorBeltSpeed(-1.0));
-      m_operatorController.a().onFalse(new IntakeConveyorBeltSpeed(0.0));
-      m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.05));
-      m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.3));
-      m_operatorController.start().onTrue(new IntakeConveyorIn(true));
-      m_operatorController.back().onFalse(new IntakeConveyorIn(false));
-      }
+    m_operatorController.a().onTrue (new ActivateIntakeRollers(true));
+    m_operatorController.a().onFalse(new ActivateIntakeRollers(false));
+    m_operatorController.a().onTrue(new IntakeConveyorBeltSpeed(-1.0));
+    m_operatorController.a().onFalse(new IntakeConveyorBeltSpeed(0.0));
+    m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.05));
+    m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.3));
+    m_operatorController.start().onTrue(new IntakeConveyorIn(true));
+    m_operatorController.back().onFalse(new IntakeConveyorIn(false));
+  }
 
   /**
    * Sets motors to coast or brake mode
