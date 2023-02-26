@@ -36,20 +36,20 @@ public final class Constants {
     public static final int MOTOR_RIGHT_1_ID = 2;
     public static final int MOTOR_LEFT_2_ID = 3;
     public static final int MOTOR_RIGHT_2_ID = 4;
-
     public static final int MOTOR_WAIST_ID = 5;
+    public static final int INTAKE_RIGHT_ROLLER_MOTOR_ID = 6;
+    public static final int INTAKE_LEFT_ROLLER_MOTOR_ID = 7;
     public static final int ARM_MOTOR_ID = 8;
-    public static final int MOTOR_SHOULDER_ID = 14;
-
-    public static final int PIGEON_IMU_ID = 0;
-
     public static final int INTAKE_CONVEYOR_MOTOR_ID = 9;
+
     public static final int INTAKE_LEFT_EXTENSION_MOTOR_ID = 12;
     public static final int INTAKE_RIGHT_EXTENSION_MOTOR_ID = 13;
-    public static final int INTAKE_LEFT_ROLLER_MOTOR_ID = 7;
-    public static final int INTAKE_RIGHT_ROLLER_MOTOR_ID = 6;
+    public static final int MOTOR_SHOULDER_ID = 14;
+
     public static final int INTAKE_EXTENSION_MOTOR_LEFT_ID = 16;
     public static final int INTAKE_EXTENSION_MOTOR_RIGHT_ID = 17;
+
+    public static final int PIGEON_IMU_ID = 0;
   }
 
   public static class DiscreteInputs {
