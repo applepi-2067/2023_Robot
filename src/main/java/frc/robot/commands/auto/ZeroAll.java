@@ -17,14 +17,14 @@ import frc.robot.commands.waist.ZeroWaistPositionCoarse;
 public class ZeroAll extends SequentialCommandGroup {
     public ZeroAll() {
         addCommands(
-            // new ZeroShoulderPosition(Constants.ZeroingOffsets.SHOULDER_FRONT_MINIMUM_ANGLE),
-            // new SetShoulderPosition(Constants.ZeroingOffsets.SHOULDER_FRONT_MINIMUM_ANGLE + 4.0), // Arm must clear a sprocket
-            // new ZeroArmPosition().andThen(new SetArmExtension(0.0)),
-            // Commands.parallel(
-            //     new SetShoulderPosition(0.0),
-            //     new ZeroWaistPosition().andThen(new WaitCommand(0.5)).andThen(new SetWaistPosition(0))
-            // ),
-               new ZeroTopLeftIntake(), new ZeroTopRightIntake()
+            new ZeroShoulderPosition(Constants.ZeroingOffsets.SHOULDER_FRONT_MINIMUM_ANGLE),
+            new SetShoulderPosition(Constants.ZeroingOffsets.SHOULDER_FRONT_MINIMUM_ANGLE + 4.0), // Arm must clear a sprocket
+            new ZeroArmPosition().andThen(new SetArmExtension(0.0)),
+            Commands.parallel(
+                new SetShoulderPosition(0.0),
+                new ZeroWaistPosition().andThen(new WaitCommand(0.5)).andThen(new SetWaistPosition(0)),
+                new ZeroTopLeftIntake().andThen(new ZeroTopRightIntake())
+                )
         );
     }
     

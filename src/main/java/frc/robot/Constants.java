@@ -109,18 +109,18 @@ public final class Constants {
   }
 
   public static final class SetpointTolerances {
-    public static final double SHOULDER_ANGLE_TOLERANCE = 0.1;
+    public static final double SHOULDER_ANGLE_TOLERANCE = 1;
     public static final double ARM_METERS_TOLERANCE = 0.005;
     public static final double WAIST_ANGLE_TOLERANCE = 0.1;
   }
   
   public static final class IKPositions {
-    public static final IKCoordinate ABOVE_INTAKE_BEFORE_ACQUISITION = new IKCoordinate(0, 0.2, 0.169); //TODO: SET
-    public static final IKCoordinate ACQUIRING_PIECE_FROM_INTAKE = new IKCoordinate(0, 0.238, 0.169); //TODO: SET
-    public static final IKCoordinate STOWED_WITH_GAME_PIECE_CLEAR_OF_INTAKE = new IKCoordinate(0, 0, 0); //TODO: SET
+    public static final IKCoordinate ABOVE_INTAKE_BEFORE_ACQUISITION = new IKCoordinate(0.26, 0.0, 0.38); //TODO: SET
+    public static final IKCoordinate ACQUIRING_PIECE_FROM_INTAKE = new IKCoordinate(0.23, 0.0, 0.27); //TODO: SET
+    public static final IKCoordinate STOWED_WITH_GAME_PIECE_CLEAR_OF_INTAKE = new IKCoordinate(0.23, 0, 0.5); //TODO: SET
 
-    public static final IKCoordinate HIGH_SCORING_POSITION = new IKCoordinate(1.4732, 0, 1.3843); //TODO: SET
-    public static final IKCoordinate MID_SCORING_POSITION = new IKCoordinate(1.0668, 0, 1.0797); //TODO: SET
+    public static final IKCoordinate HIGH_SCORING_POSITION = new IKCoordinate(1.44, 0, 1.36); //TODO: SET
+    public static final IKCoordinate MID_SCORING_POSITION = new IKCoordinate(1.00, 0, 1.03); //TODO: SET
     public static final IKCoordinate LOW_SCORING_POSITION = new IKCoordinate(0.6858, 0, 0.2158); //TODO: SET
   }
 

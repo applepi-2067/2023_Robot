@@ -245,6 +245,7 @@ public class Util {
 	 * @return x position in meteres
 	 */
 	public static double getIKX(double armLength, double waistAngle, double shoulderAngle) {
+		armLength += Constants.IKOffsets.MINIMUM_ARM_LENGTH; 
 		return (armLength * (Math.sin(shoulderAngle))) * (Math.cos(waistAngle));
 	}
 
@@ -256,6 +257,13 @@ public class Util {
 	 * @return
 	 */
 	public static double getIKY(double armLength, double waistAngle, double shoulderAngle) {
+		armLength += Constants.IKOffsets.MINIMUM_ARM_LENGTH;
+		double ans = (armLength * (Math.sin(shoulderAngle))) * (Math.sin(waistAngle));
+		System.out.println("YYY arm_len: " + armLength
+					+ ", sin(shoulder): " + Math.sin(shoulderAngle)
+					+ ", sin(waist)" + (Math.sin(waistAngle))
+					+ ", ans: " + ans);
+ 
 		return (armLength * (Math.sin(shoulderAngle))) * (Math.sin(waistAngle));
 	}
 
@@ -267,6 +275,7 @@ public class Util {
 	 * @return
 	 */
 	public static double getIKZ(double armLength, double waistAngle, double shoulderAngle) {
+		armLength += Constants.IKOffsets.MINIMUM_ARM_LENGTH;
 		return (armLength * (Math.sin(shoulderAngle))) + Constants.IKOffsets.SHOULDER_HEIGHT;
 	}
 }
