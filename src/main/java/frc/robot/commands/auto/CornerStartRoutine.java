@@ -11,9 +11,8 @@ import frc.robot.commands.intake.IntakePiece;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.commands.claw.ClawClose;
-import frc.robot.commands.claw.ClawIntake;
 import frc.robot.commands.claw.ClawOpen;
-import frc.robot.subsystems.ClawGrasp;
+import frc.robot.commands.claw.SetClawBeltSpeed;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -81,7 +80,7 @@ public class CornerStartRoutine extends SequentialCommandGroup {
         // 12a
         new SetArmExtension(1.2192),
         // 13
-        new ClawIntake(false)
+        new SetClawBeltSpeed(0.0)
     );  
   
   }
