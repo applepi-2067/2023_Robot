@@ -107,7 +107,7 @@ public class Arm extends SubsystemBase implements Loggable {
     // Clamp arm extension on [0.0, max extension].
     meters = MathUtil.clamp(meters, 0.0, MAX_ARM_EXTENSION_METERS);
     // m_pidController.setReference(metersToMotorRotations(meters), CANSparkMax.ControlType.kPosition);
-    m_pidController.setReference(metersToMotorRotations(meters), CANSparkMax.ControlType.kSmartMotion);
+    m_pidController.setReference(metersToMotorRotations(meters), CANSparkMax.ControlType.kSmartMotion, SMART_MOTION_SLOT);
   }
 
   /**
