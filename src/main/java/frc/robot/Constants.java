@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import frc.robot.commands.IK.IKCoordinate;
 import frc.robot.utils.Gains;
 
 /**
@@ -113,6 +114,12 @@ public final class Constants {
     public static final double WAIST_ANGLE_TOLERANCE = 0.1;
   }
   
+  public static final class IKPositions {
+    public static final IKCoordinate ABOVE_INTAKE_BEFORE_ACQUISITION = new IKCoordinate(0, 0.2, 0.169); //TODO: SET
+    public static final IKCoordinate ACQUIRING_PIECE_FROM_INTAKE = new IKCoordinate(0, 0.238, 0.169); //TODO: SET
+    public static final IKCoordinate STOWED_WITH_GAME_PIECE_CLEAR_OF_INTAKE = new IKCoordinate(0, 0, 0); //TODO: SET
+  }
+
   public static final class IKOffsets {
     public static final double MINIMUM_ARM_LENGTH = 0.5334;  // Arm length when at zero
     public static final double SHOULDER_HEIGHT = 0.9779;
