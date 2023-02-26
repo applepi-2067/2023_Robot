@@ -41,7 +41,7 @@ public class ClawBelt extends SubsystemBase implements Loggable {
 
   /** Creates a new ClawBelt. */
   private ClawBelt() {
-    m_motor = new TalonSRX(CANDeviceIDs.MOTOR_CLAWBELT_ID);
+    m_motor = new TalonSRX(CANDeviceIDs.CLAWBELT_MOTOR_ID);
     m_motor.setInverted(INVERT_MOTOR);
     m_motor.setNeutralMode(NeutralMode.Coast);
 
