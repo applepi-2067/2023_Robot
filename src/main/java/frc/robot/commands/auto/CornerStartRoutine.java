@@ -6,7 +6,7 @@ package frc.robot.commands.auto;
 
 import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.drivetrain.DriveToPosition;
-import frc.robot.commands.intake.ActivateIntakeRollers;
+import frc.robot.commands.intake.SetIntakeRollerSpeed;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.commands.claw.ClawClose;
@@ -57,7 +57,7 @@ public class CornerStartRoutine extends SequentialCommandGroup {
         // 7a and 8a
         new DriveToPosition(5.11), // Distance in meters to travel
         // 7b
-        new ActivateIntakeRollers(true) 
+        new SetIntakeRollerSpeed(1.0) 
       ),
       Commands.parallel( 
         // 9a
