@@ -32,11 +32,11 @@ public final class Constants {
   }
 
   public static class CANDeviceIDs {
-    public static final int MOTOR_LEFT_1_ID = 1;
-    public static final int MOTOR_RIGHT_1_ID = 2;
-    public static final int MOTOR_LEFT_2_ID = 3;
-    public static final int MOTOR_RIGHT_2_ID = 4;
-    public static final int MOTOR_WAIST_ID = 5;
+    public static final int DT_MOTOR_LEFT_1_ID = 1;
+    public static final int DT_MOTOR_RIGHT_1_ID = 2;
+    public static final int DT_MOTOR_LEFT_2_ID = 3;
+    public static final int DT_MOTOR_RIGHT_2_ID = 4;
+    public static final int WAIST_MOTOR_ID = 5;
     public static final int INTAKE_RIGHT_ROLLER_MOTOR_ID = 6;
     public static final int INTAKE_LEFT_ROLLER_MOTOR_ID = 7;
     public static final int ARM_MOTOR_ID = 8;
@@ -101,9 +101,9 @@ public final class Constants {
   public static final class PneumaticsDevices {
     public static final int INTAKE_CONVEYOR_IN = 0;
     public static final int INTAKE_CONVEYOR_OUT = 1;
-    public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
-    public static final int CLAW_CLOSE = 7;
     public static final int CLAW_OPEN = 7;
+
+    public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
   }
 
   public static final class SetpointTolerances {
