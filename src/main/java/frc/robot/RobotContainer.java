@@ -24,6 +24,7 @@ import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.IK.IKCoordinate;
 import frc.robot.commands.IK.RobotRelativeIK;
 import frc.robot.commands.arm.*;
 
@@ -92,37 +93,31 @@ public class RobotContainer implements Loggable {
     m_driverController.a().onTrue(new balanceOnCharge());
 
     //Operator Controls
-    //m_operatorController.a().onTrue(new SetArmExtension(0.0));
-    //m_operatorController.b().onTrue(new SetArmExtension(0.5));
+    m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.05));
+    m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.3));
 
-    // Arm low pose for scoring
-    // m_operatorController.a().onTrue(new RobotRelativeIK(0.6858, 0, 0.2158));
-    // // Arm mid pose for scoring
-    // m_operatorController.x().onTrue(new RobotRelativeIK(1.0668, 0, 1.0797));
-    // // Arm high pose for scoring
-    // m_operatorController.y().onTrue(new RobotRelativeIK(1.4732, 0, 1.3843));
+    m_operatorController.povLeft().onTrue(new IntakeConveyorIn(true));
+    m_operatorController.povRight().onFalse(new IntakeConveyorIn(false));
 
-    // m_operatorContoller.a().onTrue(new SetWaistPosition(0));
-    // m_operatorContoller.b().onTrue(new SetWaistPosition(180));
-    // m_operatorContoller.x().onTrue(new ZeroWaistPosition());
-    // m_operatorContoller.y().onTrue(new ZeroWaistPositionCoarse());
+    //Intake game piece
+    m_operatorController.leftBumper().onTrue (new SetIntakeRollerSpeed(1.0));
+    m_operatorController.leftBumper().onFalse(new SetIntakeRollerSpeed(0.0));
+    m_operatorController.leftBumper().onTrue(new IntakeConveyorBeltSpeed(-1.0));
+    m_operatorController.leftBumper().onFalse(new IntakeConveyorBeltSpeed(0.0));
+    //Outtake game piece
+    m_operatorController.rightBumper().onTrue (new SetIntakeRollerSpeed(-1.0));
+    m_operatorController.rightBumper().onFalse(new SetIntakeRollerSpeed(0.0));
+    m_operatorController.rightBumper().onTrue(new IntakeConveyorBeltSpeed(1.0));
+    m_operatorController.rightBumper().onFalse(new IntakeConveyorBeltSpeed(0.0));
+  
+    m_operatorController.start().onTrue(new ClawOpen());
+    m_operatorController.back().onTrue(new ClawClose());
 
-    // m_operatorContoller.leftBumper().onTrue(new SetArmExtension(0));
-    // m_operatorContoller.rightBumper().onTrue(new SetArmExtension(0.5));
-    
-    //m_operatorController.x().onTrue(new ClawOpen());
-    //m_operatorController.a().onTrue(new ClawClose());
-    // m_operatorContoller.x().onTrue(new SetShoulderPosition(0));
-    // m_operatorContoller.y().onTrue(new SetShoulderPosition(90));
-    // m_operatorContoller.a().onTrue(new DriveShoulderWithJoystick(()->{return 0.0;}));
-    m_operatorController.a().onTrue (new ActivateIntakeRollers(true));
-    m_operatorController.a().onFalse(new ActivateIntakeRollers(false));
-    m_operatorController.a().onTrue(new IntakeConveyorBeltSpeed(-1.0));
-    m_operatorController.a().onFalse(new IntakeConveyorBeltSpeed(0.0));
-    m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.05));
-    m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.3));
-    m_operatorController.start().onTrue(new IntakeConveyorIn(true));
-    m_operatorController.back().onFalse(new IntakeConveyorIn(false));
+    //Arm locations
+    m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
+    m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));
+    m_operatorController.a().onTrue(new RobotRelativeIK(Constants.IKPositions.LOW_SCORING_POSITION));
+    m_operatorController.x().onTrue(new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
   }
 
   /**
