@@ -2,16 +2,10 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
 
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.REVPhysicsSim;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.Constants;
 import frc.robot.Constants.CANDeviceIDs;
 import frc.robot.utils.Util;
 
@@ -21,6 +15,13 @@ public class IntakeConveyorBelt extends SubsystemBase implements Loggable {
 
   private final TalonSRX m_motor;
   private static final boolean INVERT_MOTOR = false;
+
+    // Current limit configuration
+    private SupplyCurrentLimitConfiguration talonCurrentLimit;
+    private final boolean ENABLE_CURRENT_LIMIT = true;
+    private final double CONTINUOUS_CURRENT_LIMIT = 20; // amps
+    private final double TRIGGER_THRESHOLD_LIMIT = 30; // amp
+    private final double TRIGGER_THRESHOLD_TIME = 0.5; // s
 
   public static IntakeConveyorBelt getInstance() {
     if (instance == null) {
@@ -33,6 +34,9 @@ public class IntakeConveyorBelt extends SubsystemBase implements Loggable {
     m_motor = new TalonSRX(CANDeviceIDs.INTAKE_CONVEYOR_MOTOR_ID);
     m_motor.setInverted(INVERT_MOTOR);
 
+    talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
+      CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
+    m_motor.configSupplyCurrentLimit(talonCurrentLimit);
   }
 
   /**
