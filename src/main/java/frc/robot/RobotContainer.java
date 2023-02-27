@@ -53,6 +53,7 @@ public class RobotContainer implements Loggable {
   private final IntakeConveyorBelt m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
   private final IntakeRoller m_IntakeRoller = IntakeRoller.getInstance();
   private final IntakeConveyorExtension m_IntakeConveyorExtension = IntakeConveyorExtension.getInstance();
+  private final ClawBelt m_clawBelt = ClawBelt.getInstance();
 
   private static DigitalInput m_practiceBotJumper = new DigitalInput(Constants.DiscreteInputs.PBOT_JUMPER_DI);
   private Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
@@ -75,9 +76,10 @@ public class RobotContainer implements Loggable {
                 Util.clampStickValue(-m_driverController.getRightX())),
             m_drivetrain));
 
-    m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
-    m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
-    m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorController.getLeftY()));
+    // m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
+    // m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
+    // m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorController.getLeftY()));
+    m_clawBelt.setDefaultCommand(new SetClawBeltSpeed(() -> m_operatorController.getLeftY()));
   }
 
   /**
@@ -110,24 +112,28 @@ public class RobotContainer implements Loggable {
     m_operatorController.rightTrigger().onTrue(new IntakeConveyorBeltSpeed(1.0));
     m_operatorController.rightTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
   
-    m_operatorController.start().onTrue(new ClawOpen());
-    m_operatorController.back().onTrue(new ClawClose());
+    m_operatorController.back().onTrue(new ClawOpen());
+    m_operatorController.back().onFalse(new ClawClose());
 
     //Arm locations
-    m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
-    m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));
-    m_operatorController.a().onTrue(new RobotRelativeIK(Constants.IKPositions.LOW_SCORING_POSITION));
-    m_operatorController.x().onTrue(new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
+    m_operatorController.start().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-45.0))); // stowed/retracted position
+    m_operatorController.y().onTrue(new SetShoulderPosition(13.36).andThen(new SetArmExtension(0.894))); // High scoring position
+    m_operatorController.b().onTrue(new SetShoulderPosition(3.273).andThen(new SetArmExtension(0.429))); // Mid scoring position
+    m_operatorController.x().onTrue(new SetShoulderPosition(0).andThen(new SetArmExtension(0))); //Get Game Piece from human / feed station
 
-    SmartDashboard.putData("shoulder 0 degrees", new SetShoulderPosition(0));
-    SmartDashboard.putData("shoulder -60 degrees", new SetShoulderPosition(-60));
-    SmartDashboard.putData("waist 0 degrees", new SetWaistPosition(0));
-    SmartDashboard.putData("waist 15 degrees", new SetWaistPosition(15));
+    // m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
+    // m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));
+    // m_operatorController.a().onTrue(new RobotRelativeIK(Constants.IKPositions.LOW_SCORING_POSITION));
+    // m_operatorController.x().onTrue(new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
 
-    SmartDashboard.putData("Above intake before acquisition", new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
-    SmartDashboard.putData("Aquiring piece from intake", new RobotRelativeIK(Constants.IKPositions.ACQUIRING_PIECE_FROM_INTAKE));
-    SmartDashboard.putData("Stowed with game piece clear of intake", new RobotRelativeIK(Constants.IKPositions.STOWED_WITH_GAME_PIECE_CLEAR_OF_INTAKE));
+    // SmartDashboard.putData("shoulder 0 degrees", new SetShoulderPosition(0));
+    // SmartDashboard.putData("shoulder -60 degrees", new SetShoulderPosition(-60));
+    // SmartDashboard.putData("waist 0 degrees", new SetWaistPosition(0));
+    // SmartDashboard.putData("waist 15 degrees", new SetWaistPosition(15));
 
+    // SmartDashboard.putData("Above intake before acquisition", new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
+    // SmartDashboard.putData("Aquiring piece from intake", new RobotRelativeIK(Constants.IKPositions.ACQUIRING_PIECE_FROM_INTAKE));
+    // SmartDashboard.putData("Stowed with game piece clear of intake", new RobotRelativeIK(Constants.IKPositions.STOWED_WITH_GAME_PIECE_CLEAR_OF_INTAKE));
   }
 
   /**
