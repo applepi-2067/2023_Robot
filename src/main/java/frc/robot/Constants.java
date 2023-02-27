@@ -119,8 +119,8 @@ public final class Constants {
     public static final IKCoordinate ACQUIRING_PIECE_FROM_INTAKE = new IKCoordinate(0.23, 0.0, 0.27); //TODO: SET
     public static final IKCoordinate STOWED_WITH_GAME_PIECE_CLEAR_OF_INTAKE = new IKCoordinate(0.23, 0, 0.5); //TODO: SET
 
-    public static final IKCoordinate HIGH_SCORING_POSITION = new IKCoordinate(1.44, 0, 1.36); //TODO: SET
-    public static final IKCoordinate MID_SCORING_POSITION = new IKCoordinate(1.00, 0, 1.03); //TODO: SET
+    public static final IKCoordinate HIGH_SCORING_POSITION = new IKCoordinate(-1.44, 0, 1.36); //over the back
+    public static final IKCoordinate MID_SCORING_POSITION = new IKCoordinate(-1.00, 0, 1.03); //over the back
     public static final IKCoordinate LOW_SCORING_POSITION = new IKCoordinate(0.6858, 0, 0.2158); //TODO: SET
   }
 
