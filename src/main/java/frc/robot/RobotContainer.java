@@ -98,8 +98,10 @@ public class RobotContainer implements Loggable {
     m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.025));
     m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.332));
 
-    m_operatorController.povLeft().onTrue(new IntakeConveyorIn(true));
-    m_operatorController.povRight().onFalse(new IntakeConveyorIn(false));
+    // m_operatorController.povLeft().onTrue(new IntakeConveyorIn(true));
+    // m_operatorController.povRight().onFalse(new IntakeConveyorIn(false));
+    m_operatorController.povRight().onTrue(new ClawSensorGrab());
+    
 
     //Intake game piece
     m_operatorController.leftTrigger().onTrue (new SetIntakeRollerSpeed(1.0));
