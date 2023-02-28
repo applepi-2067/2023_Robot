@@ -246,7 +246,7 @@ public class Util {
 	 */
 	public static double getIKX(double armLength, double waistAngle, double shoulderAngle) {
 		armLength += Constants.IKOffsets.MINIMUM_ARM_LENGTH; 
-		return (armLength * (Math.sin(shoulderAngle))) * (Math.cos(waistAngle));
+		return (armLength * (Math.cos(shoulderAngle))) * (Math.cos(waistAngle));
 	}
 
 	/**
@@ -264,7 +264,7 @@ public class Util {
 					+ ", sin(waist)" + (Math.sin(waistAngle))
 					+ ", ans: " + ans);
  
-		return (armLength * (Math.sin(shoulderAngle))) * (Math.sin(waistAngle));
+		return (armLength * (Math.cos(shoulderAngle))) * (Math.sin(waistAngle));
 	}
 
 	/**
