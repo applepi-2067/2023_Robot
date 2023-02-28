@@ -27,7 +27,7 @@ public class Lighting extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_claw.isGamePieceInClaw()) {
+    if  (m_claw.isGamePieceInClaw()) {
       m_Lights.white();
     } 
     else if (m_LightMode.equals("purple")) {
