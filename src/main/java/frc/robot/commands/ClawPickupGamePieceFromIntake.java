@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.IK.RobotRelativeIK;
+import frc.robot.commands.auto.AquiringGamePiecePosition;
 import frc.robot.commands.claw.*;
 
 public class ClawPickupGamePieceFromIntake extends SequentialCommandGroup {
@@ -20,7 +21,8 @@ public class ClawPickupGamePieceFromIntake extends SequentialCommandGroup {
       //Lower the open claw while running the wheels inward
       new ClawOpen(),
       new SetClawBeltSpeed(()->{return 1.0;}),
-      new RobotRelativeIK(Constants.IKPositions.ACQUIRING_PIECE_FROM_INTAKE),
+      new AquiringGamePiecePosition(),
+      // new RobotRelativeIK(Constants.IKPositions.ACQUIRING_PIECE_FROM_INTAKE),
 
       //Close the claw
       new ClawClose(),
