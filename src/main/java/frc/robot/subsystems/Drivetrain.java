@@ -246,19 +246,18 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   }
 
   public void updateOdometry() {
-    Pose2d m_latestCameraPose2d = m_odometry.update(
+    m_latestRobotPose2d = m_odometry.update(
       new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters()
-    );
-
-    // Correct for waist rotation.
-    m_latestRobotPose2d = new Pose2d(
-      m_latestCameraPose2d.getX(), m_latestCameraPose2d.getY(), 
-      Rotation2d.fromDegrees(m_latestCameraPose2d.getRotation().getDegrees() - m_waist.getPosition())
     );
   }
 
   public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds) {
-    m_odometry.addVisionMeasurement(visionEstimatedRobotPose2d, timestampSeconds);
+    // Correct for waist rotation.
+    Pose2d correctedVisionEstimatedRobotPose2d = new Pose2d(
+      visionEstimatedRobotPose2d.getX(), visionEstimatedRobotPose2d.getY(), 
+      Rotation2d.fromDegrees(visionEstimatedRobotPose2d.getRotation().getDegrees() - m_waist.getPosition())
+    );
+    m_odometry.addVisionMeasurement(correctedVisionEstimatedRobotPose2d, timestampSeconds);
   }
 
   public Pose2d getLatestRobotPose2d() {
