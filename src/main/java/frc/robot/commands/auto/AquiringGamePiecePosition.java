@@ -8,6 +8,7 @@ import frc.robot.commands.waist.SetWaistPosition;
 public class AquiringGamePiecePosition extends SequentialCommandGroup {
     public AquiringGamePiecePosition () {
         addCommands(
+            new SetArmExtension(0.0),
             new SetWaistPosition(0.0),
             new SetShoulderPosition(-74.3),
             new SetArmExtension(0.2)
