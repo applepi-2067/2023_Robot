@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.IK.RobotRelativeIK;
 import frc.robot.commands.auto.AquiringGamePiecePosition;
+import frc.robot.commands.auto.StowedWithPiece;
 import frc.robot.commands.claw.*;
 
 public class ClawPickupGamePieceFromIntake extends SequentialCommandGroup {
@@ -30,7 +31,7 @@ public class ClawPickupGamePieceFromIntake extends SequentialCommandGroup {
       //Stop the wheels when the game piece is sensed in the gripper & raise the arm to the stowed location
       new WaitForGamePieceInClaw(),
       new SetClawBeltSpeed(()->{return 0;}),
-      new RobotRelativeIK(Constants.IKPositions.STOWED_WITH_GAME_PIECE_CLEAR_OF_INTAKE)
+      new StowedWithPiece()
     );
   }
 }
