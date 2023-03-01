@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -92,7 +94,8 @@ public class RobotContainer implements Loggable {
    */
   private void configureBindings() {
     //Driver Controls
-    m_driverController.a().onTrue(new balanceOnCharge());
+    // m_driverController.a().onTrue(new balanceOnCharge());
+    m_driverController.a().onTrue(new DriveToTargetOffset(4, new Pose2d(1.0, 0.0, new Rotation2d(Math.PI))));
 
     //Operator Controls
     m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.025));

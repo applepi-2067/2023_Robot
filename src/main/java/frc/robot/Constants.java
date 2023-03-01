@@ -8,6 +8,8 @@ import java.io.IOException;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.commands.IK.IKCoordinate;
 import frc.robot.utils.Gains;
@@ -68,6 +70,8 @@ public final class Constants {
   }
 
   public static class Drivetrain {
+    public static final Pose2d INITIAL_ROBOT_POSE2D = new Pose2d(12.813, 6.745, new Rotation2d(Math.PI)); // 3 meters from id 4, facing away.
+
     /**
      * Which PID slot to pull gains from. Starting 2018, you can choose from
      * 0,1,2 or 3. Only the first two (0,1) are visible in web-based
