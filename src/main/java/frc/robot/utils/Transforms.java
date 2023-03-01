@@ -29,14 +29,14 @@ public class Transforms {
         double targetRelativePoseRotation = targetRelativePose.getRotation().getRadians();
     
         double absoluteFieldPoseX = (
-            targetAbsolutePoseX + 
-            (targetRelativePoseX * Math.sin(targetRelativePoseRotation)) + 
-            (targetRelativePoseY * Math.cos(targetRelativePoseRotation))
+            targetAbsolutePoseX
+            + (targetRelativePoseX * Math.cos(targetAbsolutePoseRotation))
+            - (targetRelativePoseY * Math.sin(targetAbsolutePoseRotation))
         );
         double absoluteFieldPoseY = (
-            targetAbsolutePoseY + 
-            (targetRelativePoseY * Math.sin(targetRelativePoseRotation)) + 
-            (targetRelativePoseX * Math.cos(targetRelativePoseRotation))
+            targetAbsolutePoseY
+            + (targetRelativePoseX * Math.sin(targetAbsolutePoseRotation))
+            + (targetRelativePoseY * Math.cos(targetAbsolutePoseRotation))
         );
         double absoluteFieldPoseRotation = targetAbsolutePoseRotation + targetRelativePoseRotation;
 
