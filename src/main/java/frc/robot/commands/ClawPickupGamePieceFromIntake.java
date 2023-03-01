@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.IK.RobotRelativeIK;
+import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.auto.AquiringGamePiecePosition;
 import frc.robot.commands.auto.StowedWithPiece;
 import frc.robot.commands.claw.*;
@@ -18,6 +19,7 @@ public class ClawPickupGamePieceFromIntake extends SequentialCommandGroup {
     addCommands(
       //Sequence starts with claw open & above gap between the back of the intake and the waist,
       // waiting for a game piece to be brought into the robot
+      new SetArmExtension(0.0),
 
       //Lower the open claw while running the wheels inward
       new ClawOpen(),
