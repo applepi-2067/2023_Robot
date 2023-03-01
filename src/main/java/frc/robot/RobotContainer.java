@@ -98,22 +98,22 @@ public class RobotContainer implements Loggable {
     m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.025));
     m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.332));
 
-    m_operatorController.povLeft().onTrue(new IntakeConveyorIn(true));
-    m_operatorController.povRight().onFalse(new IntakeConveyorIn(false));
+    m_operatorController.leftBumper().onTrue(new IntakeConveyorIn(true));
+    m_operatorController.rightBumper().onFalse(new IntakeConveyorIn(false));
 
     //Intake game piece
-    m_operatorController.leftTrigger().onTrue (new SetIntakeRollerSpeed(1.0));
-    m_operatorController.leftTrigger().onFalse(new SetIntakeRollerSpeed(0.0));
-    m_operatorController.leftTrigger().onTrue(new IntakeConveyorBeltSpeed(-1.0));
-    m_operatorController.leftTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
-    //Outtake game piece
-    m_operatorController.rightTrigger().onTrue (new SetIntakeRollerSpeed(-1.0));
+    m_operatorController.rightTrigger().onTrue (new SetIntakeRollerSpeed(1.0));
     m_operatorController.rightTrigger().onFalse(new SetIntakeRollerSpeed(0.0));
-    m_operatorController.rightTrigger().onTrue(new IntakeConveyorBeltSpeed(1.0));
+    m_operatorController.rightTrigger().onTrue(new IntakeConveyorBeltSpeed(-1.0));
     m_operatorController.rightTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
+    //Outtake game piece
+    m_operatorController.leftTrigger().onTrue (new SetIntakeRollerSpeed(-1.0));
+    m_operatorController.leftTrigger().onFalse(new SetIntakeRollerSpeed(0.0));
+    m_operatorController.leftTrigger().onTrue(new IntakeConveyorBeltSpeed(1.0));
+    m_operatorController.leftTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
   
-    m_operatorController.back().onTrue(new ClawOpen());
-    m_operatorController.back().onFalse(new ClawClose());
+    m_operatorController.a().onTrue(new ClawOpen());
+    m_operatorController.a().onFalse(new ClawClose());
 
     //Arm locations
     m_operatorController.start().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-45.0))); // stowed/retracted position
@@ -121,10 +121,10 @@ public class RobotContainer implements Loggable {
     m_operatorController.b().onTrue(new SetShoulderPosition(3.273).andThen(new SetArmExtension(0.429))); // Mid scoring position
     m_operatorController.x().onTrue(new SetShoulderPosition(0).andThen(new SetArmExtension(0))); //Get Game Piece from human / feed station
 
-    // m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
-    // m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));
+     m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
+     m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));
     // m_operatorController.a().onTrue(new RobotRelativeIK(Constants.IKPositions.LOW_SCORING_POSITION));
-    // m_operatorController.x().onTrue(new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
+     m_operatorController.x().onTrue(new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
 
     // SmartDashboard.putData("shoulder 0 degrees", new SetShoulderPosition(0));
     // SmartDashboard.putData("shoulder -60 degrees", new SetShoulderPosition(-60));
@@ -164,3 +164,4 @@ public class RobotContainer implements Loggable {
     SmartDashboard.putNumber("Shoulder Rotation (deg)", m_shoulder.getPosition());
   }
 }
+
