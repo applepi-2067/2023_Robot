@@ -86,7 +86,6 @@ public class Robot extends TimedRobot {
       m_robotContainer.setCoastEnabled(true);
     }
   }
-
   @Override
   public void disabledPeriodic() {
     SmartDashboard.putData("Autonomous Mode Chooser", m_autoChooser); 
