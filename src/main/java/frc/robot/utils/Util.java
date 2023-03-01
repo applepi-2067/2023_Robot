@@ -235,4 +235,47 @@ public class Util {
 			return shiftedStick / (1.0 - Constants.Drivetrain.DRIVETRAIN_CONTROLLER_DEADBAND);
 		}
 	}
+
+	/**
+	 * getn the x component of the claw, where X is the (left/right) horizontal plane relative t othe front of the robot
+	 * 
+	 * @param armLength in meters
+	 * @param waistAngle in degrees
+	 * @param shoulderAngle in degrees
+	 * @return x position in meteres
+	 */
+	public static double getIKX(double armLength, double waistAngle, double shoulderAngle) {
+		armLength += Constants.IKOffsets.MINIMUM_ARM_LENGTH; 
+		return (armLength * (Math.sin(shoulderAngle))) * (Math.cos(waistAngle));
+	}
+
+	/**
+	 * get the y component of the claw on the forward/backward plane of the robot
+	 * @param armLength
+	 * @param waistAngle
+	 * @param shoulderAngle
+	 * @return
+	 */
+	public static double getIKY(double armLength, double waistAngle, double shoulderAngle) {
+		armLength += Constants.IKOffsets.MINIMUM_ARM_LENGTH;
+		double ans = (armLength * (Math.sin(shoulderAngle))) * (Math.sin(waistAngle));
+		System.out.println("YYY arm_len: " + armLength
+					+ ", sin(shoulder): " + Math.sin(shoulderAngle)
+					+ ", sin(waist)" + (Math.sin(waistAngle))
+					+ ", ans: " + ans);
+ 
+		return (armLength * (Math.sin(shoulderAngle))) * (Math.sin(waistAngle));
+	}
+
+	/**
+	 * get the z component of the claw in terms of height from the floor, offsetting the position to compensate for the shoulder height
+	 * @param armLength
+	 * @param waistAngle
+	 * @param shoulderAngle
+	 * @return
+	 */
+	public static double getIKZ(double armLength, double waistAngle, double shoulderAngle) {
+		armLength += Constants.IKOffsets.MINIMUM_ARM_LENGTH;
+		return (armLength * (Math.sin(shoulderAngle))) + Constants.IKOffsets.SHOULDER_HEIGHT;
+	}
 }

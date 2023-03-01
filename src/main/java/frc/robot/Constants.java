@@ -9,6 +9,7 @@ import java.io.IOException;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import frc.robot.commands.IK.IKCoordinate;
 import frc.robot.utils.Gains;
 
 /**
@@ -36,14 +37,23 @@ public final class Constants {
   }
 
   public static class CANDeviceIDs {
-    public static final int MOTOR_LEFT_1_ID = 1;
-    public static final int MOTOR_RIGHT_1_ID = 2;
-    public static final int MOTOR_LEFT_2_ID = 3;
-    public static final int MOTOR_RIGHT_2_ID = 4;
-
-    public static final int MOTOR_WAIST_ID = 5;
+    public static final int DT_MOTOR_LEFT_1_ID = 1;
+    public static final int DT_MOTOR_RIGHT_1_ID = 2;
+    public static final int DT_MOTOR_LEFT_2_ID = 3;
+    public static final int DT_MOTOR_RIGHT_2_ID = 4;
+    public static final int WAIST_MOTOR_ID = 5;
+    public static final int INTAKE_RIGHT_ROLLER_MOTOR_ID = 6;
+    public static final int INTAKE_LEFT_ROLLER_MOTOR_ID = 7;
     public static final int ARM_MOTOR_ID = 8;
-    public static final int MOTOR_SHOULDER_ID = 14;
+    public static final int INTAKE_CONVEYOR_MOTOR_ID = 9;
+    public static final int CLAWBELT_MOTOR_ID = 10;
+
+    public static final int INTAKE_LEFT_EXTENSION_MOTOR_ID = 12;
+    public static final int INTAKE_RIGHT_EXTENSION_MOTOR_ID = 13;
+    public static final int SHOULDER_MOTOR_ID = 14;
+
+    public static final int INTAKE_EXTENSION_MOTOR_LEFT_ID = 16;
+    public static final int INTAKE_EXTENSION_MOTOR_RIGHT_ID = 17;
 
     public static final int PIGEON_IMU_ID = 0;
   }
@@ -54,6 +64,7 @@ public final class Constants {
     public static final int ARM_END_OF_TRAVEL_DI = 2;
 
     public static final int PBOT_JUMPER_DI = 9;
+
   }
 
   public static class Drivetrain {
@@ -94,24 +105,45 @@ public final class Constants {
   }
 
   public static final class PneumaticsDevices {
-    public static final int CLAW_CLOSE = 0;
-    public static final int CLAW_OPEN = 1;
+    public static final int INTAKE_CONVEYOR_IN = 0;
+    public static final int INTAKE_CONVEYOR_OUT = 1;
+    public static final int CLAW_OPEN = 7;
+
     public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
   }
 
   public static final class SetpointTolerances {
-    public static final double SHOULDER_ANGLE_TOLERANCE = 0.1;
+    public static final double SHOULDER_ANGLE_TOLERANCE = 1;
     public static final double ARM_METERS_TOLERANCE = 0.005;
     public static final double WAIST_ANGLE_TOLERANCE = 0.1;
   }
   
+  public static final class IKPositions {
+    public static final IKCoordinate ABOVE_INTAKE_BEFORE_ACQUISITION = new IKCoordinate(0.26, 0.0, 0.38); //TODO: SET
+    public static final IKCoordinate ACQUIRING_PIECE_FROM_INTAKE = new IKCoordinate(0.23, 0.0, 0.27); //TODO: SET
+    public static final IKCoordinate STOWED_WITH_GAME_PIECE_CLEAR_OF_INTAKE = new IKCoordinate(0.23, 0, 0.5); //TODO: SET
+
+    public static final IKCoordinate HIGH_SCORING_POSITION = new IKCoordinate(-1.44, 0, 1.36); //over the back
+    public static final IKCoordinate MID_SCORING_POSITION = new IKCoordinate(-1.00, 0, 1.03); //over the back
+    public static final IKCoordinate LOW_SCORING_POSITION = new IKCoordinate(0.6858, 0, 0.2158); //TODO: SET
+  }
+
   public static final class IKOffsets {
     public static final double MINIMUM_ARM_LENGTH = 0.5334;  // Arm length when at zero
     public static final double SHOULDER_HEIGHT = 0.9779;
   }
 
   public static final class IKConstraints {
-    public static final double MINIMUM_Z_HEIGHT = 0.28; 
+    public static final double MINIMUM_Z_HEIGHT = 0.28;
+  }
+
+  public static final class ScoringPositionsID6 {
+    /* Scoring positions in the format of waist degrees, shoulder degrees, and arm extension in meters
+     *C1: 
+     *C2: 0, 190, 0.3
+     *C3: 0, 170, 0.65
+     * 
+     */
   }
 
   public static final class Field {
