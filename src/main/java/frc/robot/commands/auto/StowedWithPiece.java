@@ -15,8 +15,8 @@ public class StowedWithPiece extends SequentialCommandGroup {
   public StowedWithPiece() {
     addCommands(
       new SetWaistPosition(0.0),
-      new SetShoulderPosition(-77.0),
-      new SetArmExtension(0.2)
+      new SetShoulderPosition(-48.0),
+      new SetArmExtension(0.0)
     );
   }
 }

@@ -9,7 +9,7 @@ public class AquiringGamePiecePosition extends SequentialCommandGroup {
     public AquiringGamePiecePosition () {
         addCommands(
             new SetWaistPosition(0.0),
-            new SetShoulderPosition(-77.0),
+            new SetShoulderPosition(-74.3),
             new SetArmExtension(0.2)
         );
     }
