@@ -27,7 +27,6 @@ import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.drivetrain.*;
-import frc.robot.commands.balanceOnCharge;
 import frc.robot.commands.IK.RobotRelativeIK;
 import frc.robot.commands.arm.*;
 
