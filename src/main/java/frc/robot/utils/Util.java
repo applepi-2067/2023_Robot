@@ -259,11 +259,6 @@ public class Util {
 	public static double getIKY(double armLength, double waistAngle, double shoulderAngle) {
 		armLength += Constants.IKOffsets.MINIMUM_ARM_LENGTH;
 		double ans = (armLength * (Math.sin(shoulderAngle))) * (Math.sin(waistAngle));
-		System.out.println("YYY arm_len: " + armLength
-					+ ", sin(shoulder): " + Math.sin(shoulderAngle)
-					+ ", sin(waist)" + (Math.sin(waistAngle))
-					+ ", ans: " + ans);
- 
 		return (armLength * (Math.sin(shoulderAngle))) * (Math.sin(waistAngle));
 	}
 
