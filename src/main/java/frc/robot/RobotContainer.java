@@ -1,3 +1,6 @@
+
+
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -79,7 +82,7 @@ public class RobotContainer implements Loggable {
     // m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
     // m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
     // m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorController.getLeftY()));
-    m_clawBelt.setDefaultCommand(new SetClawBeltSpeed(() -> m_operatorController.getLeftY()));
+    //m_clawBelt.setDefaultCommand(new SetClawBeltSpeed(() -> m_operatorController.getLeftY()));
   }
 
   /**
@@ -98,8 +101,10 @@ public class RobotContainer implements Loggable {
     m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.025));
     m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.332));
 
-    m_operatorController.povLeft().onTrue(new IntakeConveyorIn(true));
-    m_operatorController.povRight().onFalse(new IntakeConveyorIn(false));
+    // m_operatorController.povLeft().onTrue(new IntakeConveyorIn(true));
+    // m_operatorController.povRight().onFalse(new IntakeConveyorIn(false));
+    m_operatorController.povRight().onTrue(new ClawSensorGrab());
+    
 
     //Intake game piece
     m_operatorController.leftTrigger().onTrue (new SetIntakeRollerSpeed(1.0));
