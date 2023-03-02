@@ -4,23 +4,20 @@
 
 package frc.robot.commands.auto;
 
-import frc.robot.subsystems.Arm;
 import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.drivetrain.DriveToPosition;
-import frc.robot.commands.intake.IntakePiece;
+import frc.robot.commands.intake.SetIntakeRollerSpeed;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.commands.claw.ClawClose;
-import frc.robot.commands.claw.ClawIntake;
 import frc.robot.commands.claw.ClawOpen;
-import frc.robot.subsystems.ClawGrasp;
+import frc.robot.commands.claw.SetClawBeltSpeed;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 
 public class CornerStartRoutine extends SequentialCommandGroup {
-  private Arm arm;
   /** Creates a new TwoBall. */
   public CornerStartRoutine(Drivetrain drivetrain, boolean BlueAlliance, boolean isBottomRoutine) { 
     double invertWaistOne;
@@ -60,7 +57,7 @@ public class CornerStartRoutine extends SequentialCommandGroup {
         // 7a and 8a
         new DriveToPosition(5.11), // Distance in meters to travel
         // 7b
-        new IntakePiece(true)
+        new SetIntakeRollerSpeed(1.0) 
       ),
       Commands.parallel( 
         // 9a
@@ -81,7 +78,7 @@ public class CornerStartRoutine extends SequentialCommandGroup {
         // 12a
         new SetArmExtension(1.2192),
         // 13
-        new ClawIntake(false)
+        new SetClawBeltSpeed(()->{return 0.0;})
     );  
   
   }

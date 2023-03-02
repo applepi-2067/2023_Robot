@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
@@ -21,10 +22,9 @@ import frc.robot.utils.Util;
 import frc.robot.Constants;
 import frc.robot.Constants.CANDeviceIDs;
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class Arm extends SubsystemBase implements Loggable{
+public class Arm extends SubsystemBase implements Loggable {
 
   private static Arm instance = null;
 
@@ -34,17 +34,26 @@ public class Arm extends SubsystemBase implements Loggable{
   private final DigitalInput m_endOfTravelSensor;
 
   private static final int CURRENT_LIMIT = 10; //Amps
-  private static final double GEAR_RATIO = 5.0 * 4.0 * (18.0/34.0);
+  private static final double GEAR_RATIO = 5.23 * 3.61 * (18.0 / 34.0);
   private static final double OUTPUT_SPROCKET_PITCH_DIAMETER_METERS = 0.020574;
   private static final double RIGGING_EXTENSION_RATIO = 2.0;
   private static final double METERS_PER_REV = Math.PI * OUTPUT_SPROCKET_PITCH_DIAMETER_METERS * RIGGING_EXTENSION_RATIO;
   private static final boolean INVERT_MOTOR = false;
   public static final double MAX_ARM_EXTENSION_METERS = Units.inchesToMeters(36.25);
 
-  private static double max_voltage_open_loop = 2.0;
+  private static double max_voltage_open_loop = 6.0;
+
+  private static final int SMART_MOTION_SLOT = 0;
 
   // PID Coefficients.
-  private Gains gains = new Gains(0.1, 1e-4, 1, 0, 1, 1.0);
+  // private Gains gains = new Gains(0.1, 1e-4, 1, 0, 1, 1.0); //raw PI controller gains (non-smart motion)
+  private Gains gains = new Gains(1e-4, 3e-6, 0.000156, 0, 1, 1.0); //smart motion gains
+  
+  // SmartMotion configs
+  private static final double MAX_VELOCITY_RPM = 11_000; // NEO550 free speed 11000RPM
+  private static final double MIN_VELOCITY_RPM = 0;
+  private static final double MAXX_ACCELERATION_RPM_PER_SEC = 15_000;
+  private static final double ALLOWED_ERROR = 0.05; //motor rotations
 
   public static Arm getInstance() {
     if (instance == null) {
@@ -61,17 +70,23 @@ public class Arm extends SubsystemBase implements Loggable{
     m_motor.restoreFactoryDefaults();
     m_motor.setSmartCurrentLimit(CURRENT_LIMIT);
     m_motor.setInverted(INVERT_MOTOR);
+    m_motor.setIdleMode(IdleMode.kBrake);
 
     m_pidController = m_motor.getPIDController();
     m_encoder = m_motor.getEncoder();
 
     // Set PID coefficients
-    m_pidController.setP(gains.kP);
-    m_pidController.setI(gains.kI);
-    m_pidController.setD(gains.kD);
-    m_pidController.setIZone(gains.kIzone);
-    m_pidController.setFF(gains.kF);
-    m_pidController.setOutputRange(-gains.kPeakOutput, gains.kPeakOutput);
+    m_pidController.setP(gains.kP, SMART_MOTION_SLOT);
+    m_pidController.setI(gains.kI, SMART_MOTION_SLOT);
+    m_pidController.setD(gains.kD, SMART_MOTION_SLOT);
+    m_pidController.setIZone(gains.kIzone, SMART_MOTION_SLOT);
+    m_pidController.setFF(gains.kF, SMART_MOTION_SLOT);
+    m_pidController.setOutputRange(-gains.kPeakOutput, gains.kPeakOutput, SMART_MOTION_SLOT);
+
+    m_pidController.setSmartMotionMaxVelocity(MAX_VELOCITY_RPM, SMART_MOTION_SLOT);
+    m_pidController.setSmartMotionMinOutputVelocity(MIN_VELOCITY_RPM, SMART_MOTION_SLOT);
+    m_pidController.setSmartMotionMaxAccel(MAXX_ACCELERATION_RPM_PER_SEC, SMART_MOTION_SLOT);
+    m_pidController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERROR, SMART_MOTION_SLOT);
 
     if (RobotBase.isSimulation()) {
       REVPhysicsSim.getInstance().addSparkMax(m_motor, DCMotor.getNEO(1));
@@ -93,7 +108,8 @@ public class Arm extends SubsystemBase implements Loggable{
   public void setPosition(double meters) {
     // Clamp arm extension on [0.0, max extension].
     meters = MathUtil.clamp(meters, 0.0, MAX_ARM_EXTENSION_METERS);
-    m_pidController.setReference(metersToMotorRotations(meters), CANSparkMax.ControlType.kPosition);
+    // m_pidController.setReference(metersToMotorRotations(meters), CANSparkMax.ControlType.kPosition);
+    m_pidController.setReference(metersToMotorRotations(meters), CANSparkMax.ControlType.kSmartMotion, SMART_MOTION_SLOT);
   }
 
   /**

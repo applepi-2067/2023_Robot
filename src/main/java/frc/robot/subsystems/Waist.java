@@ -20,7 +20,6 @@ import frc.robot.Constants.CANDeviceIDs;
 import frc.robot.utils.Gains;
 
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Waist extends SubsystemBase implements Loggable {
@@ -37,8 +36,17 @@ public class Waist extends SubsystemBase implements Loggable {
   private static final int CURRENT_LIMIT_AMPS = 30;
   private static final boolean INVERT_MOTOR = false;
 
+  private static final int SMART_MOTION_SLOT = 0;
+
   // PID Coefficients.
-  private Gains gains = new Gains(0.1, 5e-4, 0, 0, 3, 0.7);
+  // private Gains gains = new Gains(0.1, 5e-4, 0, 0, 3, 0.7); //raw PI controller gains (non-smart motion)
+  private Gains gains = new Gains(3e-4, 3e-6, 0.000156, 0, 1, 0.7); //smart motion gains
+
+  // SmartMotion configs
+  private static final double MAX_VELOCITY_RPM = 5_000; // NEO free speed 5676 RPM
+  private static final double MIN_VELOCITY_RPM = 0;
+  private static final double MAXX_ACCELERATION_RPM_PER_SEC = 5_000;
+  private static final double ALLOWED_ERROR = 0.0; //motor rotations
 
   public static Waist getInstance() {
     if (instance == null) {
@@ -50,7 +58,7 @@ public class Waist extends SubsystemBase implements Loggable {
   
   /** Creates a new Waist. */
   private Waist() {
-    m_motor = new CANSparkMax(CANDeviceIDs.MOTOR_WAIST_ID, MotorType.kBrushless);
+    m_motor = new CANSparkMax(CANDeviceIDs.WAIST_MOTOR_ID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
     m_motor.setIdleMode(IdleMode.kBrake);
     m_motor.setSmartCurrentLimit(CURRENT_LIMIT_AMPS);
@@ -61,12 +69,17 @@ public class Waist extends SubsystemBase implements Loggable {
     m_zeroingSensor = new DigitalInput(Constants.DiscreteInputs.WAIST_ZEROING_DI);
 
      // Set PID coefficients
-     m_pidController.setP(gains.kP);
-     m_pidController.setI(gains.kI);
-     m_pidController.setD(gains.kD);
-     m_pidController.setIZone(gains.kIzone);
-     m_pidController.setFF(gains.kF);
-     m_pidController.setOutputRange(-gains.kPeakOutput, gains.kPeakOutput);
+     m_pidController.setP(gains.kP, SMART_MOTION_SLOT);
+     m_pidController.setI(gains.kI, SMART_MOTION_SLOT);
+     m_pidController.setD(gains.kD, SMART_MOTION_SLOT);
+     m_pidController.setIZone(gains.kIzone, SMART_MOTION_SLOT);
+     m_pidController.setFF(gains.kF, SMART_MOTION_SLOT);
+     m_pidController.setOutputRange(-gains.kPeakOutput, gains.kPeakOutput, SMART_MOTION_SLOT);
+
+     m_pidController.setSmartMotionMaxVelocity(MAX_VELOCITY_RPM, SMART_MOTION_SLOT);
+     m_pidController.setSmartMotionMinOutputVelocity(MIN_VELOCITY_RPM, SMART_MOTION_SLOT);
+     m_pidController.setSmartMotionMaxAccel(MAXX_ACCELERATION_RPM_PER_SEC, SMART_MOTION_SLOT);
+     m_pidController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERROR, SMART_MOTION_SLOT);
 
      if (RobotBase.isSimulation()) {
       REVPhysicsSim.getInstance().addSparkMax(m_motor, DCMotor.getNEO(1));
@@ -81,11 +94,6 @@ public class Waist extends SubsystemBase implements Loggable {
     return (rotations / GEAR_RATIO) * DEGREES_PER_REV;
   }
 
-  @Config
-  private void setGains(double P, double I, double D, double f, double IZone, double peak) {
-
-  }
-
   public void setEncoderPosition(double encoderPosition) {
     m_encoder.setPosition(degreesToMotorRotations(encoderPosition));
   }
@@ -95,7 +103,8 @@ public class Waist extends SubsystemBase implements Loggable {
    * @param degrees
    */
   public void setPosition(double degrees) {
-    m_pidController.setReference(degreesToMotorRotations(degrees), CANSparkMax.ControlType.kPosition);
+    // m_pidController.setReference(degreesToMotorRotations(degrees), CANSparkMax.ControlType.kPosition);
+    m_pidController.setReference(degreesToMotorRotations(degrees), CANSparkMax.ControlType.kSmartMotion, SMART_MOTION_SLOT);
   }
 
   /**
