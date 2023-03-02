@@ -98,11 +98,11 @@ public class RobotContainer implements Loggable {
     m_driverController.a().onTrue(new balanceOnCharge());
 
     //Operator Controls
-    m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.025));
+    m_operatorController.povLeft().onTrue(new SetIntakeExtension(0.025));
     m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.332));
 
-    m_operatorController.leftBumper().onTrue(new IntakeConveyorIn(true));
-    m_operatorController.rightBumper().onFalse(new IntakeConveyorIn(false));
+    m_operatorController.rightBumper().onTrue(new IntakeConveyorIn(true));
+    m_operatorController.leftBumper().onTrue(new IntakeConveyorIn(false));
 
     //Intake game piece
     m_operatorController.rightTrigger().onTrue (new SetIntakeRollerSpeed(1.0));
@@ -119,15 +119,15 @@ public class RobotContainer implements Loggable {
     m_operatorController.a().onFalse(new ClawClose());
 
     //Arm locations
-    m_operatorController.start().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-45.0))); // stowed/retracted position
+    m_operatorController.povUp().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-45.0))); // stowed/retracted position
     m_operatorController.y().onTrue(new SetShoulderPosition(13.36).andThen(new SetArmExtension(0.894))); // High scoring position
     m_operatorController.b().onTrue(new SetShoulderPosition(3.273).andThen(new SetArmExtension(0.429))); // Mid scoring position
     m_operatorController.x().onTrue(new SetShoulderPosition(0).andThen(new SetArmExtension(0))); //Get Game Piece from human / feed station
 
-     m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
-     m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));
-    // m_operatorController.a().onTrue(new RobotRelativeIK(Constants.IKPositions.LOW_SCORING_POSITION));
-     m_operatorController.x().onTrue(new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
+    //m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
+    //m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));
+    //m_operatorController.a().onTrue(new RobotRelativeIK(Constants.IKPositions.LOW_SCORING_POSITION));
+    //m_operatorController.povUp().onTrue(new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
 
     // SmartDashboard.putData("shoulder 0 degrees", new SetShoulderPosition(0));
     // SmartDashboard.putData("shoulder -60 degrees", new SetShoulderPosition(-60));
