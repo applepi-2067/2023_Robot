@@ -76,7 +76,7 @@ public class RobotContainer implements Loggable {
         Commands.run(
             () -> m_drivetrain.arcadeDrive(
                 Util.clampStickValue(-m_driverController.getLeftY()),
-                Util.clampStickValue(-m_driverController.getRightX())),
+                Util.clampStickValue(-m_driverController.getRightX()/1.2)),
             m_drivetrain));
 
     // m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
