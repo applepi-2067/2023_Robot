@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -30,6 +31,8 @@ public class Shoulder extends SubsystemBase implements Loggable {
   private final CANSparkMax m_motor;
   private final SparkMaxPIDController m_pidController;
   private final RelativeEncoder m_encoder;
+
+  private final DigitalInput m_zeroingSensor;
 
   private static final double GEAR_RATIO = (5.0/1.0) * (3.0/1.0) * (66.0 / 22.0) * (74.0 / 16.0);
   private static final double DEGREES_PER_REV = 360.0;
@@ -61,6 +64,8 @@ public class Shoulder extends SubsystemBase implements Loggable {
   
   /** Creates a new Shoulder. */
   private Shoulder() {
+    m_zeroingSensor = new DigitalInput(Constants.DiscreteInputs.SHOULDER_ZEROING_DI);
+
     m_motor = new CANSparkMax(Constants.CANDeviceIDs.SHOULDER_MOTOR_ID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
     m_motor.setSmartCurrentLimit(CURRENT_LIMIT);
@@ -152,6 +157,11 @@ public class Shoulder extends SubsystemBase implements Loggable {
   @Log (name = "Position (Deg)", rowIndex = 2, columnIndex = 0)
   public double getPosition() {
     return motorRotationsToDegrees(m_encoder.getPosition());
+  }
+
+  @Log
+  public boolean zeroSensorTriggered() {
+    return ! m_zeroingSensor.get();
   }
 
   @Override
