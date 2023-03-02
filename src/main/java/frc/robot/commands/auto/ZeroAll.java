@@ -22,7 +22,7 @@ public class ZeroAll extends SequentialCommandGroup {
                 new ZeroArmPosition().andThen(new SetArmExtension(0.0))
             ),
             Commands.parallel(
-                new SetShoulderPosition(0.0),
+                // new SetShoulderPosition(0.0),
                 new ZeroWaistPosition().andThen(new WaitCommand(0.5)).andThen(new SetWaistPosition(0))
                 // new ZeroTopLeftIntake().andThen(new ZeroTopRightIntake())  // disabled because intake is taken apart
             )
