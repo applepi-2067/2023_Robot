@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.utils.Gains;
 
@@ -107,5 +108,9 @@ public final class Constants {
   }
   public static final class IKConstraints {
     public static final double MINIMUM_Z_HEIGHT = 0.28; 
+  }
+
+  public static final class Camera {
+    public static final double CAMERA_HYPOTENUSE_OFFSET = Units.inchesToMeters(7.0);
   }
 }
