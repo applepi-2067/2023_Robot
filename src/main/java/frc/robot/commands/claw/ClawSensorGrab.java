@@ -6,8 +6,6 @@ package frc.robot.commands.claw;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.claw.ClawOpen;
-import frc.robot.commands.claw.SetClawBeltSpeed;
 
 
 public class ClawSensorGrab extends SequentialCommandGroup {
