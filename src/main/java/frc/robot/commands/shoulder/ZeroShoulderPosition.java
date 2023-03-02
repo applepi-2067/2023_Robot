@@ -5,41 +5,38 @@
 package frc.robot.commands.shoulder;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Shoulder;
 
 public class ZeroShoulderPosition extends CommandBase {
 
   private Shoulder m_shoulder;
-  private double m_currentShoulderPosition;
 
-  public ZeroShoulderPosition(double currentShoulderPosition) {
-    m_currentShoulderPosition = currentShoulderPosition;
-    // Use addRequirements() here to declare subsystem dependencies.
+  public ZeroShoulderPosition() {
     m_shoulder = Shoulder.getInstance();
     addRequirements(m_shoulder);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_shoulder.setEncoderAngle(m_currentShoulderPosition);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    m_shoulder.setSpeed(1.0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    m_shoulder.setSpeed(0.0);
+    m_shoulder.setEncoderAngle(Constants.ZeroingOffsets.SHOULDER_FRONT_MINIMUM_ANGLE);
   }
 
-  // Returns true when the command should end.
+  // Returns true when we have raised the arm high enough to lose the sensor
   @Override
   public boolean isFinished() {
-    return true;
+    return !m_shoulder.zeroSensorTriggered();
   }
 }
