@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class StopDrivetrain extends CommandBase {
     private static Drivetrain m_drivetrain;
 
-    public StopDrivetrain(double meters) { 
+    public StopDrivetrain() { 
         Drivetrain drivetrain = Drivetrain.getInstance(); 
         addRequirements(drivetrain);
         m_drivetrain = drivetrain;
