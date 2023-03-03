@@ -117,7 +117,7 @@ public class RobotContainer implements Loggable {
   
     m_operatorController.a().onTrue(new ClawOpen());
     m_operatorController.a().onFalse(new ClawClose());
-
+    m_operatorController.povUp().onTrue(new ClawSensorGrab());
     //Arm locations
     m_operatorController.povUp().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-45.0))); // stowed/retracted position
     m_operatorController.y().onTrue(new SetShoulderPosition(13.36).andThen(new SetArmExtension(0.894))); // High scoring position
