@@ -10,6 +10,7 @@ import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.arm.ZeroArmPosition;
 import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
+import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.shoulder.ZeroShoulderPosition;
 
@@ -19,6 +20,7 @@ public class ScorePreloadedPiece extends SequentialCommandGroup {
   public ScorePreloadedPiece() {
     // Robot starts facing the grid in the top of bottom position (not in front of charge station)
     addCommands(
+      new DriveToPosition(0.0),
       new ClawClose(),
       // Zero arm extension and shoulder angle
       Commands.parallel(
@@ -27,13 +29,17 @@ public class ScorePreloadedPiece extends SequentialCommandGroup {
       ),
 
       // Raise arm and drop the cone
-      new SetShoulderPosition(13.36),
+      new SetShoulderPosition(16.00),
       new SetArmExtension(0.82),
-      new ClawOpen()
+      new ClawOpen(),
 
       // Retract arm into stow position
+      new SetArmExtension(0.0),
+      new SetShoulderPosition(-60.0),
 
       // Drive out of community by driving a set distance
+      new DriveToPosition(-3.75)
+
     );
   }
 }
