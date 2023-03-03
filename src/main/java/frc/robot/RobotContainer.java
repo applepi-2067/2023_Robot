@@ -100,6 +100,7 @@ public class RobotContainer implements Loggable {
     m_driverController.rightStick().onTrue(new StopDrivetrain());  // Stop the drivetrain when right stick is pressed in
 
     //Operator Controls
+    m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
     m_operatorController.povLeft().onTrue(new SetIntakeExtension(0.025));
     m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.332));
 
