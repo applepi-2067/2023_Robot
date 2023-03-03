@@ -1,6 +1,6 @@
 // Commands the robot to move a specified distance in inches
 
-package frc.robot.commands.drivetrain;
+package frc.robot.commands.fielddriving;
 
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
