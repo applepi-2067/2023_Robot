@@ -96,9 +96,8 @@ public class RobotContainer implements Loggable {
    */
   private void configureBindings() {
     //Driver Controls
-    Pose2d endRelativePose = new Pose2d(1.0, 0.0, new Rotation2d(Math.PI));
-    Pose2d endAbsolutePose = Transforms.targetRelativePoseToAbsoluteFieldPose(4, endRelativePose);
-    m_driverController.a().onTrue(new DriveToAbsolutePosition(endAbsolutePose));
+    Pose2d endRelativePose = new Pose2d(2.0, 0.0, new Rotation2d(Math.PI));
+    m_driverController.a().onTrue(new DriveToTargetOffset(4, endRelativePose));
 
     //Operator Controls
     m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.025));
