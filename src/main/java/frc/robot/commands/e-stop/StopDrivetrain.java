@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import java.lang.Math;
 
-/** Make the drivetrain top by setting wheel velocity setpoint to zero
+/** Make the drivetrain stop by setting wheel velocity setpoint to zero
 */
 public class StopDrivetrain extends CommandBase {
     private static Drivetrain m_drivetrain;
