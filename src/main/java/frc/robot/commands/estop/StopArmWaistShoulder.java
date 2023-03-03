@@ -7,12 +7,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** Make arm, waist, and shoulder stop movement by setting their setpoints to their current position
 */
-public class StopDrivetrain extends CommandBase {
+public class StopArmWaistShoulder extends CommandBase {
     private static final Arm m_arm = Arm.getInstance();
     private static final Waist m_waist = Waist.getInstance();
     private static final Shoulder m_shoulder = Shoulder.getInstance();
 
-    public StopDrivetrain() { 
+    public StopArmWaistShoulder() { 
         addRequirements(m_arm);
         addRequirements(m_waist);
         addRequirements(m_shoulder);
