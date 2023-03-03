@@ -17,10 +17,9 @@ public class StopDrivetrain extends CommandBase {
     @Override
     public void initialize() {}
 
-
     @Override
     public void execute() {
-        m_drivetrain.setSetPointVelocity(0.0, 0.0)
+        m_drivetrain.setSetPointVelocity(0.0, 0.0);
     }
 
     @Override
