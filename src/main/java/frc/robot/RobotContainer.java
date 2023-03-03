@@ -15,10 +15,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
 import frc.robot.subsystems.*;
+import frc.robot.utils.Transforms;
 import frc.robot.utils.Util;
 import frc.robot.commands.chargestation.*;
 import frc.robot.commands.claw.*;
 import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.shoulder.*;
 import io.github.oblarg.oblog.Loggable;
@@ -75,7 +77,7 @@ public class RobotContainer implements Loggable {
         Commands.run(
             () -> m_drivetrain.arcadeDrive(
                 Util.clampStickValue(-m_driverController.getLeftY()),
-                Util.clampStickValue(-m_driverController.getRightX())),
+                Util.clampStickValue(-m_driverController.getRightX()/1.3)),
             m_drivetrain));
 
     // m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
@@ -94,8 +96,9 @@ public class RobotContainer implements Loggable {
    */
   private void configureBindings() {
     //Driver Controls
-    // m_driverController.a().onTrue(new balanceOnCharge());
-    m_driverController.a().onTrue(new DriveToTargetOffset(4, new Pose2d(1.0, 0.0, new Rotation2d(Math.PI))));
+    Pose2d endRelativePose = new Pose2d(1.0, 0.0, new Rotation2d(Math.PI));
+    Pose2d endAbsolutePose = Transforms.targetRelativePoseToAbsoluteFieldPose(4, endRelativePose);
+    m_driverController.a().onTrue(new DriveToAbsolutePosition(endAbsolutePose));
 
     //Operator Controls
     m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.025));

@@ -120,6 +120,10 @@ public final class Constants {
     public static final double SHOULDER_ANGLE_TOLERANCE = 1;
     public static final double ARM_METERS_TOLERANCE = 0.005;
     public static final double WAIST_ANGLE_TOLERANCE = 0.1;
+
+    // Tolerance for auto position drive commands to end 
+    public static final double AUTO_DISTANCE_TOLERANCE = 0.04;  // meters
+    public static final double AUTO_VELOCITY_TOLERANCE = 0.1;  // m/s
   }
   
   public static final class IKPositions {
