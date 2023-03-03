@@ -20,6 +20,7 @@ import frc.robot.utils.Util;
 import frc.robot.commands.chargestation.*;
 import frc.robot.commands.claw.*;
 import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.estop.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.shoulder.*;
 import io.github.oblarg.oblog.Loggable;
