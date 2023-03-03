@@ -29,7 +29,7 @@ public class ScorePreloadedPiece extends SequentialCommandGroup {
       ),
 
       // Raise arm and drop the cone
-      new SetShoulderPosition(16.00),
+      new SetShoulderPosition(20.00),
       new SetArmExtension(0.82),
       new ClawOpen(),
 
