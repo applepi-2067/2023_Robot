@@ -96,6 +96,7 @@ public class RobotContainer implements Loggable {
   private void configureBindings() {
     //Driver Controls
     m_driverController.a().onTrue(new balanceOnCharge());
+    m_driverController.rightStick().onTrue(new StopDrivetrain());  // Stop the drivetrain when right stick is pressed in
 
     //Operator Controls
     m_operatorController.povLeft().onTrue(new SetIntakeExtension(0.025));
