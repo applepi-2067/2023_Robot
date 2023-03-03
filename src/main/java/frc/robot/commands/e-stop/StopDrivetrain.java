@@ -3,8 +3,6 @@ package frc.robot.commands.drivetrain;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import java.lang.Math;
-
 /** Make the drivetrain stop by setting wheel velocity setpoint to zero
 */
 public class StopDrivetrain extends CommandBase {
