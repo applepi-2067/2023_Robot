@@ -58,6 +58,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
   private final DifferentialDrivePoseEstimator m_odometry;
   private Pose2d m_latestRobotPose2d = new Pose2d();
+  private Waist m_waist = Waist.getInstance();
 
   private final Field2d m_field = new Field2d();
   
@@ -252,7 +253,16 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   }
 
   public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds) {
-    m_odometry.addVisionMeasurement(visionEstimatedRobotPose2d, timestampSeconds);
+    // Correct for camera offset and waist rotation.
+    double waistAngleRadians = Units.degreesToRadians(m_waist.getPosition());
+
+    Pose2d correctedVisionEstimatedRobotPose2d = new Pose2d(
+      visionEstimatedRobotPose2d.getX() - (Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.cos(waistAngleRadians)),
+      visionEstimatedRobotPose2d.getY() - (Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.sin(waistAngleRadians)), 
+      Rotation2d.fromRadians(visionEstimatedRobotPose2d.getRotation().getRadians() - waistAngleRadians)
+    );
+
+    m_odometry.addVisionMeasurement(correctedVisionEstimatedRobotPose2d, timestampSeconds);
   }
 
   public Pose2d getLatestRobotPose2d() {
@@ -320,8 +330,8 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
     /* Set acceleration and vcruise velocity - see documentation */
     // Constants stolen from team 2168's 2022 repo
-    _talon.configMotionAcceleration((int) (metersPerSecToTicksPer100ms(Units.inchesToMeters(4.0 * 12.0)))); //(distance units per 100 ms) per second
-    _talon.configMotionCruiseVelocity((int) (metersPerSecToTicksPer100ms(Units.inchesToMeters(10.0 * 12.0)))); //distance units per 100 ms
+    _talon.configMotionAcceleration((int) (metersPerSecToTicksPer100ms(Constants.Drivetrain.MOTOR_ACCELERATION))); //(distance units per 100 ms) per second
+    _talon.configMotionCruiseVelocity((int) (metersPerSecToTicksPer100ms(Constants.Drivetrain.MOTOR_ACCELERATION))); //distance units per 100 ms
     _talon.configMotionSCurveStrength(8);
   
 

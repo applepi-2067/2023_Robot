@@ -1,3 +1,6 @@
+
+
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -21,6 +24,7 @@ import frc.robot.commands.chargestation.*;
 import frc.robot.commands.claw.*;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
+import frc.robot.commands.estop.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.shoulder.*;
 import io.github.oblarg.oblog.Loggable;
@@ -83,7 +87,7 @@ public class RobotContainer implements Loggable {
     // m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
     // m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
     // m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorController.getLeftY()));
-    m_clawBelt.setDefaultCommand(new SetClawBeltSpeed(() -> m_operatorController.getLeftY()));
+    //m_clawBelt.setDefaultCommand(new SetClawBeltSpeed(() -> m_operatorController.getLeftY()));
   }
 
   /**
@@ -100,36 +104,37 @@ public class RobotContainer implements Loggable {
     m_driverController.a().onTrue(new DriveToTargetOffset(4, endRelativePose));
 
     //Operator Controls
-    m_operatorController.leftBumper().onTrue(new SetIntakeExtension(0.025));
+    m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
+    m_operatorController.povLeft().onTrue(new SetIntakeExtension(0.025));
     m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.332));
 
-    m_operatorController.povLeft().onTrue(new IntakeConveyorIn(true));
-    m_operatorController.povRight().onFalse(new IntakeConveyorIn(false));
+    m_operatorController.rightBumper().onTrue(new IntakeConveyorIn(true));
+    m_operatorController.leftBumper().onTrue(new IntakeConveyorIn(false));
 
     //Intake game piece
-    m_operatorController.leftTrigger().onTrue (new SetIntakeRollerSpeed(1.0));
-    m_operatorController.leftTrigger().onFalse(new SetIntakeRollerSpeed(0.0));
-    m_operatorController.leftTrigger().onTrue(new IntakeConveyorBeltSpeed(-1.0));
-    m_operatorController.leftTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
-    //Outtake game piece
-    m_operatorController.rightTrigger().onTrue (new SetIntakeRollerSpeed(-1.0));
+    m_operatorController.rightTrigger().onTrue (new SetIntakeRollerSpeed(1.0));
     m_operatorController.rightTrigger().onFalse(new SetIntakeRollerSpeed(0.0));
-    m_operatorController.rightTrigger().onTrue(new IntakeConveyorBeltSpeed(1.0));
+    m_operatorController.rightTrigger().onTrue(new IntakeConveyorBeltSpeed(-1.0));
     m_operatorController.rightTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
+    //Outtake game piece
+    m_operatorController.leftTrigger().onTrue (new SetIntakeRollerSpeed(-1.0));
+    m_operatorController.leftTrigger().onFalse(new SetIntakeRollerSpeed(0.0));
+    m_operatorController.leftTrigger().onTrue(new IntakeConveyorBeltSpeed(1.0));
+    m_operatorController.leftTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
   
-    m_operatorController.back().onTrue(new ClawOpen());
-    m_operatorController.back().onFalse(new ClawClose());
-
+    m_operatorController.a().onTrue(new ClawOpen());
+    m_operatorController.a().onFalse(new ClawClose());
+    m_operatorController.povUp().onTrue(new ClawSensorGrab());
     //Arm locations
-    m_operatorController.start().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-45.0))); // stowed/retracted position
+    m_operatorController.povUp().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-45.0))); // stowed/retracted position
     m_operatorController.y().onTrue(new SetShoulderPosition(13.36).andThen(new SetArmExtension(0.894))); // High scoring position
     m_operatorController.b().onTrue(new SetShoulderPosition(3.273).andThen(new SetArmExtension(0.429))); // Mid scoring position
     m_operatorController.x().onTrue(new SetShoulderPosition(0).andThen(new SetArmExtension(0))); //Get Game Piece from human / feed station
 
-    // m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
-    // m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));
-    // m_operatorController.a().onTrue(new RobotRelativeIK(Constants.IKPositions.LOW_SCORING_POSITION));
-    // m_operatorController.x().onTrue(new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
+    //m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
+    //m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));
+    //m_operatorController.a().onTrue(new RobotRelativeIK(Constants.IKPositions.LOW_SCORING_POSITION));
+    //m_operatorController.povUp().onTrue(new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
 
     // SmartDashboard.putData("shoulder 0 degrees", new SetShoulderPosition(0));
     // SmartDashboard.putData("shoulder -60 degrees", new SetShoulderPosition(-60));
@@ -169,3 +174,4 @@ public class RobotContainer implements Loggable {
     SmartDashboard.putNumber("Shoulder Rotation (deg)", m_shoulder.getPosition());
   }
 }
+
