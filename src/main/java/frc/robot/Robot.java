@@ -14,11 +14,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.arm.ZeroArmPosition;
+import frc.robot.commands.auto.CenterStartRoutine;
 import frc.robot.commands.auto.DriveSquareAuto;
 import frc.robot.commands.auto.DriveToVisionTargetOffset;
 import frc.robot.commands.auto.RotationTest;
 import frc.robot.commands.auto.ZeroAll;
-import frc.robot.commands.chargestation.BalanceOnChargeStation;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
 import io.github.oblarg.oblog.Logger;
@@ -97,7 +97,7 @@ public class Robot extends TimedRobot {
     m_autoChooser.addOption("Zero Arm", new ZeroArmPosition());
     m_autoChooser.addOption("Drive Square", new DriveSquareAuto());
     m_autoChooser.addOption("Zero All", new ZeroAll());
-    m_autoChooser.addOption("Balance", new BalanceOnChargeStation());
+    m_autoChooser.addOption("Center Start", new CenterStartRoutine());
   }
 
   /**
