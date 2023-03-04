@@ -16,7 +16,7 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class RotateToAbsoluteAngle extends CommandBase implements Loggable {
     private Drivetrain m_drivetrain;
-    private double m_degreesAbsolute;
+    private double m_absoluteAngleSetpointDegrees;
     private final double ANGLE_TOLERANCE = 1; // deg
     private final double ANGULAR_VELOCITY_TOLERANCE = 5;  // deg/s
     private final double MINIMUM_POWER = 0.20; // Minimum power to turn the robot at all
@@ -38,14 +38,14 @@ public class RotateToAbsoluteAngle extends CommandBase implements Loggable {
         Drivetrain drivetrain = Drivetrain.getInstance(); 
         addRequirements(drivetrain);
         m_drivetrain = drivetrain;
-        m_degreesAbsolute = shiftAngleHalfCircle(degreesAbsolute);
+        m_absoluteAngleSetpointDegrees = shiftAngleHalfCircle(degreesAbsolute);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
         m_pidController.reset(0);
-        m_pidController.setGoal(m_degreesAbsolute);
+        m_pidController.setGoal(m_absoluteAngleSetpointDegrees);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -74,7 +74,7 @@ public class RotateToAbsoluteAngle extends CommandBase implements Loggable {
      */
     @Log
     private double getAngleError() {
-        return m_degreesAbsolute - getCurrentAngleDegrees();
+        return m_absoluteAngleSetpointDegrees - getCurrentAngleDegrees();
     }
 
     /**

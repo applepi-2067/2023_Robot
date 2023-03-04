@@ -16,7 +16,7 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class RotateToFaceAbsolutePosition extends CommandBase {
   private Drivetrain m_drivetrain;
-  private double m_thetaDegrees;
+  private double m_absoluteAngleSetpointDegrees;
   private Pose2d m_absolutePose2d;
 
   private final double ANGLE_TOLERANCE = 5; // deg
@@ -51,9 +51,9 @@ public class RotateToFaceAbsolutePosition extends CommandBase {
     // Calculate angle between poses.
     double xDiff = m_absolutePose2d.getX() - latestRobotPose2d.getX();
     double yDiff = m_absolutePose2d.getY() - latestRobotPose2d.getY();
-    m_thetaDegrees = Units.radiansToDegrees(Math.atan2(yDiff, xDiff));
+    m_absoluteAngleSetpointDegrees = Units.radiansToDegrees(Math.atan2(yDiff, xDiff));
 
-    m_pidController.setGoal(m_thetaDegrees);
+    m_pidController.setGoal(m_absoluteAngleSetpointDegrees);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -82,7 +82,7 @@ public class RotateToFaceAbsolutePosition extends CommandBase {
    */
   @Log
   private double getAngleError() {
-    return m_thetaDegrees - getCurrentAngleDegrees();
+    return m_absoluteAngleSetpointDegrees - getCurrentAngleDegrees();
   }
 
   /**
