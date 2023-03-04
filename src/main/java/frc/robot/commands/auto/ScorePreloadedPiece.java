@@ -6,6 +6,7 @@ package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.arm.ZeroArmPosition;
 import frc.robot.commands.claw.ClawClose;
@@ -13,6 +14,8 @@ import frc.robot.commands.claw.ClawOpen;
 import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.shoulder.ZeroShoulderPosition;
+import frc.robot.commands.waist.SetWaistPosition;
+import frc.robot.commands.waist.ZeroWaistPosition;
 
 //Auto routine to be used in the top of bottom scoring position, the routine will score the preloaded piece and leave the community
 public class ScorePreloadedPiece extends SequentialCommandGroup {
@@ -33,13 +36,18 @@ public class ScorePreloadedPiece extends SequentialCommandGroup {
       new SetArmExtension(0.82),
       new ClawOpen(),
 
-      // Retract arm into stow position
+      // Retract arm into stow position then drive
       new SetArmExtension(0.0),
-      new SetShoulderPosition(-60.0),
+      Commands.parallel(
+        new SetShoulderPosition(-60.0),
+        new DriveToPosition(-3.75),
+        new ZeroWaistPosition().andThen(new SetWaistPosition(90))
+      ),
+
+      new WaitCommand(1),
+      new SetWaistPosition(0)
 
       // Drive out of community by driving a set distance
-      new DriveToPosition(-3.75)
-
-    );
+      );
   }
 }
