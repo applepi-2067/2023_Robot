@@ -24,9 +24,11 @@ import frc.robot.commands.chargestation.*;
 import frc.robot.commands.claw.*;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
+import frc.robot.commands.fielddriving.DriveToTargetOffset;
 import frc.robot.commands.estop.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.shoulder.*;
+import frc.robot.commands.teleop_auto.DoubleSubstationPieceAcquire;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Log;
@@ -100,8 +102,7 @@ public class RobotContainer implements Loggable {
    */
   private void configureBindings() {
     //Driver Controls
-    Pose2d endRelativePose = new Pose2d(2.0, 0.0, new Rotation2d(Math.PI));
-    m_driverController.a().onTrue(new DriveToTargetOffset(4, endRelativePose));
+    m_driverController.a().onTrue(new DoubleSubstationPieceAcquire());
 
     //Operator Controls
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in

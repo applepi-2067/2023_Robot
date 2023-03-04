@@ -57,7 +57,7 @@ public class RotateToAbsolutePosition extends CommandBase implements Loggable {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_drivetrain.arcadeDrive(0, 0);
+        m_drivetrain.stop();
     }
 
     // Returns true when we are within an acceptable distance of our target position

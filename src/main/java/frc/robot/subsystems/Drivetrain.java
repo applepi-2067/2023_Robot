@@ -147,6 +147,14 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   }
 
   /**
+   * Stop the drivetrain motors
+   */
+  public void stop() {
+    m_leftMotor.set(0);
+    m_rightMotor.set(0);
+  }
+
+  /**
    * Set the left and right motor velocities.
    * 
    * @param leftMotorVelocity_MetersPerSec: left motor target velocity in meters per second.
@@ -250,6 +258,11 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_latestRobotPose2d = m_odometry.update(
       new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters()
     );
+    
+    // DEBUG
+    SmartDashboard.putNumber("Pose X", m_latestRobotPose2d.getX());
+    SmartDashboard.putNumber("Pose Y", m_latestRobotPose2d.getY());
+    SmartDashboard.putNumber("Pose Rot (deg)", m_latestRobotPose2d.getRotation().getDegrees());
   }
 
   public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds) {

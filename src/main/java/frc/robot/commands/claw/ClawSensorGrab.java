@@ -15,7 +15,7 @@ public class ClawSensorGrab extends SequentialCommandGroup {
 
     addCommands(
       new ClawOpen(),
-      new SetClawBeltSpeed(() -> {return 0.5;}),
+      new SetClawBeltSpeed(() -> {return -1.0;}),
       new WaitForGamePieceInClaw(),
       new ClawClose(),
       new WaitCommand(1.0),

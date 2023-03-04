@@ -1,10 +1,7 @@
-package frc.robot.commands.auto;
+package frc.robot.commands.fielddriving;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
-import frc.robot.commands.fielddriving.RotateToAbsolutePosition;
-import frc.robot.commands.fielddriving.RotateToFaceAbsolutePosition;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Transforms;
 
