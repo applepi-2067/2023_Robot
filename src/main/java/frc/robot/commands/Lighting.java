@@ -10,8 +10,8 @@ import frc.robot.subsystems.ClawBelt;
 
 public class Lighting extends CommandBase {
   String m_LightMode;
-   private static Lights m_Lights;
-   private ClawBelt m_claw;
+  private Lights m_Lights;
+  private ClawBelt m_claw;
 
   public Lighting(String LightMode) {
     m_Lights = Lights.getInstance();
