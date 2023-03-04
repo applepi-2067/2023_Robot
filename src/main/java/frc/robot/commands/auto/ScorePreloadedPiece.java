@@ -4,6 +4,7 @@
 
 package frc.robot.commands.auto;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -41,16 +42,22 @@ public class ScorePreloadedPiece extends SequentialCommandGroup {
       new SetArmExtension(0.0),
       Commands.parallel(
         new SetShoulderPosition(-60.0),
-        new DriveToPosition(-4.00),
+        new DriveToPosition(-4.254),
         new ZeroWaistPosition().andThen(new SetWaistPosition(90))
-        //new SetArmExtension(),
-        //new ClawSensorGrab()
       ),
 
-      new WaitCommand(1),
-      new SetWaistPosition(0)
+      Commands.deadline(
+        new ClawSensorGrab(),
+        new SetArmExtension(0.56)
+      ),
+      
+      //After piece is grabbed turn to zero 
+      new SetArmExtension(0.0),
+      new SetWaistPosition(0.0),
 
-      // Drive out of community by driving a set distance
+      // DEBUG, RESET WAIST FOR TESTING
+      new WaitCommand(1),  // DEBUG ONLY
+      new SetWaistPosition(0)  // DEBUG ONLY
       );
   }
 }
