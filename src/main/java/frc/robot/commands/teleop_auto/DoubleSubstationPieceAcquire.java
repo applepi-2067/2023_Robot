@@ -36,7 +36,7 @@ public class DoubleSubstationPieceAcquire extends SequentialCommandGroup {
     Pose2d exitRelativePose = new Pose2d(  // X-dimension is normal to target surface
       3.0,  // x = perpendicular to target surface
       0.0, // y = left-right from target surface
-      new Rotation2d(Math.PI / 2)
+      new Rotation2d(Math.PI)
     );
 
     addCommands(
