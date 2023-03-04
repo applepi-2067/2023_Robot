@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
 import frc.robot.commands.fielddriving.RotateToAbsolutePosition;
+import frc.robot.commands.fielddriving.RotateToFaceAbsolutePosition;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Transforms;
 
@@ -15,11 +16,14 @@ public class DriveToTargetOffset extends SequentialCommandGroup {
 
     Pose2d absoluteDestinationPose = Transforms.targetRelativePoseToAbsoluteFieldPose(targetID, targetOffsetPose);
     addCommands(
+      // Rotate to face destination.
+      new RotateToFaceAbsolutePosition(absoluteDestinationPose)
+
       // Drive to absolute destination coordinate
-      new DriveToAbsolutePosition(absoluteDestinationPose),
+      // new DriveToAbsolutePosition(absoluteDestinationPose),
 
       // Rotate to end pose angle
-      new RotateToAbsolutePosition(absoluteDestinationPose.getRotation().getDegrees())
+      // new RotateToAbsolutePosition(absoluteDestinationPose.getRotation().getDegrees())
     );
   }
 }
