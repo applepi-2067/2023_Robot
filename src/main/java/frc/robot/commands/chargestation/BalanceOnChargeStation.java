@@ -13,7 +13,8 @@ public class BalanceOnChargeStation extends SequentialCommandGroup {
   public BalanceOnChargeStation() {
     
     addCommands( 
-    new DriveToPosition(1.0),
+     
+
       new balanceOnCharge()
     );
   }

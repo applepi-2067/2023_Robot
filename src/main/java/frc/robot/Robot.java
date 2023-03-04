@@ -17,6 +17,7 @@ import frc.robot.commands.arm.ZeroArmPosition;
 import frc.robot.commands.auto.DriveSquareAuto;
 import frc.robot.commands.auto.DriveToVisionTargetOffset;
 import frc.robot.commands.auto.RotationTest;
+import frc.robot.commands.auto.ScorePreloadedPiece;
 import frc.robot.commands.auto.ZeroAll;
 import frc.robot.commands.chargestation.BalanceOnChargeStation;
 import frc.robot.subsystems.Drivetrain;
@@ -93,11 +94,8 @@ public class Robot extends TimedRobot {
 
   public void autoSelectInit() {
     m_autoChooser = new SendableChooser<Command>();
-    m_autoChooser.setDefaultOption("Rotate Test", new RotationTest(Drivetrain.getInstance()));
-    m_autoChooser.addOption("Zero Arm", new ZeroArmPosition());
-    m_autoChooser.addOption("Drive Square", new DriveSquareAuto());
-    m_autoChooser.addOption("Zero All", new ZeroAll());
-    m_autoChooser.addOption("Balance", new BalanceOnChargeStation());
+    m_autoChooser.addOption("Top/Bottom Score", new ScorePreloadedPiece());
+    // m_autoChooser.addOption("Balance", new BalanceOnChargeStation());  // Disabled until we actually write it
   }
 
   /**
