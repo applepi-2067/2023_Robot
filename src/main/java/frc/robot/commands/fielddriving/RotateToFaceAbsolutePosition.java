@@ -19,7 +19,7 @@ public class RotateToFaceAbsolutePosition extends CommandBase {
   private double m_thetaDegrees;
   private Pose2d m_absolutePose2d;
 
-  private final double ANGLE_TOLERANCE = 1; // deg
+  private final double ANGLE_TOLERANCE = 5; // deg
   private final double ANGULAR_VELOCITY_TOLERANCE = 5;  // deg/s
   private final double MINIMUM_POWER = 0.20; // Minimum power to turn the robot at all
 
