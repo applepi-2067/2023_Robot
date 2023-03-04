@@ -20,7 +20,7 @@ public class DriveToTargetOffset extends SequentialCommandGroup {
       new DriveToAbsolutePosition(absoluteDestinationPose),
 
       // Rotate to end pose angle
-      new RotateToAbsolutePosition(absoluteDestinationPose.getRotation().getDegrees())
+      new RotateToAbsoluteAngle(absoluteDestinationPose.getRotation().getDegrees())
     );
   }
 }

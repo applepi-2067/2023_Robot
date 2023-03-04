@@ -14,7 +14,7 @@ import java.lang.Math;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class RotateToAbsolutePosition extends CommandBase implements Loggable {
+public class RotateToAbsoluteAngle extends CommandBase implements Loggable {
     private Drivetrain m_drivetrain;
     private double m_degreesAbsolute;
     private final double ANGLE_TOLERANCE = 1; // deg
@@ -34,7 +34,7 @@ public class RotateToAbsolutePosition extends CommandBase implements Loggable {
     private ProfiledPIDController m_pidController = new ProfiledPIDController(0.007, 0.0, 0.0, constraints);
 
 
-    public RotateToAbsolutePosition(double degreesAbsolute) { 
+    public RotateToAbsoluteAngle(double degreesAbsolute) { 
         Drivetrain drivetrain = Drivetrain.getInstance(); 
         addRequirements(drivetrain);
         m_drivetrain = drivetrain;
