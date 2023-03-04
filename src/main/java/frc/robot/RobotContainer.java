@@ -123,8 +123,7 @@ public class RobotContainer implements Loggable {
     m_operatorController.y().onTrue(new SetShoulderPosition(13.36).andThen(new SetArmExtension(0.894))); // High scoring position
     m_operatorController.b().onTrue(new SetShoulderPosition(3.273).andThen(new SetArmExtension(0.429))); // Mid scoring position
     m_operatorController.x().onTrue(new SetShoulderPosition(0).andThen(new SetArmExtension(0))); //Get Game Piece from human / feed station
-    
-    m_operatorController.povDown().onTrue(new SetWaistPosition(0.0));  // DEBUG ONLY, REMOVE BEFORE MERGE
+  
 
     //m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
     //m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));
