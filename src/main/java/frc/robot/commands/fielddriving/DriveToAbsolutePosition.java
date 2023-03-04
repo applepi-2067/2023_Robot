@@ -60,8 +60,6 @@ public class DriveToAbsolutePosition extends CommandBase {
     double rightTrackSpeed = clampVelocity(rightTrackSpeedDistance + rightTrackSpeedRotation);
 
     m_drivetrain.setSetPointVelocity(leftTrackSpeed, rightTrackSpeed);
-    SmartDashboard.putNumber("Left Wheel Speed", leftTrackSpeed);
-    SmartDashboard.putNumber("Right Wheel Speed", rightTrackSpeed);
   }
 
   // Called once the command ends or is interrupted.
