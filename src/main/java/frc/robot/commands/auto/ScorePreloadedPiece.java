@@ -43,21 +43,21 @@ public class ScorePreloadedPiece extends SequentialCommandGroup {
       Commands.parallel(
         new SetShoulderPosition(-60.0),
         new DriveToPosition(-4.254),
-        new ZeroWaistPosition().andThen(new SetWaistPosition(90))
-      ),
+        new ZeroWaistPosition().andThen(new SetWaistPosition(0.0))
+      )
 
-      Commands.deadline(
-        new ClawSensorGrab(),
-        new SetArmExtension(0.56)
-      ),
+      // Commands.deadline(
+      //   new ClawSensorGrab(),
+      //   new SetArmExtension(0.56)
+      // ),
       
-      //After piece is grabbed turn to zero 
-      new SetArmExtension(0.0),
-      new SetWaistPosition(0.0),
+      // //After piece is grabbed turn to zero 
+      // new SetArmExtension(0.0),
+      // new SetWaistPosition(0.0),
 
-      // DEBUG, RESET WAIST FOR TESTING
-      new WaitCommand(1),  // DEBUG ONLY
-      new SetWaistPosition(0)  // DEBUG ONLY
-      );
+      // // DEBUG, RESET WAIST FOR TESTING
+      // new WaitCommand(1),  // DEBUG ONLY
+      // new SetWaistPosition(0)  // DEBUG ONLY
+    );
   }
 }
