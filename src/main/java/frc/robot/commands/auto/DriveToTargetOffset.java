@@ -17,13 +17,13 @@ public class DriveToTargetOffset extends SequentialCommandGroup {
     Pose2d absoluteDestinationPose = Transforms.targetRelativePoseToAbsoluteFieldPose(targetID, targetOffsetPose);
     addCommands(
       // Rotate to face destination.
-      new RotateToFaceAbsolutePosition(absoluteDestinationPose)
+      new RotateToFaceAbsolutePosition(absoluteDestinationPose),
 
       // Drive to absolute destination coordinate
-      // new DriveToAbsolutePosition(absoluteDestinationPose),
+      new DriveToAbsolutePosition(absoluteDestinationPose),
 
       // Rotate to end pose angle
-      // new RotateToAbsolutePosition(absoluteDestinationPose.getRotation().getDegrees())
+      new RotateToAbsolutePosition(absoluteDestinationPose.getRotation().getDegrees())
     );
   }
 }
