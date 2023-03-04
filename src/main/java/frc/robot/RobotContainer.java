@@ -101,23 +101,24 @@ public class RobotContainer implements Loggable {
 
     //Operator Controls
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
-    m_operatorController.povLeft().onTrue(new SetIntakeExtension(0.025));
     m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.332));
-
-    m_operatorController.rightBumper().onTrue(new IntakeConveyorIn(true));
-    m_operatorController.leftBumper().onTrue(new IntakeConveyorIn(false));
-
-    //Intake game piece
-    m_operatorController.rightTrigger().onTrue (new SetIntakeRollerSpeed(1.0));
-    m_operatorController.rightTrigger().onFalse(new SetIntakeRollerSpeed(0.0));
-    m_operatorController.rightTrigger().onTrue(new IntakeConveyorBeltSpeed(-1.0));
-    m_operatorController.rightTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
+    
+    // m_operatorController.povLeft().onTrue(new SetIntakeExtension(0.025));
   
-    //Outtake game piece
-    m_operatorController.leftTrigger().onTrue (new SetIntakeRollerSpeed(-1.0));
-    m_operatorController.leftTrigger().onFalse(new SetIntakeRollerSpeed(0.0));
-    m_operatorController.leftTrigger().onTrue(new IntakeConveyorBeltSpeed(1.0));
-    m_operatorController.leftTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
+    // m_operatorController.rightBumper().onTrue(new IntakeConveyorIn(true));
+    // m_operatorController.leftBumper().onTrue(new IntakeConveyorIn(false));
+    
+    // //Intake game piece
+    // m_operatorController.rightTrigger().onTrue (new SetIntakeRollerSpeed(1.0));
+    // m_operatorController.rightTrigger().onFalse(new SetIntakeRollerSpeed(0.0));
+    // m_operatorController.rightTrigger().onTrue(new IntakeConveyorBeltSpeed(-1.0));
+    // m_operatorController.rightTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
+  
+    // //Outtake game piece
+    // m_operatorController.leftTrigger().onTrue (new SetIntakeRollerSpeed(-1.0));
+    // m_operatorController.leftTrigger().onFalse(new SetIntakeRollerSpeed(0.0));
+    // m_operatorController.leftTrigger().onTrue(new IntakeConveyorBeltSpeed(1.0));
+    // m_operatorController.leftTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
   
     m_operatorController.a().onTrue(new ClawOpen());
     m_operatorController.a().onFalse(new ClawClose());
