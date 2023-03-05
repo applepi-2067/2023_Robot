@@ -54,6 +54,7 @@ public class RotateToFaceAbsolutePosition extends CommandBase {
     m_absoluteAngleSetpointDegrees = Units.radiansToDegrees(Math.atan2(yDiff, xDiff));
 
     m_pidController.setGoal(m_absoluteAngleSetpointDegrees);
+    m_pidController.reset(getCurrentAngleDegrees());
   }
 
   // Called every time the scheduler runs while the command is scheduled.

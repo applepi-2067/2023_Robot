@@ -46,6 +46,7 @@ public class RotateToAbsoluteAngle extends CommandBase implements Loggable {
     public void initialize() {
         m_pidController.reset(0);
         m_pidController.setGoal(m_absoluteAngleSetpointDegrees);
+        m_pidController.reset(getCurrentAngleDegrees());
     }
 
     // Called every time the scheduler runs while the command is scheduled.
