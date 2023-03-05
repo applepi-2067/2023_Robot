@@ -22,14 +22,19 @@ public class DriveToAbsolutePosition extends CommandBase {
   private ProfiledPIDController m_distanceController;
   private PIDController m_rotationController;
 
-  /** Creates a new DriveToTargetOffset. */
-  public DriveToAbsolutePosition(Pose2d absoluteDestinationPose) {
+  public DriveToAbsolutePosition(Pose2d absoluteDestinationPose, double velocityScaling) {
     addRequirements(m_drivetrain);
     m_absoluteDestinationPose = absoluteDestinationPose;
-    TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY, Constants.Drivetrain.MOTOR_ACCELERATION);
+    double MAX_VELOCITY = 5;
+    double MAX_ACCELERATION = 2;
+    TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(MAX_VELOCITY * velocityScaling, MAX_ACCELERATION);
     m_distanceController = new ProfiledPIDController(1.5, 0.0, 0.0, constraints);
     m_distanceController.setGoal(0);
     m_rotationController = new PIDController(1.3, 0, 0);
+  }
+
+  public DriveToAbsolutePosition(Pose2d absoluteDestinationPose) {
+    this(absoluteDestinationPose, 1.0);
   }
 
   // Called when the command is initially scheduled.
