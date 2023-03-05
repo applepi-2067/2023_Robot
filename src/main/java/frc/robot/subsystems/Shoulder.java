@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -31,6 +32,8 @@ public class Shoulder extends SubsystemBase implements Loggable {
   private final SparkMaxPIDController m_pidController;
   private final RelativeEncoder m_encoder;
 
+  private final DigitalInput m_zeroingSensor;
+
   private static final double GEAR_RATIO = (5.0/1.0) * (3.0/1.0) * (66.0 / 22.0) * (74.0 / 16.0);
   private static final double DEGREES_PER_REV = 360.0;
   private static final int CURRENT_LIMIT = 13; //Amps
@@ -43,7 +46,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
   // PID Coefficients.
   // private static Gains gains = new Gains(0.11, 0.001, 0, 0, 1, 0.65); //raw PI controller gains (non-smart motion)
-  private Gains gains = new Gains(1e-4, 3e-6, 0.000156, 0, 1, 0.65); //smart motion gains
+  private Gains gains = new Gains(1.5e-4, 3e-6, 0.000156, 0, 1, 0.65); //smart motion gains
   
   // SmartMotion configs
   private static final double MAX_VELOCITY_RPM = 5_000; // NEO free speed 5676 RPM
@@ -61,11 +64,13 @@ public class Shoulder extends SubsystemBase implements Loggable {
   
   /** Creates a new Shoulder. */
   private Shoulder() {
+    m_zeroingSensor = new DigitalInput(Constants.DiscreteInputs.SHOULDER_ZEROING_DI);
+
     m_motor = new CANSparkMax(Constants.CANDeviceIDs.SHOULDER_MOTOR_ID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
     m_motor.setSmartCurrentLimit(CURRENT_LIMIT);
     m_motor.setInverted(INVERT_MOTOR);
-    m_motor.setIdleMode(IdleMode.kBrake);
+    m_motor.setIdleMode(IdleMode.kCoast);
 
     m_pidController = m_motor.getPIDController();
     m_encoder = m_motor.getEncoder();
@@ -152,6 +157,11 @@ public class Shoulder extends SubsystemBase implements Loggable {
   @Log (name = "Position (Deg)", rowIndex = 2, columnIndex = 0)
   public double getPosition() {
     return motorRotationsToDegrees(m_encoder.getPosition());
+  }
+
+  @Log
+  public boolean zeroSensorTriggered() {
+    return ! m_zeroingSensor.get();
   }
 
   @Override

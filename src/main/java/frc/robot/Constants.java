@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.commands.IK.IKCoordinate;
 import frc.robot.utils.Gains;
@@ -28,7 +29,7 @@ public final class Constants {
   }
 
   public static class ZeroingOffsets {
-    public static final double SHOULDER_FRONT_MINIMUM_ANGLE = -76.5;
+    public static final double SHOULDER_FRONT_MINIMUM_ANGLE = -54.5;  //  Angle at which the sensor stops detecting the magnet
     public static final double WAIST_ZERO_SENSOR_OFFSET = 14.0;  // Angle from waist zero sensor to true zero
   }
 
@@ -58,6 +59,7 @@ public final class Constants {
     public static final int WAIST_ZEROING_DI = 0;
     public static final int CLAW_IR_SENSOR_DI = 1;
     public static final int ARM_END_OF_TRAVEL_DI = 2;
+    public static final int SHOULDER_ZEROING_DI = 8;
 
     public static final int PBOT_JUMPER_DI = 9;
 
@@ -88,7 +90,7 @@ public final class Constants {
      * Gains used in Motion Magic, to be adjusted accordingly
      * Gains(kp, ki, kd, kf, izone, peak output);
      */
-    public static final Gains kPositionGains = new Gains(0.1, 0.001, 0.0, 0.0, 300.0, 1.0);
+    public static final Gains kPositionGains = new Gains(0.013, 0.000001, 0.0, 0.0, 0.3, 1.0);
     public static final Gains kVelocityGains = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0); 
 
     // Maximum drivetrain velocity in meters per seconds.
@@ -97,7 +99,8 @@ public final class Constants {
     // Drivetrain only moves when abs(stick) > deadband. Compensates for stick drift.
     public static final double DRIVETRAIN_CONTROLLER_DEADBAND = 0.03;
 
-    public static final double MOTOR_ACCELERATION = 5.0;
+    public static final double MOTOR_ACCELERATION = 5.0;  // m/s^2
+    public static final double MOTOR_ACCELERATION_AUTO = 2.0;  // m/s^2
   }
 
   public static final class PneumaticsDevices {
@@ -109,18 +112,18 @@ public final class Constants {
   }
 
   public static final class SetpointTolerances {
-    public static final double SHOULDER_ANGLE_TOLERANCE = 0.1;
+    public static final double SHOULDER_ANGLE_TOLERANCE = 1;
     public static final double ARM_METERS_TOLERANCE = 0.005;
     public static final double WAIST_ANGLE_TOLERANCE = 0.1;
   }
   
   public static final class IKPositions {
-    public static final IKCoordinate ABOVE_INTAKE_BEFORE_ACQUISITION = new IKCoordinate(0, 0.2, 0.169); //TODO: SET
-    public static final IKCoordinate ACQUIRING_PIECE_FROM_INTAKE = new IKCoordinate(0, 0.238, 0.169); //TODO: SET
-    public static final IKCoordinate STOWED_WITH_GAME_PIECE_CLEAR_OF_INTAKE = new IKCoordinate(0, 0, 0); //TODO: SET
+    public static final IKCoordinate ABOVE_INTAKE_BEFORE_ACQUISITION = new IKCoordinate(0.26, 0.0, 0.38); //TODO: SET
+    public static final IKCoordinate ACQUIRING_PIECE_FROM_INTAKE = new IKCoordinate(0.23, 0.0, 0.27); //TODO: SET
+    public static final IKCoordinate STOWED_WITH_GAME_PIECE_CLEAR_OF_INTAKE = new IKCoordinate(0.23, 0, 0.5); //TODO: SET
 
-    public static final IKCoordinate HIGH_SCORING_POSITION = new IKCoordinate(1.4732, 0, 1.3843); //TODO: SET
-    public static final IKCoordinate MID_SCORING_POSITION = new IKCoordinate(1.0668, 0, 1.0797); //TODO: SET
+    public static final IKCoordinate HIGH_SCORING_POSITION = new IKCoordinate(-1.44, 0, 1.36); //over the back
+    public static final IKCoordinate MID_SCORING_POSITION = new IKCoordinate(-1.00, 0, 1.03); //over the back
     public static final IKCoordinate LOW_SCORING_POSITION = new IKCoordinate(0.6858, 0, 0.2158); //TODO: SET
   }
 
@@ -130,5 +133,18 @@ public final class Constants {
   }
   public static final class IKConstraints {
     public static final double MINIMUM_Z_HEIGHT = 0.28;
+  }
+
+  public static final class Camera {
+    public static final double CAMERA_HYPOTENUSE_OFFSET = Units.inchesToMeters(7.0);
+  }
+
+  public static final class ScoringPositionsID6 {
+    /* Scoring positions in the format of waist degrees, shoulder degrees, and arm extension in meters
+     *C1: 
+     *C2: 0, 190, 0.3
+     *C3: 0, 170, 0.65
+     * 
+     */
   }
 }

@@ -78,7 +78,7 @@ public class CornerStartRoutine extends SequentialCommandGroup {
         // 12a
         new SetArmExtension(1.2192),
         // 13
-        new SetClawBeltSpeed(0.0)
+        new SetClawBeltSpeed(()->{return 0.0;})
     );  
   
   }

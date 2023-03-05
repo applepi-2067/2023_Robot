@@ -1,13 +1,15 @@
 package frc.robot.commands.claw;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawBelt;
 
 public class SetClawBeltSpeed extends CommandBase {
     private ClawBelt m_ClawBelt; 
-    private double m_ClawBeltSpeed; 
+    private DoubleSupplier m_ClawBeltSpeed; 
 
-    public SetClawBeltSpeed(double clawBeltSpeed) {
+    public SetClawBeltSpeed(DoubleSupplier clawBeltSpeed) {
         m_ClawBelt = ClawBelt.getInstance();
         addRequirements(m_ClawBelt);
         
@@ -19,7 +21,7 @@ public class SetClawBeltSpeed extends CommandBase {
     
     @Override
     public void execute() {
-        m_ClawBelt.setSpeed(m_ClawBeltSpeed);
+        m_ClawBelt.setSpeed(m_ClawBeltSpeed.getAsDouble());
     }
   
     @Override
