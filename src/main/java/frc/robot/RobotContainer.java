@@ -88,10 +88,6 @@ public class RobotContainer implements Loggable {
                 -m_driverController.getLeftY(),
                 -m_driverController.getRightX() / 1.7),
             m_drivetrain));
-
-    m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
-    m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
-    m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorController.getLeftY()));
   }
 
   /**
@@ -143,7 +139,7 @@ public class RobotContainer implements Loggable {
 
     //Arm locations
     m_operatorController.povRight().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-55.0))); // stowed/retracted position
-    m_operatorController.x().onTrue(new SetShoulderPosition(20).andThen(new SetArmExtension(0.894))); // High scoring position
+    m_operatorController.x().onTrue(new SetShoulderPosition(22).andThen(new SetArmExtension(0.894))); // High scoring position
     m_operatorController.b().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.429))); // Mid scoring position
     m_operatorController.y().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.18)));  //Get Game Piece from human / feed station
 
