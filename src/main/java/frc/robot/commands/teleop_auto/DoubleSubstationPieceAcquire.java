@@ -21,7 +21,7 @@ public class DoubleSubstationPieceAcquire extends SequentialCommandGroup {
   /** Creates a new DoubleSubstationPieceAcquire. */
   public DoubleSubstationPieceAcquire() {
     double ENTRY_DISTANCE_FROM_CHARGESTATION_WALL = 3;
-    double FINAL_DISTANCE_FROM_CHARGESTATION_WALL = 1;
+    double FINAL_DISTANCE_FROM_CHARGESTATION_WALL = 0.9;
     double LEFT_RIGHT_SUBSTATION_OFFSET = -0.5;
     int TARGET_ID = 4;
 
