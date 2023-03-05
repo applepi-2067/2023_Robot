@@ -25,7 +25,7 @@ public class DriveForwardUntilAngle extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_driveTrain.setSetPointVelocity(0.3, 0.3);
+    m_driveTrain.arcadeDrive(0.5, 0);
   }
 
   @Override
