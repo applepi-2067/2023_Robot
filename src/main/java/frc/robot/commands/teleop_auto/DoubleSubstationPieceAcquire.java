@@ -6,6 +6,7 @@ package frc.robot.commands.teleop_auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.arm.SetArmExtension;
@@ -23,7 +24,12 @@ public class DoubleSubstationPieceAcquire extends SequentialCommandGroup {
     double ENTRY_DISTANCE_FROM_CHARGESTATION_WALL = 3;
     double FINAL_DISTANCE_FROM_CHARGESTATION_WALL = 0.9;
     double LEFT_RIGHT_SUBSTATION_OFFSET = -0.5;
-    int TARGET_ID = 4;
+
+    if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+      int TARGET_ID = 4;
+    } else {
+      int TARGET_ID = 5;
+    }
 
     Pose2d entryRelativePose = new Pose2d(  // X-dimension is normal to target surface
       ENTRY_DISTANCE_FROM_CHARGESTATION_WALL,  // x = perpendicular to target surface
