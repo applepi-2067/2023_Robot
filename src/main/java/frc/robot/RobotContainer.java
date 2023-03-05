@@ -76,8 +76,8 @@ public class RobotContainer implements Loggable {
     m_drivetrain.setDefaultCommand(
         Commands.run(
             () -> m_drivetrain.arcadeDrive(
-                Util.clampStickValue(-m_driverController.getLeftY()),
-                Util.clampStickValue(-m_driverController.getRightX() / 1.8)),
+                -m_driverController.getLeftY(),
+                -m_driverController.getRightX() / 1.7),
             m_drivetrain));
 
     // m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
@@ -97,7 +97,6 @@ public class RobotContainer implements Loggable {
   private void configureBindings() {
     //Driver Controls
     m_driverController.a().onTrue(new balanceOnCharge());
-    m_driverController.rightStick().onTrue(new StopDrivetrain());  // Stop the drivetrain when right stick is pressed in
 
     //Operator Controls
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
@@ -129,7 +128,7 @@ public class RobotContainer implements Loggable {
     m_operatorController.povRight().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-55.0))); // stowed/retracted position
     m_operatorController.x().onTrue(new SetShoulderPosition(20).andThen(new SetArmExtension(0.894))); // High scoring position
     m_operatorController.b().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.429))); // Mid scoring position
-    m_operatorController.y().onTrue(new SetArmExtension(0).andThen(new SetShoulderPosition(10))); //Get Game Piece from human / feed station
+    m_operatorController.y().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.18)));  //Get Game Piece from human / feed station
 
     //m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
     //m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));

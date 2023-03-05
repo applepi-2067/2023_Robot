@@ -100,7 +100,7 @@ public final class Constants {
     public static final double DRIVETRAIN_CONTROLLER_DEADBAND = 0.03;
 
     public static final double MOTOR_ACCELERATION = 5.0;  // m/s^2
-    public static final double MOTOR_ACCELERATION_AUTO = 2.0;  // m/s^2
+    public static final double MOTOR_ACCELERATION_AUTO = 1.0;  // m/s^2
   }
 
   public static final class PneumaticsDevices {
