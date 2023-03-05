@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
@@ -113,7 +114,6 @@ public class RobotContainer implements Loggable {
 
     //Operator Controls
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
-    m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.332));
 
     // m_operatorController.povLeft().onTrue(new SetIntakeExtension(0.025));
   
@@ -142,6 +142,9 @@ public class RobotContainer implements Loggable {
     m_operatorController.x().onTrue(new SetShoulderPosition(22).andThen(new SetArmExtension(0.894))); // High scoring position
     m_operatorController.b().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.429))); // Mid scoring position
     m_operatorController.y().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.18)));  //Get Game Piece from human / feed station
+
+    m_operatorController.leftBumper().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-55.0)).andThen(new SetWaistPosition(0)));
+    m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-55.0)).andThen(new SetWaistPosition(180)));
 
     //m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
     //m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));
