@@ -193,9 +193,6 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     double filteredLeftMotorVelocity_MetersPerSec = averageForwardSpeedFiltered - speedDiffFiltered;
     double filteredRightMotorVelocity_MetersPerSec = averageForwardSpeedFiltered + speedDiffFiltered;
 
-    SmartDashboard.putNumber("Left v setpoint", filteredLeftMotorVelocity_MetersPerSec);
-    SmartDashboard.putNumber("Right v setpoint", filteredRightMotorVelocity_MetersPerSec);
-
     m_leftMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(filteredLeftMotorVelocity_MetersPerSec));
     m_rightMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(filteredRightMotorVelocity_MetersPerSec));
   }
