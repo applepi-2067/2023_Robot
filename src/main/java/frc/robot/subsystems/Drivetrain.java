@@ -9,6 +9,7 @@ import frc.robot.utils.Transforms;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -88,6 +89,22 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_rightMotor.configFactoryDefault();
     m_leftMotorFollower.configFactoryDefault();
     m_rightMotorFollower.configFactoryDefault();
+
+    // Configure current limits
+    double CONTINUOUS_CURRENT_LIMIT = 40;  // A
+    double TRIGGER_THRESHOLD_LIMIT = 60; // A
+    double TRIGGER_THRESHOLD_TIME = 0.5; // s
+    SupplyCurrentLimitConfiguration talonCurrentLimit = new SupplyCurrentLimitConfiguration(
+        true,
+        CONTINUOUS_CURRENT_LIMIT,
+        TRIGGER_THRESHOLD_LIMIT,
+        TRIGGER_THRESHOLD_TIME
+    );
+    m_leftMotor.configSupplyCurrentLimit(talonCurrentLimit);
+    m_rightMotor.configSupplyCurrentLimit(talonCurrentLimit);
+    m_leftMotorFollower.configSupplyCurrentLimit(talonCurrentLimit);
+    m_rightMotorFollower.configSupplyCurrentLimit(talonCurrentLimit);
+
 
     // Make back motors follow front motor commands.
     m_leftMotorFollower.follow(m_leftMotor);
