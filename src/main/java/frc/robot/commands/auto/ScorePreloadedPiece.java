@@ -42,7 +42,7 @@ public class ScorePreloadedPiece extends SequentialCommandGroup {
       new SetArmExtension(0.0),
       Commands.parallel(
         new SetShoulderPosition(-60.0),
-        new DriveToPosition(-4.254),
+        // new DriveToPosition(-4.254),
         new ZeroWaistPosition().andThen(new SetWaistPosition(0.0))
       )
 

@@ -22,6 +22,7 @@ import frc.robot.commands.claw.*;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.estop.*;
 import frc.robot.commands.intake.*;
+import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.commands.shoulder.*;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
@@ -57,6 +58,8 @@ public class RobotContainer implements Loggable {
   private final IntakeConveyorBelt m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
   private final IntakeRoller m_IntakeRoller = IntakeRoller.getInstance();
   private final IntakeConveyorExtension m_IntakeConveyorExtension = IntakeConveyorExtension.getInstance();
+
+  private final Lights m_lights = Lights.getInstance();
   private final ClawBelt m_clawBelt = ClawBelt.getInstance();
 
   private static DigitalInput m_practiceBotJumper = new DigitalInput(Constants.DiscreteInputs.PBOT_JUMPER_DI);
@@ -80,10 +83,9 @@ public class RobotContainer implements Loggable {
                 Util.clampStickValue(-m_driverController.getRightX() / 1.8)),
             m_drivetrain));
 
-    // m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
-    // m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
-    // m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorController.getLeftY()));
-    //m_clawBelt.setDefaultCommand(new SetClawBeltSpeed(() -> m_operatorController.getLeftY()));
+    m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
+    m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
+    m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorController.getLeftY()));
   }
 
   /**
@@ -97,6 +99,11 @@ public class RobotContainer implements Loggable {
   private void configureBindings() {
     //Driver Controls
     m_driverController.a().onTrue(new balanceOnCharge());
+
+    // Light control
+    m_driverController.x().onTrue(new SetLightsColor(Lights.Color.PURPLE));
+    m_driverController.y().onTrue(new SetLightsColor(Lights.Color.YELLOW));
+
     m_driverController.rightStick().onTrue(new StopDrivetrain());  // Stop the drivetrain when right stick is pressed in
 
     //Operator Controls
