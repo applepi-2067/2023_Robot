@@ -28,8 +28,7 @@ public class DriveToAbsolutePosition extends CommandBase {
     double MAX_VELOCITY = 5;
     double MAX_ACCELERATION = 2;
     TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(MAX_VELOCITY * velocityScaling, MAX_ACCELERATION);
-    m_distanceController = new ProfiledPIDController(1.7, 0.0, 0.0, constraints);
-    m_distanceController.setGoal(0);
+    m_distanceController = new ProfiledPIDController(2.0, 0.0, 0.0, constraints);
     m_rotationController = new PIDController(1.3, 0, 0);
   }
 
@@ -42,6 +41,10 @@ public class DriveToAbsolutePosition extends CommandBase {
   public void initialize() {
     m_destinationDistance = getDistanceFromDestination();
     m_distanceController.setGoal(m_destinationDistance);
+
+    // Reset controllers since this object can be called multiple times
+    m_distanceController.reset(0.0);
+    m_rotationController.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

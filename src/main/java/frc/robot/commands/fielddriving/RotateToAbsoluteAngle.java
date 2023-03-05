@@ -30,7 +30,7 @@ public class RotateToAbsoluteAngle extends CommandBase implements Loggable {
     // 200 - competitive, motor power = 61%
     // >250 - scary
 
-    private TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(200, 150);
+    private TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(150, 50);
     private ProfiledPIDController m_pidController = new ProfiledPIDController(0.007, 0.0, 0.0, constraints);
 
 

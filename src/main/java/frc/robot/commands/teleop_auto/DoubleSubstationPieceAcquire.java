@@ -41,12 +41,17 @@ public class DoubleSubstationPieceAcquire extends SequentialCommandGroup {
       new SetArmExtension(0), // DEBUG
       new SetShoulderPosition(-45), // DEBUG
       
-      // Drive to pickup position
+      // Drive to setup position
       new DriveToTargetOffset(TARGET_ID, entryRelativePose),
-      new DriveToTargetOffset(TARGET_ID, setupRelativePose),
+
+      // Raise arm and drive to pickup position to get piece
+
+      Commands.parallel(
+        new SetShoulderPosition(8),
+        new DriveToTargetOffset(TARGET_ID, setupRelativePose)
+      ),
 
       // Pickup piece
-      new SetShoulderPosition(8),
       Commands.deadline(
         new ClawSensorGrab(), // Block until we grab a piedce
         new SetArmExtension(0.45)
