@@ -19,28 +19,36 @@ public class Transforms {
     public static Pose2d targetRelativePoseToAbsoluteFieldPose(int targetID, Pose2d targetRelativePose) {
         Optional<Pose3d> result = Constants.Field.aprilTagFieldLayout.getTagPose(targetID);
         Pose2d targetAbsolutePose = result.get().toPose2d();
+        return shiftAbsolutePoseByRelativePose(targetAbsolutePose, targetRelativePose);
+    }
 
-        double targetAbsolutePoseX = targetAbsolutePose.getX();
-        double targetAbsolutePoseY = targetAbsolutePose.getY();
-        double targetAbsolutePoseRotation = targetAbsolutePose.getRotation().getRadians();    
+    /**
+     * Shift a pose in absolute field space by a shift defined in the absolutePose's frame of reference
+     * @param absolutePose Pose in absolute field space
+     * @param relativeShift Shift defined from the perspective of the absolutePose
+     * @return Shifted pose in field absolute space
+     */
+    public static Pose2d shiftAbsolutePoseByRelativePose(Pose2d absolutePose, Pose2d relativeShift) {
+        double absolutePoseX = absolutePose.getX();
+        double absolutePoseY = absolutePose.getY();
+        double absolutePoseRotation = absolutePose.getRotation().getRadians();    
 
-        double targetRelativePoseX = targetRelativePose.getX();
-        double targetRelativePoseY = targetRelativePose.getY();
-        double targetRelativePoseRotation = targetRelativePose.getRotation().getRadians();
+        double relativeShiftX = relativeShift.getX();
+        double relativeShiftY = relativeShift.getY();
+        double relativeShiftRotation = relativeShift.getRotation().getRadians();
     
         double absoluteFieldPoseX = (
-            targetAbsolutePoseX
-            + (targetRelativePoseX * Math.cos(targetAbsolutePoseRotation))
-            - (targetRelativePoseY * Math.sin(targetAbsolutePoseRotation))
+            absolutePoseX
+            + (relativeShiftX * Math.cos(absolutePoseRotation))
+            - (relativeShiftY * Math.sin(absolutePoseRotation))
         );
         double absoluteFieldPoseY = (
-            targetAbsolutePoseY
-            + (targetRelativePoseX * Math.sin(targetAbsolutePoseRotation))
-            + (targetRelativePoseY * Math.cos(targetAbsolutePoseRotation))
+            absolutePoseY
+            + (relativeShiftX * Math.sin(absolutePoseRotation))
+            + (relativeShiftY * Math.cos(absolutePoseRotation))
         );
-        double absoluteFieldPoseRotation = targetAbsolutePoseRotation + targetRelativePoseRotation;
+        double absoluteFieldPoseRotation = absolutePoseRotation + relativeShiftRotation;
 
-        Pose2d absoluteFieldPose = new Pose2d(absoluteFieldPoseX, absoluteFieldPoseY, new Rotation2d(absoluteFieldPoseRotation));
-        return absoluteFieldPose;
+        return new Pose2d(absoluteFieldPoseX, absoluteFieldPoseY, new Rotation2d(absoluteFieldPoseRotation));
     }
 }
