@@ -38,10 +38,10 @@ public class balanceOnCharge extends CommandBase {
             m_driveTrain.arcadeDrive(-0.25, 0);
         }
         if (m_driveTrain.getPitchDegrees() < -2.5 && m_driveTrain.getPitchDegrees() > -5){
-            m_driveTrain.arcadeDrive(-0.1, 0);
+            m_driveTrain.arcadeDrive(-0.15, 0);
         }
         else if (m_driveTrain.getPitchDegrees() > 2.5 && m_driveTrain.getPitchDegrees() < 5){
-            m_driveTrain.arcadeDrive(0.1, 0);
+            m_driveTrain.arcadeDrive(0.15, 0);
         }
     }
     

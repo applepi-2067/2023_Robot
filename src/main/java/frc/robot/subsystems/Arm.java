@@ -52,7 +52,7 @@ public class Arm extends SubsystemBase implements Loggable {
   // SmartMotion configs
   private static final double MAX_VELOCITY_RPM = 11_000; // NEO550 free speed 11000RPM
   private static final double MIN_VELOCITY_RPM = 0;
-  private static final double MAX_ACCELERATION_RPM_PER_SEC = 15_000;
+  private static final double MAX_ACCELERATION_RPM_PER_SEC = 30_000;
   private static final double ALLOWED_ERROR = 0.05; //motor rotations
 
   public static Arm getInstance() {

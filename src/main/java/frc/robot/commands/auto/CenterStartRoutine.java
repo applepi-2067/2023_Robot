@@ -4,6 +4,7 @@
 
 package frc.robot.commands.auto;
 
+import frc.robot.commands.arm.BlockUntilArmLessThan;
 import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.arm.ZeroArmPosition;
 import frc.robot.commands.chargestation.DriveBackwardsUntilAngle;
@@ -29,14 +30,12 @@ public class CenterStartRoutine extends SequentialCommandGroup {
       new SetShoulderPosition(20.0),  // Forward is 20 deg  -- High scoring position
       new SetArmExtension(0.82), // High scoring position
       new ClawOpen(),
-      new SetArmExtension(0.0),
-      new ClawClose(),
       Commands.parallel(
-        new SetShoulderPosition(-65.0), // down in front
+        new SetArmExtension(0.0),
+        new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-65.0)), // down in front
         new DriveBackwardsUntilAngle()
       ),
       new balanceOnCharge()
-    // Gyro to test if level
     );
   }
 }
