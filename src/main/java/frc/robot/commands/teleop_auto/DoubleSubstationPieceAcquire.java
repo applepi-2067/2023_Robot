@@ -20,22 +20,20 @@ import frc.robot.commands.shoulder.SetShoulderPosition;
 public class DoubleSubstationPieceAcquire extends SequentialCommandGroup {
   /** Creates a new DoubleSubstationPieceAcquire. */
   public DoubleSubstationPieceAcquire() {
-    double DISTANCE_FROM_CHARGESTATION_WALL = 1.2;
-
-    double LEFT_RIGHT_SUBSTATION_OFFSET = -0.33;
-    double CAMERA_OFFSET = -0.18;  // 18cm offset, remove after camera offset code is integrated !
+    double ENTRY_DISTANCE_FROM_CHARGESTATION_WALL = 3;
+    double FINAL_DISTANCE_FROM_CHARGESTATION_WALL = 1;
+    double LEFT_RIGHT_SUBSTATION_OFFSET = -0.5;
     int TARGET_ID = 4;
 
-    Pose2d setupRelativePose = new Pose2d(  // X-dimension is normal to target surface
-      DISTANCE_FROM_CHARGESTATION_WALL,  // x = perpendicular to target surface
-      LEFT_RIGHT_SUBSTATION_OFFSET + CAMERA_OFFSET, // y = left-right from target surface
+    Pose2d entryRelativePose = new Pose2d(  // X-dimension is normal to target surface
+      ENTRY_DISTANCE_FROM_CHARGESTATION_WALL,  // x = perpendicular to target surface
+      LEFT_RIGHT_SUBSTATION_OFFSET, // y = left-right from target surface
       new Rotation2d(Math.PI)
     );
 
-    // pose to reset for debug
-    Pose2d exitRelativePose = new Pose2d(  // X-dimension is normal to target surface
-      3.0,  // x = perpendicular to target surface
-      0.0, // y = left-right from target surface
+    Pose2d setupRelativePose = new Pose2d(  // X-dimension is normal to target surface
+      FINAL_DISTANCE_FROM_CHARGESTATION_WALL,  // x = perpendicular to target surface
+      LEFT_RIGHT_SUBSTATION_OFFSET, // y = left-right from target surface
       new Rotation2d(Math.PI)
     );
 
@@ -44,13 +42,14 @@ public class DoubleSubstationPieceAcquire extends SequentialCommandGroup {
       new SetShoulderPosition(-45), // DEBUG
       
       // Drive to pickup position
+      new DriveToTargetOffset(TARGET_ID, entryRelativePose),
       new DriveToTargetOffset(TARGET_ID, setupRelativePose),
 
       // Pickup piece
       new SetShoulderPosition(8),
       Commands.deadline(
         new ClawSensorGrab(), // Block until we grab a piedce
-        new SetArmExtension(0.6)
+        new SetArmExtension(0.45)
       ),
 
       // Stow
@@ -58,7 +57,7 @@ public class DoubleSubstationPieceAcquire extends SequentialCommandGroup {
       new SetShoulderPosition(-60),
 
       // Turn around and exit
-      new DriveToTargetOffset(TARGET_ID, exitRelativePose),
+      // new DriveToTargetOffset(TARGET_ID, exitRelativePose),
 
       new ClawOpen()  // DEBUG
     );

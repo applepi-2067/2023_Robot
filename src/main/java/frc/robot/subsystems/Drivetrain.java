@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.utils.Transforms;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -265,17 +266,19 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     SmartDashboard.putNumber("Pose Rot (deg)", m_latestRobotPose2d.getRotation().getDegrees());
   }
 
-  public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds) {
+  public void addVisionMeaurement(Pose2d visionPoseEstimated, double timestampSeconds) {
     // Correct for camera offset and waist rotation.
     double waistAngleRadians = Units.degreesToRadians(m_waist.getPosition());
 
-    Pose2d correctedVisionEstimatedRobotPose2d = new Pose2d(
-      visionEstimatedRobotPose2d.getX() - (Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.cos(waistAngleRadians)),
-      visionEstimatedRobotPose2d.getY() - (Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.sin(waistAngleRadians)), 
-      Rotation2d.fromRadians(visionEstimatedRobotPose2d.getRotation().getRadians() - waistAngleRadians)
+    Pose2d cameraShift = new Pose2d(
+      Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.sin(waistAngleRadians),
+      Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * -Math.cos(waistAngleRadians), 
+      Rotation2d.fromRadians(waistAngleRadians)
     );
 
-    m_odometry.addVisionMeasurement(correctedVisionEstimatedRobotPose2d, timestampSeconds);
+    Pose2d correctedVisionPoseEstimate = Transforms.shiftAbsolutePoseByRelativePose(visionPoseEstimated, cameraShift);
+
+    m_odometry.addVisionMeasurement(correctedVisionPoseEstimate, timestampSeconds);
   }
 
   public Pose2d getLatestRobotPose2d() {
