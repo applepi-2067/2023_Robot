@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.utils.Transforms;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -110,7 +111,8 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
     // Initialize pose estimator.
     m_odometry = new DifferentialDrivePoseEstimator(
-      new DifferentialDriveKinematics(WHEEL_BASE_METERS), new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters(), new Pose2d(),
+      new DifferentialDriveKinematics(WHEEL_BASE_METERS), new Rotation2d(getYawRadians()),
+      getRightMotorDistanceMeters(), getLeftMotorDistanceMeters(), Constants.Drivetrain.INITIAL_ROBOT_POSE2D,
       new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.0408, 1.2711, 0.1)
     );
 
@@ -143,6 +145,14 @@ public class Drivetrain extends SubsystemBase implements Loggable{
       leftStickY * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY,
       rightStickY * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY
     );
+  }
+
+  /**
+   * Stop the drivetrain motors
+   */
+  public void stop() {
+    m_leftMotor.set(0);
+    m_rightMotor.set(0);
   }
 
   /**
@@ -249,19 +259,26 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_latestRobotPose2d = m_odometry.update(
       new Rotation2d(getYawRadians()), getRightMotorDistanceMeters(), getLeftMotorDistanceMeters()
     );
+    
+    // DEBUG
+    SmartDashboard.putNumber("Pose X", m_latestRobotPose2d.getX());
+    SmartDashboard.putNumber("Pose Y", m_latestRobotPose2d.getY());
+    SmartDashboard.putNumber("Pose Rot (deg)", m_latestRobotPose2d.getRotation().getDegrees());
   }
 
-  public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds) {
+  public void addVisionMeaurement(Pose2d visionPoseEstimated, double timestampSeconds) {
     // Correct for camera offset and waist rotation.
     double waistAngleRadians = Units.degreesToRadians(m_waist.getPosition());
 
-    Pose2d correctedVisionEstimatedRobotPose2d = new Pose2d(
-      visionEstimatedRobotPose2d.getX() - (Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.cos(waistAngleRadians)),
-      visionEstimatedRobotPose2d.getY() - (Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.sin(waistAngleRadians)), 
-      Rotation2d.fromRadians(visionEstimatedRobotPose2d.getRotation().getRadians() - waistAngleRadians)
+    Pose2d cameraShift = new Pose2d(
+      Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.sin(waistAngleRadians),
+      Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * -Math.cos(waistAngleRadians), 
+      Rotation2d.fromRadians(waistAngleRadians)
     );
 
-    m_odometry.addVisionMeasurement(correctedVisionEstimatedRobotPose2d, timestampSeconds);
+    Pose2d correctedVisionPoseEstimate = Transforms.shiftAbsolutePoseByRelativePose(visionPoseEstimated, cameraShift);
+
+    m_odometry.addVisionMeasurement(correctedVisionPoseEstimate, timestampSeconds);
   }
 
   public Pose2d getLatestRobotPose2d() {

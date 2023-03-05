@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -16,14 +18,18 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
 import frc.robot.subsystems.*;
+import frc.robot.utils.Transforms;
 import frc.robot.utils.Util;
 import frc.robot.commands.chargestation.*;
 import frc.robot.commands.claw.*;
 import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
+import frc.robot.commands.fielddriving.DriveToTargetOffset;
 import frc.robot.commands.estop.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.commands.shoulder.*;
+import frc.robot.commands.teleop_auto.DoubleSubstationPieceAcquire;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Log;
@@ -98,11 +104,16 @@ public class RobotContainer implements Loggable {
    */
   private void configureBindings() {
     //Driver Controls
+
+    // Pick up piece from double substation
+
+    m_driverController.povUp().onTrue(new DoubleSubstationPieceAcquire());
+
     // Light control
     m_driverController.x().onTrue(new SetLightsColor(Lights.Color.PURPLE));
     m_driverController.y().onTrue(new SetLightsColor(Lights.Color.YELLOW));
 
-    m_driverController.rightStick().onTrue(new StopDrivetrain());  // Stop the drivetrain when right stick is pressed in
+    m_driverController.back().onTrue(new StopDrivetrain());  // Stop the drivetrain when right stick is pressed in
 
     //Operator Controls
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in

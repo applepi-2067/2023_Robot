@@ -4,20 +4,18 @@
 
 package frc.robot.subsystems;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Vision extends SubsystemBase {
   public static Vision instance = null;
@@ -26,7 +24,10 @@ public class Vision extends SubsystemBase {
   private PhotonCamera m_camera = new PhotonCamera("Arducam_1");
   private PhotonPoseEstimator m_photonPoseEstimator;
   
-  // Get a new object through singleton method
+  // Thresholds for single target rejection
+  private double MAX_TARGET_AMBIGUITY = 0.1;  // [0, 1]
+  private double MAXIMUM_TARGET_DISTANCE_METERS = 2.0;
+
   public static Vision getInstance() {
     if (instance == null) {
       instance = new Vision();
@@ -36,49 +37,47 @@ public class Vision extends SubsystemBase {
 
   // Constructor is private since this class is singleton
   private Vision() {
-    AprilTagFieldLayout aprilTagFieldLayout = null;
-    try {
-      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-      m_photonPoseEstimator = new PhotonPoseEstimator(
-        aprilTagFieldLayout,
-        PoseStrategy.LOWEST_AMBIGUITY,
-        m_camera,
-        new Transform3d()
-      );
-    }
-    catch (IOException e) {
-      System.out.println("Couldn't load April Tag Field Layout.");
-    }
+    m_photonPoseEstimator = new PhotonPoseEstimator(
+      Constants.Field.aprilTagFieldLayout,
+      PoseStrategy.MULTI_TAG_PNP,
+      m_camera,
+      new Transform3d()
+    );
+    m_photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
   }
-
-  // TODO: Transform destination pose relative to target (give ID) to absolute field pose.
-  // public Pose2d getCameraToDestPose(int targetID, Pose2d destination) {
-  //   double targetX = cameraToTargetTransform.getX();
-  //   double targetY = cameraToTargetTransform.getY();
-  //   double targetRotationRadians = cameraToTargetTransform.getRotation().toRotation2d().getRadians();
-
-  //   // Coords of destination in target reference frame.
-  //   double destinationXTarget = destination.getX();
-  //   double destinationYTarget = destination.getY();
-  //   double destinationRotationRadiansTarget = destination.getRotation().getRadians();
-
-  //   // Coords of destination in camera reference frame.
-  //   double destinationXCamera = targetX + (destinationXTarget * Math.cos(targetRotationRadians)) + (destinationYTarget * Math.sin(targetRotationRadians));
-  //   double destinationYCamera = targetY + (destinationYTarget * Math.cos(targetRotationRadians)) + (destinationXTarget * Math.sin(targetRotationRadians));
-  //   double destinationRotationRadiansCamera = targetRotationRadians + destinationRotationRadiansTarget;
-
-  //   Pose2d cameraToDestPose = new Pose2d(destinationXCamera, destinationYCamera, new Rotation2d(destinationRotationRadiansCamera));
-  //   return cameraToDestPose;
-  // }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     Optional<EstimatedRobotPose> result = m_photonPoseEstimator.update();
     if (result.isPresent()) {
-      Pose2d estimatedRobotPose2d = result.get().estimatedPose.toPose2d();
+      EstimatedRobotPose robotPose = result.get();
+      Pose2d estimatedRobotPose2d = robotPose.estimatedPose.toPose2d();
       double timestampSeconds = result.get().timestampSeconds;
-      m_drivetrain.addVisionMeaurement(estimatedRobotPose2d, timestampSeconds);
+      
+      // If we have more than one target in our estimate then we use MultiPNP to solve pose
+      // which is extremely robust at any distance, so we juse use that measurement directly
+      if (robotPose.targetsUsed.size() > 1) {
+        m_drivetrain.addVisionMeaurement(estimatedRobotPose2d, timestampSeconds);
+      } else {
+        // Estimates based on a single tag must pass specific checks before being used
+        PhotonTrackedTarget target = robotPose.targetsUsed.get(0);
+
+        // Ignore single targets with ambiguity above threshold
+        if (target.getPoseAmbiguity() > MAX_TARGET_AMBIGUITY) {
+          return;
+        }
+
+        // Ignore single targets that are too far away
+        Transform3d cameraToTarget3D = robotPose.targetsUsed.get(0).getBestCameraToTarget();
+        double distanceToTarget = cameraToTarget3D.getTranslation().toTranslation2d().getNorm();
+        if (distanceToTarget > MAXIMUM_TARGET_DISTANCE_METERS) {
+          return;
+        }
+
+        // Target is good! Add it to pose estimate
+        m_drivetrain.addVisionMeaurement(estimatedRobotPose2d, timestampSeconds);
+      }
     }
   }
 }
