@@ -8,7 +8,7 @@ import frc.robot.commands.arm.BlockUntilArmLessThan;
 import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.arm.ZeroArmPosition;
 import frc.robot.commands.chargestation.DriveBackwardsUntilAngle;
-import frc.robot.commands.chargestation.balanceOnCharge;
+import frc.robot.commands.chargestation.BalanceOnCharge;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.shoulder.ZeroShoulderPosition;
 import frc.robot.commands.waist.SetWaistPosition;
@@ -35,7 +35,7 @@ public class CenterStartRoutine extends SequentialCommandGroup {
         new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-65.0)), // down in front
         new DriveBackwardsUntilAngle()
       ),
-      new balanceOnCharge()
+      new BalanceOnCharge()
     );
   }
 }
