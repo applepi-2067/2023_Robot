@@ -12,11 +12,12 @@ import frc.robot.commands.chargestation.BalanceOnCharge;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.shoulder.ZeroShoulderPosition;
 import frc.robot.commands.waist.SetWaistPosition;
+import frc.robot.commands.waist.ZeroWaistPosition;
 import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
-import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class CenterStartRoutine extends SequentialCommandGroup {
   public CenterStartRoutine() {
@@ -35,7 +36,10 @@ public class CenterStartRoutine extends SequentialCommandGroup {
         new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-65.0)), // down in front
         new DriveBackwardsUntilAngle()
       ),
-      new BalanceOnCharge()
+      Commands.parallel(
+        new BalanceOnCharge(),
+        new ZeroWaistPosition().andThen(new WaitCommand(0.5)).andThen(new SetWaistPosition(0))
+      )
     );
   }
 }
