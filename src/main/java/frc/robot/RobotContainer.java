@@ -108,12 +108,12 @@ public class RobotContainer implements Loggable {
     // Pick up piece from double substation
 
     m_driverController.povUp().onTrue(new DoubleSubstationPieceAcquire());
-    
+
     // Light control
     m_driverController.x().onTrue(new SetLightsColor(Lights.Color.PURPLE));
     m_driverController.y().onTrue(new SetLightsColor(Lights.Color.YELLOW));
 
-    m_driverController.rightStick().onTrue(new StopDrivetrain());  // Stop the drivetrain when right stick is pressed in
+    m_driverController.back().onTrue(new StopDrivetrain());  // Stop the drivetrain when right stick is pressed in
 
     //Operator Controls
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
