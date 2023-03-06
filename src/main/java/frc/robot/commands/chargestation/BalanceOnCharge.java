@@ -3,10 +3,10 @@ package frc.robot.commands.chargestation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
-public class balanceOnCharge extends CommandBase {
+public class BalanceOnCharge extends CommandBase {
     private static Drivetrain m_driveTrain;
 
-    public balanceOnCharge() {
+    public BalanceOnCharge() {
         // Use addRequirements() here to declare subsystem dependencies.
         Drivetrain drivetrain = Drivetrain.getInstance();
         addRequirements(drivetrain);
