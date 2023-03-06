@@ -100,10 +100,8 @@ public class RobotContainer implements Loggable {
    * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
    */
   private void configureBindings() {
-    //Driver Controls
-
+    /** Driver controls */
     // Pick up piece from double substation
-
     m_driverController.povUp().onTrue(new DoubleSubstationPieceAcquire());
 
     // Light control
@@ -114,54 +112,24 @@ public class RobotContainer implements Loggable {
 
     m_driverController.back().onTrue(new StopDrivetrain());  // Stop the drivetrain when right stick is pressed in
 
-    //Operator Controls
-    m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
-
-    // m_operatorController.povLeft().onTrue(new SetIntakeExtension(0.025));
-  
-    // m_operatorController.rightBumper().onTrue(new IntakeConveyorIn(true));
-    // m_operatorController.leftBumper().onTrue(new IntakeConveyorIn(false));
-    
-    // //Intake game piece
-    // m_operatorController.rightTrigger().onTrue (new SetIntakeRollerSpeed(1.0));
-    // m_operatorController.rightTrigger().onFalse(new SetIntakeRollerSpeed(0.0));
-    // m_operatorController.rightTrigger().onTrue(new IntakeConveyorBeltSpeed(-1.0));
-    // m_operatorController.rightTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
-  
-    // //Outtake game piece
-    // m_operatorController.leftTrigger().onTrue (new SetIntakeRollerSpeed(-1.0));
-    // m_operatorController.leftTrigger().onFalse(new SetIntakeRollerSpeed(0.0));
-    // m_operatorController.leftTrigger().onTrue(new IntakeConveyorBeltSpeed(1.0));
-    // m_operatorController.leftTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
-  
+    /** Operator Controls */
+    // Claw
     m_operatorController.a().onTrue(new ClawOpen());
     m_operatorController.a().onFalse(new ClawClose());
     m_operatorController.povUp().onTrue(new ClawSensorGrab());
     m_operatorController.povLeft().onTrue(new ClawGrabCancel());
-
-    //Arm locations
+    
+    // Arm locations
     m_operatorController.povRight().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-55.0))); // stowed/retracted position
     m_operatorController.x().onTrue(new SetShoulderPosition(22).andThen(new SetArmExtension(0.894))); // High cone scoring position
     m_operatorController.povDown().onTrue(new SetShoulderPosition(15).andThen(new SetArmExtension(0.894))); // High cube scoring position
     m_operatorController.b().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.429))); // Mid scoring position
     m_operatorController.y().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.18)));  //Get Game Piece from human / feed station
-
+    
     m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-55.0)).andThen(new SetWaistPosition(0)));
     m_operatorController.leftBumper().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-55.0)).andThen(new SetWaistPosition(180)));
-
-    //m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
-    //m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));
-    //m_operatorController.a().onTrue(new RobotRelativeIK(Constants.IKPositions.LOW_SCORING_POSITION));
-    //m_operatorController.povUp().onTrue(new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
-
-    // SmartDashboard.putData("shoulder 0 degrees", new SetShoulderPosition(0));
-    // SmartDashboard.putData("shoulder -60 degrees", new SetShoulderPosition(-60));
-    // SmartDashboard.putData("waist 0 degrees", new SetWaistPosition(0));
-    // SmartDashboard.putData("waist 15 degrees", new SetWaistPosition(15));
-
-    // SmartDashboard.putData("Above intake before acquisition", new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
-    // SmartDashboard.putData("Aquiring piece from intake", new RobotRelativeIK(Constants.IKPositions.ACQUIRING_PIECE_FROM_INTAKE));
-    // SmartDashboard.putData("Stowed with game piece clear of intake", new RobotRelativeIK(Constants.IKPositions.STOWED_WITH_GAME_PIECE_CLEAR_OF_INTAKE));
+    
+    m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
   }
 
   /**
