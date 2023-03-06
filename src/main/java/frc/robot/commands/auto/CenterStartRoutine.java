@@ -7,7 +7,7 @@ package frc.robot.commands.auto;
 import frc.robot.commands.arm.BlockUntilArmLessThan;
 import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.arm.ZeroArmPosition;
-import frc.robot.commands.chargestation.DriveBackwardsUntilAngle;
+import frc.robot.commands.chargestation.DriveForwardUntilAngle;
 import frc.robot.commands.chargestation.BalanceOnCharge;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.shoulder.ZeroShoulderPosition;
@@ -15,12 +15,19 @@ import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.commands.waist.ZeroWaistPosition;
 import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
+import frc.robot.commands.drivetrain.DriveToPosition;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.Drivetrain;
 
 public class CenterStartRoutine extends SequentialCommandGroup {
-  public CenterStartRoutine() {
+  public CenterStartRoutine(
+    Drivetrain drivetrain = Drivetrain.getInstance();
+        addRequirements(drivetrain);
+        m_driveTrain = drivetrain;
+) }
+{
     addCommands(
       new ClawClose(),
       // Zero arm extension and shoulder angle
@@ -34,8 +41,10 @@ public class CenterStartRoutine extends SequentialCommandGroup {
       Commands.parallel(
         new SetArmExtension(0.0),
         new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-65.0)), // down in front
-        new DriveBackwardsUntilAngle()
+        m_driveTrain.arcadeDrive(-0.25, 0),
+        new DriveToPosition(-3.9624) // Position robot behind chargestation),
       ),
+      new DriveForwardUntilAngle(),
       Commands.parallel(
         new BalanceOnCharge(),
         new ZeroWaistPosition().andThen(new WaitCommand(0.5)).andThen(new SetWaistPosition(0))

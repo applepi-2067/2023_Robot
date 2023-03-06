@@ -7,11 +7,11 @@ package frc.robot.commands.chargestation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
-public class DriveBackwardsUntilAngle extends CommandBase {
+public class DriveForwardUntilAngle extends CommandBase {
   private static Drivetrain m_driveTrain;
 
   /** Creates a new DriveForwardUntilAngle. */
-  public DriveBackwardsUntilAngle() {
+  public DriveForwardUntilAngle() {
     Drivetrain drivetrain = Drivetrain.getInstance();
     addRequirements(drivetrain);
     m_driveTrain = drivetrain;
