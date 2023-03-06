@@ -28,10 +28,9 @@ public class DriveForwardUntilAngle extends CommandBase {
     m_driveTrain.arcadeDrive(0.5, 0);
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_driveTrain.arcadeDrive(0.0, 0.0);
+    m_driveTrain.setSetPointVelocity(0.0, 0.0);
   }
 
   // Returns true when the command should end.

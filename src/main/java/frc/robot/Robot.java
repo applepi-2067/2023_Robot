@@ -18,6 +18,7 @@ import frc.robot.commands.auto.CenterStartRoutine;
 import frc.robot.commands.auto.DriveSquareAuto;
 import frc.robot.commands.auto.DriveToVisionTargetOffset;
 import frc.robot.commands.auto.RotationTest;
+import frc.robot.commands.auto.ScorePreloadedPiece;
 import frc.robot.commands.auto.ZeroAll;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
@@ -93,11 +94,10 @@ public class Robot extends TimedRobot {
 
   public void autoSelectInit() {
     m_autoChooser = new SendableChooser<Command>();
-    m_autoChooser.setDefaultOption("Rotate Test", new RotationTest(Drivetrain.getInstance()));
-    m_autoChooser.addOption("Zero Arm", new ZeroArmPosition());
-    m_autoChooser.addOption("Drive Square", new DriveSquareAuto());
-    m_autoChooser.addOption("Zero All", new ZeroAll());
+    m_autoChooser.setDefaultOption("Top/Bottom Score", new ScorePreloadedPiece());
+    m_autoChooser.addOption("Top/Bottom Score", new ScorePreloadedPiece());
     m_autoChooser.addOption("Center Start", new CenterStartRoutine());
+    m_autoChooser.addOption("Zero All", new ZeroAll());
   }
 
   /**

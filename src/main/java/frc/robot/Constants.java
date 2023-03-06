@@ -90,7 +90,7 @@ public final class Constants {
      * Gains used in Motion Magic, to be adjusted accordingly
      * Gains(kp, ki, kd, kf, izone, peak output);
      */
-    public static final Gains kPositionGains = new Gains(0.1, 0.001, 0.0, 0.0, 300.0, 1.0);
+    public static final Gains kPositionGains = new Gains(0.013, 0.000001, 0.0, 0.0, 0.3, 1.0);
     public static final Gains kVelocityGains = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0); 
 
     // Maximum drivetrain velocity in meters per seconds.
@@ -100,6 +100,7 @@ public final class Constants {
     public static final double DRIVETRAIN_CONTROLLER_DEADBAND = 0.03;
 
     public static final double MOTOR_ACCELERATION = 5.0;  // m/s^2
+    public static final double MOTOR_ACCELERATION_AUTO = 1.0;  // m/s^2
   }
 
   public static final class PneumaticsDevices {
