@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
@@ -88,10 +89,6 @@ public class RobotContainer implements Loggable {
                 -m_driverController.getLeftY(),
                 -m_driverController.getRightX() / 1.7),
             m_drivetrain));
-
-    m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
-    m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
-    m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorController.getLeftY()));
   }
 
   /**
@@ -110,14 +107,15 @@ public class RobotContainer implements Loggable {
     m_driverController.povUp().onTrue(new DoubleSubstationPieceAcquire());
 
     // Light control
+    m_driverController.rightTrigger().onTrue(new SetLightsColor(Lights.Color.PURPLE));
     m_driverController.x().onTrue(new SetLightsColor(Lights.Color.PURPLE));
+    m_driverController.leftTrigger().onTrue(new SetLightsColor(Lights.Color.YELLOW));
     m_driverController.y().onTrue(new SetLightsColor(Lights.Color.YELLOW));
 
     m_driverController.back().onTrue(new StopDrivetrain());  // Stop the drivetrain when right stick is pressed in
 
     //Operator Controls
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
-    m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.332));
 
     // m_operatorController.povLeft().onTrue(new SetIntakeExtension(0.025));
   
@@ -143,9 +141,13 @@ public class RobotContainer implements Loggable {
 
     //Arm locations
     m_operatorController.povRight().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-55.0))); // stowed/retracted position
-    m_operatorController.x().onTrue(new SetShoulderPosition(20).andThen(new SetArmExtension(0.894))); // High scoring position
+    m_operatorController.x().onTrue(new SetShoulderPosition(22).andThen(new SetArmExtension(0.894))); // High cone scoring position
+    m_operatorController.povDown().onTrue(new SetShoulderPosition(15).andThen(new SetArmExtension(0.894))); // High cube scoring position
     m_operatorController.b().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.429))); // Mid scoring position
     m_operatorController.y().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.18)));  //Get Game Piece from human / feed station
+
+    m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-55.0)).andThen(new SetWaistPosition(0)));
+    m_operatorController.leftBumper().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-55.0)).andThen(new SetWaistPosition(180)));
 
     //m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
     //m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));

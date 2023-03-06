@@ -4,9 +4,10 @@
 
 package frc.robot.commands.auto;
 
+import frc.robot.commands.arm.BlockUntilArmLessThan;
 import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.arm.ZeroArmPosition;
-import frc.robot.commands.chargestation.DriveForwardUntilAngle;
+import frc.robot.commands.chargestation.DriveBackwardsUntilAngle;
 import frc.robot.commands.chargestation.balanceOnCharge;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.shoulder.ZeroShoulderPosition;
@@ -20,16 +21,21 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class CenterStartRoutine extends SequentialCommandGroup {
   public CenterStartRoutine() {
     addCommands(
-        new ZeroAll(),
-        new SetShoulderPosition(160.0),  // Forward is 20 deg  -- High scoring position
-        new SetArmExtension(0.82), // High scoring position
-        new ClawOpen(),
+      new ClawClose(),
+      // Zero arm extension and shoulder angle
+      Commands.parallel(
+        new ZeroShoulderPosition(),
+        new ZeroArmPosition().andThen(new SetArmExtension(0.0))
+      ),
+      new SetShoulderPosition(20.0),  // Forward is 20 deg  -- High scoring position
+      new SetArmExtension(0.82), // High scoring position
+      new ClawOpen(),
+      Commands.parallel(
         new SetArmExtension(0.0),
-        new ClawClose(),
-        new SetShoulderPosition(-65.0), // down in front
-        new DriveForwardUntilAngle(),
-        new balanceOnCharge()
-    // Gyro to test if level
+        new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-65.0)), // down in front
+        new DriveBackwardsUntilAngle()
+      ),
+      new balanceOnCharge()
     );
   }
 }

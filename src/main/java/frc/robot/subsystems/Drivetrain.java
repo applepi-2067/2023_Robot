@@ -9,6 +9,7 @@ import frc.robot.utils.Transforms;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -41,8 +42,8 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   private final WPI_TalonFX m_rightMotorFollower = new WPI_TalonFX(Constants.CANDeviceIDs.DT_MOTOR_RIGHT_2_ID);
   private final DifferentialDrive m_drivetrain = new DifferentialDrive(m_leftMotor, m_rightMotor);
 
-  private final SlewRateLimiter m_leftAccelerationLimiter = new SlewRateLimiter(Constants.Drivetrain.MOTOR_ACCELERATION);
-  private final SlewRateLimiter m_rightAccelerationLimiter = new SlewRateLimiter(Constants.Drivetrain.MOTOR_ACCELERATION);
+  private final SlewRateLimiter m_forwardBackLimitered = new SlewRateLimiter(Constants.Drivetrain.MOTOR_ACCELERATION);
+  private final SlewRateLimiter m_turnLimiter = new SlewRateLimiter(Constants.Drivetrain.MOTOR_TURN_ACCELERATION);
 
   private static PigeonIMU m_pidgey;
   private static TalonSRX m_pidgeyController;
@@ -88,6 +89,22 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_rightMotor.configFactoryDefault();
     m_leftMotorFollower.configFactoryDefault();
     m_rightMotorFollower.configFactoryDefault();
+
+    // Configure current limits
+    double CONTINUOUS_CURRENT_LIMIT = 40;  // A
+    double TRIGGER_THRESHOLD_LIMIT = 60; // A
+    double TRIGGER_THRESHOLD_TIME = 0.5; // s
+    SupplyCurrentLimitConfiguration talonCurrentLimit = new SupplyCurrentLimitConfiguration(
+        true,
+        CONTINUOUS_CURRENT_LIMIT,
+        TRIGGER_THRESHOLD_LIMIT,
+        TRIGGER_THRESHOLD_TIME
+    );
+    m_leftMotor.configSupplyCurrentLimit(talonCurrentLimit);
+    m_rightMotor.configSupplyCurrentLimit(talonCurrentLimit);
+    m_leftMotorFollower.configSupplyCurrentLimit(talonCurrentLimit);
+    m_rightMotorFollower.configSupplyCurrentLimit(talonCurrentLimit);
+
 
     // Make back motors follow front motor commands.
     m_leftMotorFollower.follow(m_leftMotor);
@@ -165,8 +182,16 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_leftMotor.selectProfileSlot(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kPIDLoopIdx);
     m_rightMotor.selectProfileSlot(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kPIDLoopIdx);
 
-    double filteredLeftMotorVelocity_MetersPerSec = m_leftAccelerationLimiter.calculate(leftMotorVelocity_MetersPerSec);
-    double filteredRightMotorVelocity_MetersPerSec = m_rightAccelerationLimiter.calculate(rightMotorVelocity_MetersPerSec);
+
+    double averageForwardSpeed = (leftMotorVelocity_MetersPerSec + rightMotorVelocity_MetersPerSec) / 2;
+    double speedDiff = rightMotorVelocity_MetersPerSec - leftMotorVelocity_MetersPerSec;
+
+    double averageForwardSpeedFiltered = m_forwardBackLimitered.calculate(averageForwardSpeed);
+
+    double speedDiffFiltered = m_turnLimiter.calculate(speedDiff);
+
+    double filteredLeftMotorVelocity_MetersPerSec = averageForwardSpeedFiltered - speedDiffFiltered;
+    double filteredRightMotorVelocity_MetersPerSec = averageForwardSpeedFiltered + speedDiffFiltered;
 
     m_leftMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(filteredLeftMotorVelocity_MetersPerSec));
     m_rightMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(filteredRightMotorVelocity_MetersPerSec));
