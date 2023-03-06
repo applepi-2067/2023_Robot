@@ -25,10 +25,11 @@ public class DoubleSubstationPieceAcquire extends SequentialCommandGroup {
     double FINAL_DISTANCE_FROM_CHARGESTATION_WALL = 0.9;
     double LEFT_RIGHT_SUBSTATION_OFFSET = -0.5;
 
+    int TARGET_ID;
     if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
-      int TARGET_ID = 4;
+      TARGET_ID = 4;
     } else {
-      int TARGET_ID = 5;
+      TARGET_ID = 5;
     }
 
     Pose2d entryRelativePose = new Pose2d(  // X-dimension is normal to target surface
