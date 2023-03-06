@@ -346,8 +346,8 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
     /* Set acceleration and vcruise velocity - see documentation */
     // Constants stolen from team 2168's 2022 repo
-    _talon.configMotionAcceleration((int) (metersPerSecToTicksPer100ms(Constants.Drivetrain.MOTOR_ACCELERATION))); //(distance units per 100 ms) per second
-    _talon.configMotionCruiseVelocity((int) (metersPerSecToTicksPer100ms(Constants.Drivetrain.MOTOR_ACCELERATION))); //distance units per 100 ms
+    _talon.configMotionAcceleration((int) (metersPerSecToTicksPer100ms(Constants.Drivetrain.MOTOR_ACCELERATION_AUTO))); //(distance units per 100 ms) per second
+    _talon.configMotionCruiseVelocity((int) (metersPerSecToTicksPer100ms(Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY))); //distance units per 100 ms
     _talon.configMotionSCurveStrength(8);
   
 
