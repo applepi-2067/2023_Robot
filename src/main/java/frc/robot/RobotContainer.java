@@ -28,6 +28,7 @@ import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
 import frc.robot.commands.fielddriving.DriveToTargetOffset;
 import frc.robot.commands.estop.*;
 import frc.robot.commands.intake.*;
+import frc.robot.commands.lights.DisableLights;
 import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.commands.shoulder.*;
 import frc.robot.commands.teleop_auto.DoubleSubstationPieceAcquire;
@@ -134,7 +135,7 @@ public class RobotContainer implements Loggable {
     // m_operatorController.leftTrigger().onTrue(new IntakeConveyorBeltSpeed(1.0));
     // m_operatorController.leftTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
   
-    m_operatorController.a().onTrue(new ClawOpen());
+    m_operatorController.a().onTrue(new ClawOpen().andThen(new DisableLights()));
     m_operatorController.a().onFalse(new ClawClose());
     m_operatorController.povUp().onTrue(new ClawSensorGrab());
     m_operatorController.povLeft().onTrue(new ClawGrabCancel());
