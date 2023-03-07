@@ -368,6 +368,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     _talon.config_kP(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPositionGains.kP, Constants.Drivetrain.kTimeoutMs);
     _talon.config_kI(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPositionGains.kI, Constants.Drivetrain.kTimeoutMs);
     _talon.config_kD(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPositionGains.kD, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_IntegralZone(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPositionGains.kIzone, Constants.Drivetrain.kTimeoutMs);
 
     /* Set acceleration and vcruise velocity - see documentation */
     // Constants stolen from team 2168's 2022 repo
