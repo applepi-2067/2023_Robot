@@ -34,8 +34,7 @@ public class ScorePreloadedPiece extends SequentialCommandGroup {
       ),
 
       // Raise arm and drop the cone
-      new SetShoulderPosition(20.00),
-      new SetArmExtension(0.82),
+      new ScoreHighAuto(),
       new ClawOpen(),
 
       // Retract arm into stow position then drive
