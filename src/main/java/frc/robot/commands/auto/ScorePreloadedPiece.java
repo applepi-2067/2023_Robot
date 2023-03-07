@@ -14,6 +14,7 @@ import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
 import frc.robot.commands.claw.ClawSensorGrab;
 import frc.robot.commands.drivetrain.DriveToPosition;
+import frc.robot.commands.drivetrain.RotateToPosition;
 import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.shoulder.ZeroShoulderPosition;
@@ -47,7 +48,8 @@ public class ScorePreloadedPiece extends SequentialCommandGroup {
         new DriveToPosition(-4.0),
         new ZeroWaistPosition().andThen(new SetWaistPosition(0.0))
       ),
-      new SetLightsColor(Lights.Color.PURPLE)
+      new SetLightsColor(Lights.Color.PURPLE),
+      new RotateToPosition(180)
 
       // Commands.deadline(
       //   new ClawSensorGrab(),
