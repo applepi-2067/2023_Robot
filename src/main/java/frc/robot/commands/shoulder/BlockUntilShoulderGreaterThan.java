@@ -15,8 +15,6 @@ public class BlockUntilShoulderGreaterThan extends CommandBase {
   public BlockUntilShoulderGreaterThan(double positionDegrees) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shoulder = Shoulder.getInstance();
-    addRequirements(m_shoulder);
-
     m_positionThresholdDegrees = positionDegrees;
   }
 

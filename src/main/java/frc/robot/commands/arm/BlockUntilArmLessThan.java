@@ -19,8 +19,6 @@ public class BlockUntilArmLessThan extends CommandBase {
   public BlockUntilArmLessThan(double positionMeters) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_arm = Arm.getInstance();
-    addRequirements(m_arm);
-
     m_positionThresholdMeters = positionMeters;
   }
 

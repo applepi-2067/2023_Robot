@@ -30,19 +30,22 @@ public class CenterStartRoutine extends SequentialCommandGroup {
         new ZeroArmPosition().andThen(new SetArmExtension(0.0))
       ),
       Commands.parallel(
-        new SetShoulderPosition(20.0),  // Forward is 20 deg  -- High scoring position
-        new BlockUntilShoulderGreaterThan(0.0).andThen(new SetArmExtension(0.82)) // High scoring position
+        new SetShoulderPosition(25.0),  // Forward is 20 deg  -- High scoring position
+        new BlockUntilShoulderGreaterThan(-64.0).andThen(
+          new SetArmExtension(0.2)).andThen(
+          new BlockUntilShoulderGreaterThan(0)).andThen(
+          new SetArmExtension(0.84)) // High scoring position
       ),
       new ClawOpen(),
       Commands.parallel(
         new SetArmExtension(0.0),
-        new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-65.0)), // down in front
-        new DriveBackwardsUntilAngle()
-      ),
-      Commands.parallel(
-        new BalanceOnCharge(),
-        new ZeroWaistPosition().andThen(new WaitCommand(0.5)).andThen(new SetWaistPosition(0))
+        new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-65.0)) // down in front
+        // new DriveBackwardsUntilAngle()
       )
+      // Commands.parallel(
+      //   new BalanceOnCharge(),
+      //   new ZeroWaistPosition().andThen(new WaitCommand(0.5)).andThen(new SetWaistPosition(0))
+      // )
     );
   }
 }
