@@ -98,7 +98,8 @@ public final class Constants {
      * Gains used in Motion Magic, to be adjusted accordingly
      * Gains(kp, ki, kd, kf, izone, peak output);
      */
-    public static final Gains kPositionGains = new Gains(0.013, 0.0, 0.0, 0.0, 300.0, 1.0);
+    public static final Gains kPositionGains = new Gains(0.030, 0.0, 0.0, 0.0, 0.0, 1.0);
+    // public static final Gains kPositionGains = new Gains(0.013, 0.0001, 0.0, 0.0, 200.0, 1.0);
     public static final Gains kVelocityGains = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0); 
 
     // Maximum drivetrain velocity in meters per seconds.
@@ -109,7 +110,7 @@ public final class Constants {
 
     public static final double MOTOR_ACCELERATION = 5.0;  // m/s^2
     public static final double MOTOR_TURN_ACCELERATION = 7.0;  // m/s^2, speed differential of the wheels
-    public static final double MOTOR_ACCELERATION_AUTO = 1.0;  // m/s^2
+    public static final double MOTOR_ACCELERATION_AUTO = 3.0;  // m/s^2
   }
 
   public static final class PneumaticsDevices {

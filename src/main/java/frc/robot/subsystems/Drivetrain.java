@@ -199,16 +199,19 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
   /**
    * 
-   * @param setPoint distance in meters (fwd positive)
+   * @param distanceMeters distance in meters (fwd positive)
    */
-  public void setSetPointDistance(double setPoint) {
+  public void setSetPointDistance(double distanceMeters) {
     m_leftMotor.selectProfileSlot(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPIDLoopIdx);
     m_rightMotor.selectProfileSlot(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPIDLoopIdx);
+    
+    double currentLeftTicks = m_leftMotor.getSelectedSensorPosition();
+    double currentRightTicks = m_rightMotor.getSelectedSensorPosition();
 
-    double setPointTicks = metersToTicks(setPoint);
-    // Flipped the signs to mirror robot driving patterns
-    m_leftMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
-    m_rightMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
+    double distanceToTravelTicks = metersToTicks(distanceMeters);
+
+    m_leftMotor.set(TalonFXControlMode.MotionMagic, currentLeftTicks + distanceToTravelTicks);
+    m_rightMotor.set(TalonFXControlMode.MotionMagic, currentRightTicks + distanceToTravelTicks);
   }
 
   /**
@@ -234,6 +237,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   /**
    * @return right motor distance in meters.
    */
+  @Log
   public double getRightMotorDistanceMeters() {
     return ticksToMeters(m_rightMotor.getSelectedSensorPosition());
   }
@@ -241,10 +245,12 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   /**
    * @return left motor distance in meters.
    */
+  @Log
   public double getLeftMotorDistanceMeters() {
     return ticksToMeters(m_leftMotor.getSelectedSensorPosition());
   }
 
+  @Log
   public double getAverageMotorDistanceMeters() {
     return (getRightMotorDistanceMeters() + getLeftMotorDistanceMeters()) / 2.0;
   }
