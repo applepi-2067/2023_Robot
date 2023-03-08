@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Relay.Value;
+import frc.robot.MonkeyTest
 
 public class Lights extends SubsystemBase {
 
@@ -45,6 +46,11 @@ public class Lights extends SubsystemBase {
   }
 
   public void on() {
+    if (MonkeyTest.get() == 5) {
+      m_on = false;
+      m_rgbLight.set(Value.kOn);
+      return
+    }
     m_on = true;
     setRelayColor();
   }

@@ -3,11 +3,10 @@
   // 1: claw belt broken
   // 2: claw pneumatics broken
   // 3: claw pnematics reversed
-  // x4: high scoring position too high
-  // x5: medium scoring position too high
-  // x6: no lights
-  // x7: waist doesn't spin
-  // x8: arm doesn't extend
+  // 4: shoulder position is +20 degrees off zero
+  // 5: no lights
+  // x6: waist doesn't spin
+  // x7: arm doesn't extend
 
 package frc.robot;
 

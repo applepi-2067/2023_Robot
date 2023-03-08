@@ -23,6 +23,7 @@ import java.lang.Math;
 
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
+import frc.robot.MonkeyTest
 
 public class Shoulder extends SubsystemBase implements Loggable {
 
@@ -111,6 +112,9 @@ public class Shoulder extends SubsystemBase implements Loggable {
    * @param degrees
    */
   public void setPosition(double degrees) {
+    if (MonkeyTest.get() == 4) {
+      degrees += 20
+    }
     m_pidController.setReference(
       degreesToMotorRotations(degrees),
       // CANSparkMax.ControlType.kPosition,
