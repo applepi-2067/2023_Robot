@@ -64,10 +64,10 @@ public class RobotContainer implements Loggable {
   private final Vision m_vision = Vision.getInstance();
   private final Arm m_arm = Arm.getInstance();
   private final ClawGrasp m_ClawGrasp = ClawGrasp.getInstance();
-  private final IntakeExtensionMotor m_IntakeExtensionMotor = IntakeExtensionMotor.getInstance();
-  private final IntakeConveyorBelt m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
-  private final IntakeRoller m_IntakeRoller = IntakeRoller.getInstance();
-  private final IntakeConveyorExtension m_IntakeConveyorExtension = IntakeConveyorExtension.getInstance();
+  // private final IntakeExtensionMotor m_IntakeExtensionMotor = IntakeExtensionMotor.getInstance();
+  // private final IntakeConveyorBelt m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
+  // private final IntakeRoller m_IntakeRoller = IntakeRoller.getInstance();
+  // private final IntakeConveyorExtension m_IntakeConveyorExtension = IntakeConveyorExtension.getInstance();
 
   private final Lights m_lights = Lights.getInstance();
   private final ClawBelt m_clawBelt = ClawBelt.getInstance();
