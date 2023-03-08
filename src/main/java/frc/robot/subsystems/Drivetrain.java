@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.utils.Transforms;
+import frc.robot.MonkeyTest
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -144,6 +145,9 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
   // Move the robot forward with some rotation.
   public void arcadeDrive(double fwd, double rot) {
+    if (MonkeyTest.get() == 0) {
+      rot *= -1;
+    }
     WheelSpeeds motorVelocities = DifferentialDrive.arcadeDriveIK(fwd, rot, true);
     double leftVelocity = motorVelocities.left * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY;
     double rightVelocity = motorVelocities.right * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY;
