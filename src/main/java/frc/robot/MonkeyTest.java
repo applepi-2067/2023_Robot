@@ -6,7 +6,7 @@
   // 4: shoulder position is +20 degrees off zero
   // 5: no lights
   // 6: waist doesn't spin
-  // x7: arm doesn't extend
+  // 7: arm doesn't extend
 
 package frc.robot;
 

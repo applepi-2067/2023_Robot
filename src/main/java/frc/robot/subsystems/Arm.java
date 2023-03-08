@@ -23,6 +23,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.CANDeviceIDs;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
+import frc.robot.MonkeyTest;
 
 public class Arm extends SubsystemBase implements Loggable {
 
@@ -106,6 +107,9 @@ public class Arm extends SubsystemBase implements Loggable {
    * @param meters
    */
   public void setPosition(double meters) {
+    if (MonkeyTest.get() == 7) {
+      meters = 0.1;
+    }
     // Clamp arm extension on [0.0, max extension].
     meters = MathUtil.clamp(meters, 0.0, MAX_ARM_EXTENSION_METERS);
     // m_pidController.setReference(metersToMotorRotations(meters), CANSparkMax.ControlType.kPosition);
