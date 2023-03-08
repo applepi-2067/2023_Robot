@@ -14,10 +14,13 @@ import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
 import frc.robot.commands.claw.ClawSensorGrab;
 import frc.robot.commands.drivetrain.DriveToPosition;
+import frc.robot.commands.drivetrain.RotateToPosition;
+import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.shoulder.ZeroShoulderPosition;
 import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.commands.waist.ZeroWaistPosition;
+import frc.robot.subsystems.Lights;
 
 //Auto routine to be used in the top of bottom scoring position, the routine will score the preloaded piece and leave the community
 public class ScorePreloadedPiece extends SequentialCommandGroup {
@@ -41,9 +44,11 @@ public class ScorePreloadedPiece extends SequentialCommandGroup {
       new SetArmExtension(0.0),
       Commands.parallel(
         new SetShoulderPosition(-60.0),
-        // new DriveToPosition(-4.254),
+        new DriveToPosition(-4.0),
         new ZeroWaistPosition().andThen(new SetWaistPosition(0.0))
-      )
+      ),
+      new SetLightsColor(Lights.Color.PURPLE),
+      new RotateToPosition(180)
 
       // Commands.deadline(
       //   new ClawSensorGrab(),
