@@ -7,13 +7,16 @@
   // 5: no lights
   // 6: waist doesn't spin
   // 7: arm doesn't extend
+  // 8: drivetrain has forward/reverse drift
+  // 9: drivetrain has rotation drift
+  // 10: drivetrain can only turn in one direction
 
 package frc.robot;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MonkeyTest {
-    public static int m_monkeySelection = ThreadLocalRandom.current().nextInt(0, 8 + 1);  // max is 8
+    public static int m_monkeySelection = ThreadLocalRandom.current().nextInt(0, 10 + 1);  // max is 10
     private static MonkeyTest instance = null;
 
     public static int get() {

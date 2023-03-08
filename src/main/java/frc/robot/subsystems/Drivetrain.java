@@ -148,6 +148,17 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     if (MonkeyTest.get() == 0) {
       rot *= -1;
     }
+    if (MonkeyTest.get() == 8) {
+      fwd += 0.1;
+    }
+    if (MonkeyTest.get() == 9) {
+      rot += 0.1;
+    }
+    if (MonkeyTest.get() == 10) {
+      if (rot >= 0) {
+        rot = 0;
+      }
+    }
     WheelSpeeds motorVelocities = DifferentialDrive.arcadeDriveIK(fwd, rot, true);
     double leftVelocity = motorVelocities.left * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY;
     double rightVelocity = motorVelocities.right * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY;
