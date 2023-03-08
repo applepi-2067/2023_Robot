@@ -23,7 +23,7 @@ import java.lang.Math;
 
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
-import frc.robot.MonkeyTest
+import frc.robot.MonkeyTest;
 
 public class Shoulder extends SubsystemBase implements Loggable {
 

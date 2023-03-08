@@ -16,7 +16,7 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.robot.utils.Util;
-import frc.robot.MonkeyTest
+import frc.robot.MonkeyTest;
 
 public class ClawBelt extends SubsystemBase implements Loggable {
 

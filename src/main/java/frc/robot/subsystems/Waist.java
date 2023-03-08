@@ -22,6 +22,8 @@ import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
+import frc.robot.MonkeyTest;
+
 public class Waist extends SubsystemBase implements Loggable {
 
   private static Waist instance = null;
@@ -103,6 +105,9 @@ public class Waist extends SubsystemBase implements Loggable {
    * @param degrees
    */
   public void setPosition(double degrees) {
+    if (MonkeyTest.get() == 6) {
+      degrees = 0;
+    }
     // m_pidController.setReference(degreesToMotorRotations(degrees), CANSparkMax.ControlType.kPosition);
     m_pidController.setReference(degreesToMotorRotations(degrees), CANSparkMax.ControlType.kSmartMotion, SMART_MOTION_SLOT);
   }

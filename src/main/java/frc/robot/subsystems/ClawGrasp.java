@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PneumaticsDevices;
 import io.github.oblarg.oblog.Loggable;
-import frc.robot.MonkeyTest
+import frc.robot.MonkeyTest;
 
 public class ClawGrasp
     extends SubsystemBase implements Loggable {
