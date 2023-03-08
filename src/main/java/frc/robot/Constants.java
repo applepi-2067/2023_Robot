@@ -4,6 +4,12 @@
 
 package frc.robot;
 
+import java.io.IOException;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.commands.IK.IKCoordinate;
@@ -66,6 +72,8 @@ public final class Constants {
   }
 
   public static class Drivetrain {
+    public static final Pose2d INITIAL_ROBOT_POSE2D = new Pose2d(12.813, 6.745, new Rotation2d(Math.PI)); // 3 meters from id 4, facing away.
+
     /**
      * Which PID slot to pull gains from. Starting 2018, you can choose from
      * 0,1,2 or 3. Only the first two (0,1) are visible in web-based
@@ -90,7 +98,8 @@ public final class Constants {
      * Gains used in Motion Magic, to be adjusted accordingly
      * Gains(kp, ki, kd, kf, izone, peak output);
      */
-    public static final Gains kPositionGains = new Gains(0.013, 0.000001, 0.0, 0.0, 0.3, 1.0);
+    public static final Gains kPositionGains = new Gains(0.035, 0.0, 0.0, 0.0, 0.0, 1.0);
+    // public static final Gains kPositionGains = new Gains(0.013, 0.0001, 0.0, 0.0, 200.0, 1.0);
     public static final Gains kVelocityGains = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0); 
 
     // Maximum drivetrain velocity in meters per seconds.
@@ -100,7 +109,8 @@ public final class Constants {
     public static final double DRIVETRAIN_CONTROLLER_DEADBAND = 0.03;
 
     public static final double MOTOR_ACCELERATION = 5.0;  // m/s^2
-    public static final double MOTOR_ACCELERATION_AUTO = 1.0;  // m/s^2
+    public static final double MOTOR_TURN_ACCELERATION = 7.0;  // m/s^2, speed differential of the wheels
+    public static final double MOTOR_ACCELERATION_AUTO = 3.0;  // m/s^2
   }
 
   public static final class PneumaticsDevices {
@@ -115,6 +125,10 @@ public final class Constants {
     public static final double SHOULDER_ANGLE_TOLERANCE = 1;
     public static final double ARM_METERS_TOLERANCE = 0.005;
     public static final double WAIST_ANGLE_TOLERANCE = 0.1;
+
+    // Tolerance for auto position drive commands to end 
+    public static final double AUTO_DISTANCE_TOLERANCE = 0.04;  // meters
+    public static final double AUTO_VELOCITY_TOLERANCE = 0.1;  // m/s
   }
   
   public static final class IKPositions {
@@ -131,6 +145,7 @@ public final class Constants {
     public static final double MINIMUM_ARM_LENGTH = 0.5334;  // Arm length when at zero
     public static final double SHOULDER_HEIGHT = 0.9779;
   }
+
   public static final class IKConstraints {
     public static final double MINIMUM_Z_HEIGHT = 0.28;
   }
@@ -146,5 +161,19 @@ public final class Constants {
      *C3: 0, 170, 0.65
      * 
      */
+  }
+
+  public static final class Field {
+    public static AprilTagFieldLayout aprilTagFieldLayout = loadFieldLayout();
+
+    public static AprilTagFieldLayout loadFieldLayout() {
+      try {
+        return AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+      }
+      catch (IOException e) {
+        System.out.println("Couldn't load April Tag Field Layout.");
+        return null;
+      }
+    }
   }
 }

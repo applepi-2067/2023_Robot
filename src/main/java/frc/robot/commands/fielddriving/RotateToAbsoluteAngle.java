@@ -1,6 +1,6 @@
 // Commands the robot to move a specified distance in inches
 
-package frc.robot.commands.drivetrain;
+package frc.robot.commands.fielddriving;
 
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -14,13 +14,12 @@ import java.lang.Math;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class RotateToPosition extends CommandBase implements Loggable {
+public class RotateToAbsoluteAngle extends CommandBase implements Loggable {
     private Drivetrain m_drivetrain;
-    private double m_startingDegrees;
-    private double m_degrees;
-    private final double m_acceptableErrorDegrees = 1;
-    private final double m_acceptableErrorDegreesPerSecond = 5;
-    private final double m_minimumPower = 0.20; // Minimum power to turn the robot at all
+    private double m_absoluteAngleSetpointDegrees;
+    private final double ANGLE_TOLERANCE = 1; // deg
+    private final double ANGULAR_VELOCITY_TOLERANCE = 5;  // deg/s
+    private final double MINIMUM_POWER = 0.20; // Minimum power to turn the robot at all
 
     // Velocity and acceleration constrained PID control. maxVelocity and maxAcceleration are deg/s and deg/s^2, respectively
     // Ex. a maxAcceleration of 10 deg/s^2 would reach a 40 deg/s angular velocity in 4 seconds
@@ -31,33 +30,23 @@ public class RotateToPosition extends CommandBase implements Loggable {
     // 200 - competitive, motor power = 61%
     // >250 - scary
 
-    private TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(200, 150);
-    private ProfiledPIDController m_pidController = new ProfiledPIDController(0.008, 0.0, 0.0, constraints);
+    private TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(150, 50);
+    private ProfiledPIDController m_pidController = new ProfiledPIDController(0.007, 0.0, 0.0, constraints);
 
 
-    public RotateToPosition(double degrees) { 
+    public RotateToAbsoluteAngle(double degreesAbsolute) { 
         Drivetrain drivetrain = Drivetrain.getInstance(); 
         addRequirements(drivetrain);
         m_drivetrain = drivetrain;
-        m_degrees = optimizeRotation(degrees);
-    }
-
-    private double optimizeRotation(double degrees) {
-        degrees = degrees % 360.0;
-        if (degrees > 180.0) {
-            degrees -= 360.0;
-        }
-        else if (degrees < -180.0) {
-            degrees += 360.0;
-        }
-        return degrees;
+        m_absoluteAngleSetpointDegrees = shiftAngleHalfCircle(degreesAbsolute);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_startingDegrees = m_drivetrain.getYawDegrees();
         m_pidController.reset(0);
+        m_pidController.setGoal(m_absoluteAngleSetpointDegrees);
+        m_pidController.reset(getCurrentAngleDegrees());
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -69,43 +58,55 @@ public class RotateToPosition extends CommandBase implements Loggable {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_drivetrain.arcadeDrive(0, 0);
+        m_drivetrain.stop();
     }
 
     // Returns true when we are within an acceptable distance of our target position
     @Override
     public boolean isFinished() {
         double angleError = getAngleError();
-        boolean withinPositionTolerance = Math.abs(angleError) < m_acceptableErrorDegrees;
-        boolean withinVelocityTolerance = Math.abs(m_pidController.getVelocityError()) < m_acceptableErrorDegreesPerSecond;
+        boolean withinPositionTolerance = Math.abs(angleError) < ANGLE_TOLERANCE;
+        boolean withinVelocityTolerance = Math.abs(m_pidController.getVelocityError()) < ANGULAR_VELOCITY_TOLERANCE;
         return withinPositionTolerance && withinVelocityTolerance;
     }
 
+    /**
+     * Return the angle error
+     */
     @Log
     private double getAngleError() {
-        return m_degrees - (m_drivetrain.getYawDegrees() - m_startingDegrees);
+        return m_absoluteAngleSetpointDegrees - getCurrentAngleDegrees();
+    }
+
+    /**
+     * Return the current absolute angle [-180, 180]
+     */
+    private double getCurrentAngleDegrees() {
+        double currentAngle = m_drivetrain.getLatestRobotPose2d().getRotation().getDegrees();
+        return shiftAngleHalfCircle(currentAngle);
+    }
+
+    private double shiftAngleHalfCircle(double angleDegrees) {
+        if (angleDegrees <= 180) {
+            return angleDegrees;
+        } else {
+            return angleDegrees - 360;
+        }
     }
 
     @Log
     private double getRotationPower() {
-        double rotationPower = m_pidController.calculate(m_drivetrain.getYawDegrees() - m_startingDegrees, m_degrees);
+        double rotationPower = m_pidController.calculate(getCurrentAngleDegrees());
 
         // Set "floor" of power output to start at m_minimumPower, the minimum power % to move the robot at all
         if (rotationPower > 0) {
-            rotationPower += m_minimumPower;
+            rotationPower += MINIMUM_POWER;
         } else if (rotationPower < 0) {
-            rotationPower -= m_minimumPower;
+            rotationPower -= MINIMUM_POWER;
         }
 
         // Limit power to 65% no matter what controller asks for
         rotationPower = MathUtil.clamp(rotationPower, -0.65, 0.65);
-
-        // Debug in shuffleboard
-        SmartDashboard.putNumber("Position Error", m_pidController.getPositionError());
-        SmartDashboard.putNumber("Angle Error", getAngleError());
-        SmartDashboard.putNumber("Applied power", rotationPower);
-        SmartDashboard.putNumber("Velocity Error", m_pidController.getVelocityError());
-
         return rotationPower; 
     }
 }
