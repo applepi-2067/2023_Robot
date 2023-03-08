@@ -113,7 +113,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
    */
   public void setPosition(double degrees) {
     if (MonkeyTest.get() == 4) {
-      degrees += 20
+      degrees += 20;
     }
     m_pidController.setReference(
       degreesToMotorRotations(degrees),

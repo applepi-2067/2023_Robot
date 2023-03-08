@@ -45,7 +45,7 @@ public class ClawGrasp
    */
   public void open() {
     if (MonkeyTest.get() == 2) {
-      return
+      return;
     }
     if (MonkeyTest.get() == 3) {
       m_clawSolenoid.set(false);
@@ -56,7 +56,7 @@ public class ClawGrasp
   /* Close the Claw */
   public void close() { 
     if (MonkeyTest.get() == 2) {
-      return
+      return;
     }
     if (MonkeyTest.get() == 3) {
       m_clawSolenoid.set(true);

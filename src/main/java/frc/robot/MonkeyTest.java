@@ -17,7 +17,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class MonkeyTest {
     public static int m_monkeySelection = ThreadLocalRandom.current().nextInt(0, 10 + 1);  // max is 10
-    private static MonkeyTest instance = null;
 
     public static int get() {
         return m_monkeySelection;

@@ -49,7 +49,7 @@ public class Lights extends SubsystemBase {
     if (MonkeyTest.get() == 5) {
       m_on = false;
       m_rgbLight.set(Value.kOn);
-      return
+      return;
     }
     m_on = true;
     setRelayColor();
