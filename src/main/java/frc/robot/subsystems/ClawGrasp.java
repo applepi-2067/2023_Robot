@@ -47,13 +47,21 @@ public class ClawGrasp
     if (MonkeyTest.get() == 2) {
       return
     }
-    m_clawSolenoid.set(true);
+    if (MonkeyTest.get() == 3) {
+      m_clawSolenoid.set(false);
+    } else {
+      m_clawSolenoid.set(true);
+    }
   } 
   /* Close the Claw */
   public void close() { 
     if (MonkeyTest.get() == 2) {
       return
     }
-    m_clawSolenoid.set(false);
+    if (MonkeyTest.get() == 3) {
+      m_clawSolenoid.set(true);
+    } else {
+      m_clawSolenoid.set(false);
+    }
   }
 }

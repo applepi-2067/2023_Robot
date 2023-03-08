@@ -2,7 +2,7 @@
   // 0: turning drive controls are inverted
   // 1: claw belt broken
   // 2: claw pneumatics broken
-  // x3: claw pnematics reversed
+  // 3: claw pnematics reversed
   // x4: high scoring position too high
   // x5: medium scoring position too high
   // x6: no lights
