@@ -14,7 +14,9 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
@@ -106,22 +108,33 @@ public class RobotContainer implements Loggable {
     m_driverController.povUp().onTrue(new DoubleSubstationPieceAcquire());
 
     // Light control
-    m_driverController.rightTrigger().onTrue(new SetLightsColor(Lights.Color.PURPLE));
-    m_driverController.x().onTrue(new SetLightsColor(Lights.Color.PURPLE));
-    m_driverController.leftTrigger().onTrue(new SetLightsColor(Lights.Color.YELLOW));
-    m_driverController.y().onTrue(new SetLightsColor(Lights.Color.YELLOW));
+    // m_driverController.rightTrigger().onTrue(new SetLightsColor(Lights.Color.PURPLE));
+    // m_driverController.x().onTrue(new SetLightsColor(Lights.Color.PURPLE));
+    // m_driverController.leftTrigger().onTrue(new SetLightsColor(Lights.Color.YELLOW));
+    // m_driverController.y().onTrue(new SetLightsColor(Lights.Color.YELLOW));
 
     m_driverController.back().onTrue(new StopDrivetrain());  // E-Stop the drivetrain when back button is pressed
 
     /** Operator Controls */
+    // Lights
+    m_operatorController.leftTrigger().onTrue(new SetLightsColor(Lights.Color.YELLOW));
+    m_operatorController.rightTrigger().onTrue(new SetLightsColor(Lights.Color.PURPLE));
+
     // Claw
     m_operatorController.a().onTrue(new ClawOpen().andThen(new DisableLights()));
-    m_operatorController.a().onFalse(new ClawClose());
+    m_operatorController.a().onFalse(new SetClawBeltSpeed(() -> {return 1.0;}).andThen(
+      new ClawClose()).andThen(
+      new WaitCommand(0.4)).andThen(
+      new SetClawBeltSpeed(() -> {return 0.0;})).andThen(
+      new DisableLights()));
     m_operatorController.povUp().onTrue(new ClawSensorGrab());
     m_operatorController.povLeft().onTrue(new ClawGrabCancel());
     
     // Arm locations
-    m_operatorController.povRight().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-55.0))); // stowed/retracted position
+    m_operatorController.povRight().onTrue(
+      Commands.parallel(
+        new SetArmExtension(0.0),
+        new BlockUntilArmLessThan(0.2).andThen(new SetShoulderPosition(-55.0)))); // stowed/retracted position
     m_operatorController.x().onTrue(new SetShoulderPosition(22).andThen(new SetArmExtension(0.894))); // High cone scoring position
     m_operatorController.povDown().onTrue(new SetShoulderPosition(15).andThen(new SetArmExtension(0.894))); // High cube scoring position
     m_operatorController.b().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.429))); // Mid scoring position
