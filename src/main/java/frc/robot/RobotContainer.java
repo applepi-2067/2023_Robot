@@ -165,13 +165,5 @@ public class RobotContainer implements Loggable {
   }
 
   public void periodic() {
-    SmartDashboard.putNumber("Xposition", Util.getIKX(m_arm.getPosition(), m_waist.getPosition(), m_shoulder.getPosition()));
-    SmartDashboard.putNumber("Yposition", Util.getIKY(m_arm.getPosition(), m_waist.getPosition(), m_shoulder.getPosition()));
-    SmartDashboard.putNumber("Zposition", Util.getIKZ(m_arm.getPosition(), m_waist.getPosition(), m_shoulder.getPosition()));
-    
-    SmartDashboard.putNumber("Arm Length (m)", m_arm.getPosition() + Constants.IKOffsets.MINIMUM_ARM_LENGTH);
-    SmartDashboard.putNumber("Waist Rotation (deg)", m_waist.getPosition());
-    SmartDashboard.putNumber("Shoulder Rotation (deg)", m_shoulder.getPosition());
   }
 }
-
