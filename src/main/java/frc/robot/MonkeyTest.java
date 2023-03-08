@@ -1,6 +1,6 @@
   // Monkey test selection
   // 0: turning drive controls are inverted
-  // x1: claw belt broken
+  // 1: claw belt broken
   // x2: claw pneumatics broken
   // x3: claw pnematics reversed
   // x4: high scoring position too high

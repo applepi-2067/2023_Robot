@@ -16,6 +16,7 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.robot.utils.Util;
+import frc.robot.MonkeyTest
 
 public class ClawBelt extends SubsystemBase implements Loggable {
 
@@ -58,6 +59,9 @@ public class ClawBelt extends SubsystemBase implements Loggable {
    * @param speed (-1.0 to 1.0)
    */
   public void setSpeed(double speed) {
+    if (MonkeyTest.get() == 1) {
+      speed = 0;
+    }
     Util.limit(speed);
     m_motor.set(TalonSRXControlMode.PercentOutput, speed);
   }  
