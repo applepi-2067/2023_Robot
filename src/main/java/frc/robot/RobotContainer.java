@@ -30,6 +30,7 @@ import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
 import frc.robot.commands.fielddriving.DriveToTargetOffset;
 import frc.robot.commands.estop.*;
 import frc.robot.commands.intake.*;
+import frc.robot.commands.lights.DisableBlinkLights;
 import frc.robot.commands.lights.DisableLights;
 import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.commands.shoulder.*;
@@ -121,11 +122,12 @@ public class RobotContainer implements Loggable {
     m_operatorController.rightTrigger().onTrue(new SetLightsColor(Lights.Color.PURPLE));
 
     // Claw
-    m_operatorController.a().onTrue(new ClawOpen().andThen(new DisableLights()));
+    m_operatorController.a().onTrue(new ClawOpen());
     m_operatorController.a().onFalse(new SetClawBeltSpeed(() -> {return 1.0;}).andThen(
       new ClawClose()).andThen(
       new WaitCommand(0.4)).andThen(
       new SetClawBeltSpeed(() -> {return 0.0;})).andThen(
+      new DisableBlinkLights()).andThen(
       new DisableLights()));
     m_operatorController.povUp().onTrue(new ClawSensorGrab());
     m_operatorController.povLeft().onTrue(new ClawGrabCancel());
