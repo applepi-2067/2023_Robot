@@ -61,13 +61,13 @@ public class RobotContainer implements Loggable {
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
   private final Waist m_waist = Waist.getInstance();
   private final Shoulder m_shoulder = Shoulder.getInstance();
-  private final Vision m_vision = Vision.getInstance();
+  // private final Vision m_vision = Vision.getInstance();
   private final Arm m_arm = Arm.getInstance();
   private final ClawGrasp m_ClawGrasp = ClawGrasp.getInstance();
-  private final IntakeExtensionMotor m_IntakeExtensionMotor = IntakeExtensionMotor.getInstance();
-  private final IntakeConveyorBelt m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
-  private final IntakeRoller m_IntakeRoller = IntakeRoller.getInstance();
-  private final IntakeConveyorExtension m_IntakeConveyorExtension = IntakeConveyorExtension.getInstance();
+  // private final IntakeExtensionMotor m_IntakeExtensionMotor = IntakeExtensionMotor.getInstance();
+  // private final IntakeConveyorBelt m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
+  // private final IntakeRoller m_IntakeRoller = IntakeRoller.getInstance();
+  // private final IntakeConveyorExtension m_IntakeConveyorExtension = IntakeConveyorExtension.getInstance();
 
   private final Lights m_lights = Lights.getInstance();
   private final ClawBelt m_clawBelt = ClawBelt.getInstance();
@@ -165,13 +165,5 @@ public class RobotContainer implements Loggable {
   }
 
   public void periodic() {
-    SmartDashboard.putNumber("Xposition", Util.getIKX(m_arm.getPosition(), m_waist.getPosition(), m_shoulder.getPosition()));
-    SmartDashboard.putNumber("Yposition", Util.getIKY(m_arm.getPosition(), m_waist.getPosition(), m_shoulder.getPosition()));
-    SmartDashboard.putNumber("Zposition", Util.getIKZ(m_arm.getPosition(), m_waist.getPosition(), m_shoulder.getPosition()));
-    
-    SmartDashboard.putNumber("Arm Length (m)", m_arm.getPosition() + Constants.IKOffsets.MINIMUM_ARM_LENGTH);
-    SmartDashboard.putNumber("Waist Rotation (deg)", m_waist.getPosition());
-    SmartDashboard.putNumber("Shoulder Rotation (deg)", m_shoulder.getPosition());
   }
 }
-

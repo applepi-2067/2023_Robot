@@ -1,25 +1,21 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
-package frc.robot.commands.arm;
+package frc.robot.commands.shoulder;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Shoulder;
 
-public class BlockUntilArmLessThan extends CommandBase {
+public class BlockUntilShoulderGreaterThan extends CommandBase {
 
-  private Arm m_arm;
-  private double m_positionThresholdMeters = 0.0;
+  private Shoulder m_shoulder;
+  private double m_positionThresholdDegrees = 0.0;
 
   /**
    * 
    * @param positionMeters Command ends when arm is less than this length
    */
-  public BlockUntilArmLessThan(double positionMeters) {
+  public BlockUntilShoulderGreaterThan(double positionDegrees) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_arm = Arm.getInstance();
-    m_positionThresholdMeters = positionMeters;
+    m_shoulder = Shoulder.getInstance();
+    m_positionThresholdDegrees = positionDegrees;
   }
 
   // Called when the command is initially scheduled.
@@ -39,6 +35,6 @@ public class BlockUntilArmLessThan extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_arm.getPosition() < m_positionThresholdMeters;
+    return m_shoulder.getPosition() > m_positionThresholdDegrees;
   }
 }
