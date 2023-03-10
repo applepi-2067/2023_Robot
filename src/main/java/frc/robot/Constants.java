@@ -66,9 +66,6 @@ public final class Constants {
     public static final int CLAW_IR_SENSOR_DI = 1;
     public static final int ARM_END_OF_TRAVEL_DI = 2;
     public static final int SHOULDER_ZEROING_DI = 8;
-
-    public static final int PBOT_JUMPER_DI = 9;
-
   }
 
   public static class Drivetrain {
