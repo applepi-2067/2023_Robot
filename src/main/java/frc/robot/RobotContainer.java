@@ -73,7 +73,6 @@ public class RobotContainer implements Loggable {
   private final Lights m_lights = Lights.getInstance();
   private final ClawBelt m_clawBelt = ClawBelt.getInstance();
 
-  private static DigitalInput m_practiceBotJumper = new DigitalInput(Constants.DiscreteInputs.PBOT_JUMPER_DI);
   private Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
   /**
@@ -159,11 +158,6 @@ public class RobotContainer implements Loggable {
     } else {
       m_drivetrain.setMotorsBrake();
     }
-  }
-
-  @Log
-  public static boolean isPracticeBot() {
-    return !m_practiceBotJumper.get();
   }
 
   public void periodic() {
