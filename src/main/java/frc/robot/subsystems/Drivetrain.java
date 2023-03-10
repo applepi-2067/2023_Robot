@@ -45,8 +45,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   private final SlewRateLimiter m_forwardBackLimitered = new SlewRateLimiter(Constants.Drivetrain.MOTOR_ACCELERATION);
   private final SlewRateLimiter m_turnLimiter = new SlewRateLimiter(Constants.Drivetrain.MOTOR_TURN_ACCELERATION);
 
-  private static PigeonIMU m_pidgey;
-  private static TalonSRX m_pidgeyController;
+  private static PigeonIMU m_pidgey = new PigeonIMU(Constants.CANDeviceIDs.PIGEON_IMU_ID);
 
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
@@ -72,19 +71,10 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     return instance;
   }
 
-  private Drivetrain() {  // Constructor is private since this class is singleton
-    // Set values to factory default.
-    if (RobotContainer.isPracticeBot()) {
-      m_pidgey = new PigeonIMU(Constants.CANDeviceIDs.PIGEON_IMU_ID);
-    }
-    else {
-      //This is for the 2022 robot testing
-      m_pidgeyController = new TalonSRX(11);
-      m_pidgey = new PigeonIMU(m_pidgeyController);
-    }
-
+  private Drivetrain() {  // Constructor is private since this class is singleton    
     m_drivetrain.setSafetyEnabled(false);
-
+    
+    // Set values to factory default.
     m_leftMotor.configFactoryDefault();
     m_rightMotor.configFactoryDefault();
     m_leftMotorFollower.configFactoryDefault();
