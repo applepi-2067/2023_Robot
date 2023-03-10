@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.auto.CenterStartRoutine;
+import frc.robot.commands.auto.DoNothing;
 import frc.robot.commands.auto.ScorePreloadedPiece;
 import frc.robot.commands.auto.ZeroAll;
 import io.github.oblarg.oblog.Logger;
@@ -89,6 +90,7 @@ public class Robot extends TimedRobot {
     m_autoChooser.addOption("Top/Bottom Score", new ScorePreloadedPiece());
     m_autoChooser.addOption("Center Start", new CenterStartRoutine());
     m_autoChooser.addOption("Zero All", new ZeroAll());
+    m_autoChooser.addOption("Do Nothing", new DoNothing());
   }
 
   /**
