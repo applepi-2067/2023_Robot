@@ -25,7 +25,7 @@ public class SetClawBeltSpeed extends CommandBase {
     
     @Override
     public void execute() {
-        if (m_lights.getColor() == Lights.Color.YELLOW) {
+        if (m_lights.getColor() != Lights.Color.PURPLE) {
             m_ClawBelt.setSpeed(m_ClawBeltSpeed.getAsDouble());
         } else {
             m_ClawBelt.setSpeed(0.0);
