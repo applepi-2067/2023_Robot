@@ -135,14 +135,14 @@ public class RobotContainer implements Loggable {
     m_operatorController.povRight().onTrue(
       Commands.parallel(
         new SetArmExtension(0.0),
-        new BlockUntilArmLessThan(0.2).andThen(new SetShoulderPosition(-55.0)))); // stowed/retracted position
+        new BlockUntilArmLessThan(0.2).andThen(new SetShoulderPosition(-65.0)))); // stowed/retracted position
     m_operatorController.x().onTrue(new SetShoulderPosition(22).andThen(new SetArmExtension(0.894))); // High cone scoring position
     m_operatorController.povDown().onTrue(new SetShoulderPosition(15).andThen(new SetArmExtension(0.894))); // High cube scoring position
     m_operatorController.b().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.429))); // Mid scoring position
     m_operatorController.y().onTrue(new SetShoulderPosition(9).andThen(new SetArmExtension(0.18)));  //Get Game Piece from human / feed station
     
-    m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(-55.0).asProxy()).andThen(new SetWaistPosition(0)));
-    m_operatorController.leftBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(-55.0).asProxy()).andThen(new SetWaistPosition(180)));
+    m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(-65.0).asProxy()).andThen(new SetWaistPosition(0)));
+    m_operatorController.leftBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(-65.0).asProxy()).andThen(new SetWaistPosition(180)));
     
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
   }
