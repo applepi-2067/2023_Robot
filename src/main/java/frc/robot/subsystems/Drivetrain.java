@@ -293,7 +293,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
     Pose2d cameraShift = new Pose2d(
       Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.sin(waistAngleRadians),
-      Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * -Math.cos(waistAngleRadians), 
+      Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.cos(waistAngleRadians), 
       Rotation2d.fromRadians(waistAngleRadians)
     );
 
