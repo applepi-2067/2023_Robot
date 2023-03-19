@@ -39,6 +39,10 @@ public final class Constants {
     public static final double WAIST_ZERO_SENSOR_OFFSET = 14.0;  // Angle from waist zero sensor to true zero
   }
 
+  public static class Poses {
+    public static final double SHOULDER_STOW_ANGLE = -65.0;  // degrees
+  }
+
   public static class CANDeviceIDs {
     public static final int DT_MOTOR_LEFT_1_ID = 1;
     public static final int DT_MOTOR_RIGHT_1_ID = 2;
