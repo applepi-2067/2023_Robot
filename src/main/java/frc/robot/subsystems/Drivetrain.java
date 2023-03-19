@@ -292,13 +292,13 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     double waistAngleRadians = Units.degreesToRadians(m_waist.getPosition());
 
     Pose2d cameraShift = new Pose2d(
-      Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.sin(waistAngleRadians),
-      Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.cos(waistAngleRadians), 
-      Rotation2d.fromRadians(waistAngleRadians)
+      Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.sin(waistAngleRadians), // +x is forward
+      Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.cos(waistAngleRadians), // +y is right
+      Rotation2d.fromRadians(-waistAngleRadians)
     );
 
     Pose2d correctedVisionPoseEstimate = Transforms.shiftAbsolutePoseByRelativePose(visionPoseEstimated, cameraShift);
-
+    
     m_odometry.addVisionMeasurement(correctedVisionPoseEstimate, timestampSeconds);
   }
 
