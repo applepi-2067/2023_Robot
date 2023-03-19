@@ -34,11 +34,11 @@ public class Arm extends SubsystemBase implements Loggable {
   private final DigitalInput m_endOfTravelSensor;
 
   private static final int CURRENT_LIMIT = 10; //Amps
-  private static final double GEAR_RATIO = 5.23 * 3.61 * (18.0 / 34.0);
+  private static final double GEAR_RATIO = (84 / 29) * (76 / 21);
   private static final double OUTPUT_SPROCKET_PITCH_DIAMETER_METERS = 0.020574;
   private static final double RIGGING_EXTENSION_RATIO = 2.0;
   private static final double METERS_PER_REV = Math.PI * OUTPUT_SPROCKET_PITCH_DIAMETER_METERS * RIGGING_EXTENSION_RATIO;
-  private static final boolean INVERT_MOTOR = false;
+  private static final boolean INVERT_MOTOR = true;
   public static final double MAX_ARM_EXTENSION_METERS = Units.inchesToMeters(36.25);
 
   private static double max_voltage_open_loop = 6.0;
