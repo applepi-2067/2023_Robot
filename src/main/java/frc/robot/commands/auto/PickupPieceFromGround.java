@@ -13,6 +13,7 @@ import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
 import frc.robot.commands.claw.ClawSensorGrab;
 import frc.robot.commands.drivetrain.DriveAtVelocity;
+import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.shoulder.ZeroShoulderPosition;
 
@@ -30,11 +31,11 @@ public class PickupPieceFromGround extends SequentialCommandGroup {
         new ZeroShoulderPosition(),
         new ZeroArmPosition().andThen(new SetArmExtension(0.0))
       ),
-      new SetShoulderPosition(-60.0),
+      new SetShoulderPosition(-55.0),
       Commands.parallel(
-        new SetArmExtension(0.34),
+        new SetArmExtension(0.30),
         new ClawSensorGrab(),
-        new DriveAtVelocity(1.0)
+        new DriveAtVelocity(0.5)
       ),
       new DriveAtVelocity(0.0),
       // new ClawOpen(),
@@ -43,7 +44,11 @@ public class PickupPieceFromGround extends SequentialCommandGroup {
       Commands.parallel(
         new SetArmExtension(0.0),
         new SetShoulderPosition(-50.0)
-      )
+      ),
+      new WaitCommand(1),
+      new ClawOpen(),
+      new DriveToPosition(-1)
+
     );
   }
 }

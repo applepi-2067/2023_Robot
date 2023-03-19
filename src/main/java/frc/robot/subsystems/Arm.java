@@ -37,7 +37,8 @@ public class Arm extends SubsystemBase implements Loggable {
   private static final double GEAR_RATIO = (84 / 29) * (76 / 21);
   private static final double OUTPUT_SPROCKET_PITCH_DIAMETER_METERS = 0.020574;
   private static final double RIGGING_EXTENSION_RATIO = 2.0;
-  private static final double METERS_PER_REV = Math.PI * OUTPUT_SPROCKET_PITCH_DIAMETER_METERS * RIGGING_EXTENSION_RATIO;
+  private static final double FUDGE_FACTOR = 0.55; // 0.5m / 0.23m
+  private static final double METERS_PER_REV = Math.PI * OUTPUT_SPROCKET_PITCH_DIAMETER_METERS * RIGGING_EXTENSION_RATIO * FUDGE_FACTOR;
   private static final boolean INVERT_MOTOR = true;
   public static final double MAX_ARM_EXTENSION_METERS = Units.inchesToMeters(36.25);
 
