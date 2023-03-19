@@ -152,7 +152,7 @@ public final class Constants {
   }
 
   public static final class Camera {
-    public static final double CAMERA_HYPOTENUSE_OFFSET = Units.inchesToMeters(7.0);
+    public static final double CAMERA_HYPOTENUSE_OFFSET = Units.inchesToMeters(6.5);
   }
 
   public static final class Field {
