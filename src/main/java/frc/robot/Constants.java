@@ -35,7 +35,7 @@ public final class Constants {
   }
 
   public static class ZeroingOffsets {
-    public static final double SHOULDER_FRONT_MINIMUM_ANGLE = -54.5;  //  Angle at which the sensor stops detecting the magnet
+    public static final double SHOULDER_FRONT_MINIMUM_ANGLE = -62.5;  //  Angle at which the sensor stops detecting the magnet
     public static final double WAIST_ZERO_SENSOR_OFFSET = 14.0;  // Angle from waist zero sensor to true zero
   }
 
