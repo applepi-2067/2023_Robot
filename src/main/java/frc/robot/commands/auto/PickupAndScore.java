@@ -11,11 +11,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
+import frc.robot.commands.arm.BlockUntilArmLessThan;
 import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.arm.ZeroArmPosition;
 import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
 import frc.robot.commands.claw.ClawSensorGrab;
+import frc.robot.commands.claw.SetClawBeltSpeed;
 import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.drivetrain.RotateToPosition;
 import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
@@ -33,7 +35,7 @@ public class PickupAndScore extends SequentialCommandGroup {
     // Robot starts facing the grid in the top of bottom position (not in front of charge station)
           // Drive to 6.13, 4.69
 
-    Pose2d topFieldPiecePositionBlue = new Pose2d(6.0, 4.66, new Rotation2d(0.0));
+    Pose2d topFieldPiecePositionBlue = new Pose2d(6.20, 4.51, new Rotation2d(0.0));
     Pose2d topCubeScorePositionBlue = new Pose2d(1.81, 4.69, new Rotation2d(0.0));
 
 
@@ -51,35 +53,34 @@ public class PickupAndScore extends SequentialCommandGroup {
       new ClawOpen(),
 
       // Retract arm into stow position then drive
-      new SetArmExtension(0.0),
-      new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE),
-      new SetLightsColor(Lights.Color.PURPLE),
+      new SetLightsColor(Lights.Color.WHITE),
 
       // Drive to in front of piece, rotate waist to 180 deg
       Commands.parallel(
-        new DriveToAbsolutePosition(topFieldPiecePositionBlue, 0.1, true),
-        new ZeroWaistPosition().andThen(new SetWaistPosition(180.0))
+        new DriveToAbsolutePosition(topFieldPiecePositionBlue, true),
+        new ZeroWaistPosition().andThen(new SetWaistPosition(180.0)),
+        new SetArmExtension(0.0),
+        new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE))
       ),
 
       // Pickup with 3 second timeout
       Commands.race(
         new WaitCommand(3),  
-        new PickupPieceFromGround()
+        new PickupPieceFromGround().andThen(new SetLightsColor(Lights.Color.WHITE))
       ),
 
-      // Stow
-      // Rotate to face grid and drive back
+      // Stow and drive
       Commands.parallel(
+        new DriveToAbsolutePosition(topCubeScorePositionBlue, false),
+        new SetWaistPosition(8),
         new SetArmExtension(0.0),
         new SetShoulderPosition(-50.0)
-        // new RotateToPosition(180)
       ),
-      new DriveToAbsolutePosition(topCubeScorePositionBlue, 0.1, false),
 
       // Score
-      new SetWaistPosition(8),
       new SetShoulderPosition(10),
       new SetArmExtension(0.7),
+      new SetClawBeltSpeed(() -> {return 0.0;}),
       new ClawOpen(),
 
       // Go back to stow position

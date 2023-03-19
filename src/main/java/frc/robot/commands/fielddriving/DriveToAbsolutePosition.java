@@ -29,7 +29,7 @@ public class DriveToAbsolutePosition extends CommandBase {
     m_absoluteDestinationPose = absoluteDestinationPose;
     m_driveBackwards = driveBackwards;
     double MAX_VELOCITY = 5;
-    double MAX_ACCELERATION = 2;
+    double MAX_ACCELERATION = 5;
     TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(MAX_VELOCITY * velocityScaling, MAX_ACCELERATION);
     m_distanceController = new ProfiledPIDController(2.0, 0.0, 0.0, constraints);
     m_rotationController = new PIDController(1.3, 0, 0);
@@ -37,6 +37,10 @@ public class DriveToAbsolutePosition extends CommandBase {
 
   public DriveToAbsolutePosition(Pose2d absoluteDestinationPose) {
     this(absoluteDestinationPose, 1.0, false);
+  }
+
+  public DriveToAbsolutePosition(Pose2d absoluteDestinationPose, boolean driveBackwards) {
+    this(absoluteDestinationPose, 1.0, driveBackwards);
   }
 
   // Called when the command is initially scheduled.
