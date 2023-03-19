@@ -31,7 +31,7 @@ public class PickupPieceFromGround extends SequentialCommandGroup {
       Commands.parallel(
         new SetArmExtension(0.30),
         new ClawSensorGrab(),
-        new DriveAtVelocity(0.5)
+        new DriveAtVelocity(-0.5)
       ),
       new DriveAtVelocity(0.0)
     );

@@ -33,7 +33,7 @@ public class PickupAndScore extends SequentialCommandGroup {
     // Robot starts facing the grid in the top of bottom position (not in front of charge station)
           // Drive to 6.13, 4.69
 
-    Pose2d topFieldPiecePositionBlue = new Pose2d(6.0, 4.69, new Rotation2d(0.0));
+    Pose2d topFieldPiecePositionBlue = new Pose2d(6.0, 4.66, new Rotation2d(0.0));
     Pose2d topCubeScorePositionBlue = new Pose2d(1.81, 4.69, new Rotation2d(0.0));
 
 
@@ -52,15 +52,14 @@ public class PickupAndScore extends SequentialCommandGroup {
 
       // Retract arm into stow position then drive
       new SetArmExtension(0.0),
-      Commands.parallel(
-        new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE),
-        new ZeroWaistPosition().andThen(new SetWaistPosition(0.0))
-        // new DriveToPosition(-0.5).andThen(new RotateToPosition(180))
-      ),
+      new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE),
       new SetLightsColor(Lights.Color.PURPLE),
 
-      // Drive to in front of piece
-      new DriveToAbsolutePosition(topFieldPiecePositionBlue, 0.1, true),
+      // Drive to in front of piece, rotate waist to 180 deg
+      Commands.parallel(
+        new DriveToAbsolutePosition(topFieldPiecePositionBlue, 0.1, true),
+        new ZeroWaistPosition().andThen(new SetWaistPosition(180.0))
+      ),
 
       // Pickup with 3 second timeout
       Commands.race(
@@ -79,7 +78,7 @@ public class PickupAndScore extends SequentialCommandGroup {
 
       // Score
       new SetWaistPosition(8),
-      new SetShoulderPosition(5),
+      new SetShoulderPosition(10),
       new SetArmExtension(0.7),
       new ClawOpen(),
 
