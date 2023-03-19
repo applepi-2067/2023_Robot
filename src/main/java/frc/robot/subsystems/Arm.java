@@ -140,6 +140,11 @@ public class Arm extends SubsystemBase implements Loggable {
     return motorRotationsToMeters(m_encoder.getPosition());
   }
 
+  @Log (name = "Motor Current (A)", rowIndex = 2, columnIndex = 3)
+  private double getMotorOutputCurrent() {
+    return m_motor.getOutputCurrent();
+  }
+
 
   @Override
   public void periodic() {
