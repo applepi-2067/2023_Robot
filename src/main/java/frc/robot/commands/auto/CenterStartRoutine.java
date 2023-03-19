@@ -22,11 +22,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Drivetrain;
 
 public class CenterStartRoutine extends SequentialCommandGroup {
-  public CenterStartRoutine(
-    Drivetrain drivetrain = Drivetrain.getInstance();
-        addRequirements(drivetrain);
-        m_driveTrain = drivetrain;
-) }
+  public CenterStartRoutine()
 {
     addCommands(
       new ClawClose(),
@@ -41,7 +37,6 @@ public class CenterStartRoutine extends SequentialCommandGroup {
       Commands.parallel(
         new SetArmExtension(0.0),
         new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-65.0)), // down in front
-        m_driveTrain.arcadeDrive(-0.25, 0),
         new DriveToPosition(-3.9624) // Position robot behind chargestation),
       ),
       new DriveForwardUntilAngle(),
