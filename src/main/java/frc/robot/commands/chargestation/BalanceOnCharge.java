@@ -3,10 +3,10 @@ package frc.robot.commands.chargestation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
-public class balanceOnCharge extends CommandBase {
+public class BalanceOnCharge extends CommandBase {
     private static Drivetrain m_driveTrain;
 
-    public balanceOnCharge() {
+    public BalanceOnCharge() {
         // Use addRequirements() here to declare subsystem dependencies.
         Drivetrain drivetrain = Drivetrain.getInstance();
         addRequirements(drivetrain);
@@ -38,10 +38,10 @@ public class balanceOnCharge extends CommandBase {
             m_driveTrain.arcadeDrive(-0.25, 0);
         }
         if (m_driveTrain.getPitchDegrees() < -2.5 && m_driveTrain.getPitchDegrees() > -5){
-            m_driveTrain.arcadeDrive(-0.1, 0);
+            m_driveTrain.arcadeDrive(-0.15, 0);
         }
         else if (m_driveTrain.getPitchDegrees() > 2.5 && m_driveTrain.getPitchDegrees() < 5){
-            m_driveTrain.arcadeDrive(0.1, 0);
+            m_driveTrain.arcadeDrive(0.15, 0);
         }
     }
     

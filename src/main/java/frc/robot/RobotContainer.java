@@ -7,21 +7,34 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
 import frc.robot.subsystems.*;
+import frc.robot.utils.Transforms;
 import frc.robot.utils.Util;
 import frc.robot.commands.chargestation.*;
 import frc.robot.commands.claw.*;
 import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
+import frc.robot.commands.fielddriving.DriveToTargetOffset;
+import frc.robot.commands.estop.*;
 import frc.robot.commands.intake.*;
+import frc.robot.commands.lights.DisableBlinkLights;
+import frc.robot.commands.lights.DisableLights;
+import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.commands.shoulder.*;
+import frc.robot.commands.teleop_auto.DoubleSubstationPieceAcquire;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Log;
@@ -49,16 +62,17 @@ public class RobotContainer implements Loggable {
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
   private final Waist m_waist = Waist.getInstance();
   private final Shoulder m_shoulder = Shoulder.getInstance();
-  private final Vision m_vision = Vision.getInstance();
+  // private final Vision m_vision = Vision.getInstance();
   private final Arm m_arm = Arm.getInstance();
   private final ClawGrasp m_ClawGrasp = ClawGrasp.getInstance();
-  private final IntakeExtensionMotor m_IntakeExtensionMotor = IntakeExtensionMotor.getInstance();
-  private final IntakeConveyorBelt m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
-  private final IntakeRoller m_IntakeRoller = IntakeRoller.getInstance();
-  private final IntakeConveyorExtension m_IntakeConveyorExtension = IntakeConveyorExtension.getInstance();
+  // private final IntakeExtensionMotor m_IntakeExtensionMotor = IntakeExtensionMotor.getInstance();
+  // private final IntakeConveyorBelt m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
+  // private final IntakeRoller m_IntakeRoller = IntakeRoller.getInstance();
+  // private final IntakeConveyorExtension m_IntakeConveyorExtension = IntakeConveyorExtension.getInstance();
+
+  private final Lights m_lights = Lights.getInstance();
   private final ClawBelt m_clawBelt = ClawBelt.getInstance();
 
-  private static DigitalInput m_practiceBotJumper = new DigitalInput(Constants.DiscreteInputs.PBOT_JUMPER_DI);
   private Compressor m_compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
   /**
@@ -75,14 +89,9 @@ public class RobotContainer implements Loggable {
     m_drivetrain.setDefaultCommand(
         Commands.run(
             () -> m_drivetrain.arcadeDrive(
-                Util.clampStickValue(-m_driverController.getLeftY()),
-                Util.clampStickValue(-m_driverController.getRightX()/1.2)),
+                -m_driverController.getLeftY(),
+                -m_driverController.getRightX() / 1.7),
             m_drivetrain));
-
-    // m_waist.setDefaultCommand(new DriveWaistWithJoystick(() -> m_operatorController.getLeftX() / 4.0));
-    // m_shoulder.setDefaultCommand(new DriveShoulderWithJoystick(() -> m_operatorController.getRightY()));
-    // m_arm.setDefaultCommand(new DriveArmWithJoystick(() -> m_operatorController.getLeftY()));
-    //m_clawBelt.setDefaultCommand(new SetClawBeltSpeed(() -> m_operatorController.getLeftY()));
   }
 
   /**
@@ -94,49 +103,49 @@ public class RobotContainer implements Loggable {
    * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
    */
   private void configureBindings() {
-    //Driver Controls
-    m_driverController.a().onTrue(new balanceOnCharge());
+    /** Driver controls */
+    // Pick up piece from double substation
+    m_driverController.povUp().onTrue(new DoubleSubstationPieceAcquire());
 
-    //Operator Controls
-    m_operatorController.povLeft().onTrue(new SetIntakeExtension(0.025));
-    m_operatorController.rightBumper().onTrue(new SetIntakeExtension(0.332));
+    // Light control
+    // m_driverController.rightTrigger().onTrue(new SetLightsColor(Lights.Color.PURPLE));
+    // m_driverController.x().onTrue(new SetLightsColor(Lights.Color.PURPLE));
+    // m_driverController.leftTrigger().onTrue(new SetLightsColor(Lights.Color.YELLOW));
+    // m_driverController.y().onTrue(new SetLightsColor(Lights.Color.YELLOW));
 
-    m_operatorController.rightBumper().onTrue(new IntakeConveyorIn(true));
-    m_operatorController.leftBumper().onTrue(new IntakeConveyorIn(false));
+    m_driverController.back().onTrue(new StopDrivetrain());  // E-Stop the drivetrain when back button is pressed
 
-    //Intake game piece
-    m_operatorController.rightTrigger().onTrue (new SetIntakeRollerSpeed(1.0));
-    m_operatorController.rightTrigger().onFalse(new SetIntakeRollerSpeed(0.0));
-    m_operatorController.rightTrigger().onTrue(new IntakeConveyorBeltSpeed(-1.0));
-    m_operatorController.rightTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
-    //Outtake game piece
-    m_operatorController.leftTrigger().onTrue (new SetIntakeRollerSpeed(-1.0));
-    m_operatorController.leftTrigger().onFalse(new SetIntakeRollerSpeed(0.0));
-    m_operatorController.leftTrigger().onTrue(new IntakeConveyorBeltSpeed(1.0));
-    m_operatorController.leftTrigger().onFalse(new IntakeConveyorBeltSpeed(0.0));
-  
+    /** Operator Controls */
+    // Lights
+    m_operatorController.leftTrigger().onTrue(new SetLightsColor(Lights.Color.YELLOW));
+    m_operatorController.rightTrigger().onTrue(new SetLightsColor(Lights.Color.PURPLE));
+
+    // Claw
     m_operatorController.a().onTrue(new ClawOpen());
-    m_operatorController.a().onFalse(new ClawClose());
+    m_operatorController.a().onFalse(new SetClawBeltSpeed(() -> {return 1.0;}).andThen(
+      new ClawClose()).andThen(
+      new WaitCommand(0.4)).andThen(
+      new SetClawBeltSpeed(() -> {return 0.0;})).andThen(
+      new DisableBlinkLights()).andThen(
+      new DisableLights()));
     m_operatorController.povUp().onTrue(new ClawSensorGrab());
-    //Arm locations
-    m_operatorController.povUp().onTrue(new SetArmExtension(0.005).andThen(new SetShoulderPosition(-45.0))); // stowed/retracted position
-    m_operatorController.y().onTrue(new SetShoulderPosition(13.36).andThen(new SetArmExtension(0.894))); // High scoring position
-    m_operatorController.b().onTrue(new SetShoulderPosition(3.273).andThen(new SetArmExtension(0.429))); // Mid scoring position
-    m_operatorController.x().onTrue(new SetShoulderPosition(0).andThen(new SetArmExtension(0))); //Get Game Piece from human / feed station
-
-    //m_operatorController.y().onTrue(new RobotRelativeIK(Constants.IKPositions.HIGH_SCORING_POSITION));
-    //m_operatorController.b().onTrue(new RobotRelativeIK(Constants.IKPositions.MID_SCORING_POSITION));
-    //m_operatorController.a().onTrue(new RobotRelativeIK(Constants.IKPositions.LOW_SCORING_POSITION));
-    //m_operatorController.povUp().onTrue(new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
-
-    // SmartDashboard.putData("shoulder 0 degrees", new SetShoulderPosition(0));
-    // SmartDashboard.putData("shoulder -60 degrees", new SetShoulderPosition(-60));
-    // SmartDashboard.putData("waist 0 degrees", new SetWaistPosition(0));
-    // SmartDashboard.putData("waist 15 degrees", new SetWaistPosition(15));
-
-    // SmartDashboard.putData("Above intake before acquisition", new RobotRelativeIK(Constants.IKPositions.ABOVE_INTAKE_BEFORE_ACQUISITION));
-    // SmartDashboard.putData("Aquiring piece from intake", new RobotRelativeIK(Constants.IKPositions.ACQUIRING_PIECE_FROM_INTAKE));
-    // SmartDashboard.putData("Stowed with game piece clear of intake", new RobotRelativeIK(Constants.IKPositions.STOWED_WITH_GAME_PIECE_CLEAR_OF_INTAKE));
+    m_operatorController.povLeft().onTrue(new ClawGrabCancel());
+    
+    // Arm locations
+    m_operatorController.povRight().onTrue(
+      Commands.parallel(
+        new SetArmExtension(0.0),
+        new BlockUntilArmLessThan(0.2).andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE)))); // stowed/retracted position
+    m_operatorController.x().onTrue(new SetShoulderPosition(22).andThen(new SetArmExtension(0.894))); // High cone scoring position
+    m_operatorController.povDown().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.894))); // High cube scoring position
+    m_operatorController.b().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.429))); // Mid scoring position
+    m_operatorController.y().onTrue(new SetShoulderPosition(7).andThen(new SetArmExtension(0.18)));  //Get Game Piece from human / feed station
+    m_operatorController.back().onTrue(new SetShoulderPosition(9).andThen(new SetArmExtension(0.18)));  //Get Game Piece from human / feed station, old angle
+    
+    m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new SetWaistPosition(0)));
+    m_operatorController.leftBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new SetWaistPosition(180)));
+    
+    m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
   }
 
   /**
@@ -152,19 +161,6 @@ public class RobotContainer implements Loggable {
     }
   }
 
-  @Log
-  public static boolean isPracticeBot() {
-    return !m_practiceBotJumper.get();
-  }
-
   public void periodic() {
-    SmartDashboard.putNumber("Xposition", Util.getIKX(m_arm.getPosition(), m_waist.getPosition(), m_shoulder.getPosition()));
-    SmartDashboard.putNumber("Yposition", Util.getIKY(m_arm.getPosition(), m_waist.getPosition(), m_shoulder.getPosition()));
-    SmartDashboard.putNumber("Zposition", Util.getIKZ(m_arm.getPosition(), m_waist.getPosition(), m_shoulder.getPosition()));
-    
-    SmartDashboard.putNumber("Arm Length (m)", m_arm.getPosition() + Constants.IKOffsets.MINIMUM_ARM_LENGTH);
-    SmartDashboard.putNumber("Waist Rotation (deg)", m_waist.getPosition());
-    SmartDashboard.putNumber("Shoulder Rotation (deg)", m_shoulder.getPosition());
   }
 }
-

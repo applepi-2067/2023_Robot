@@ -52,7 +52,7 @@ public class Arm extends SubsystemBase implements Loggable {
   // SmartMotion configs
   private static final double MAX_VELOCITY_RPM = 11_000; // NEO550 free speed 11000RPM
   private static final double MIN_VELOCITY_RPM = 0;
-  private static final double MAXX_ACCELERATION_RPM_PER_SEC = 15_000;
+  private static final double MAX_ACCELERATION_RPM_PER_SEC = 30_000;
   private static final double ALLOWED_ERROR = 0.05; //motor rotations
 
   public static Arm getInstance() {
@@ -85,7 +85,7 @@ public class Arm extends SubsystemBase implements Loggable {
 
     m_pidController.setSmartMotionMaxVelocity(MAX_VELOCITY_RPM, SMART_MOTION_SLOT);
     m_pidController.setSmartMotionMinOutputVelocity(MIN_VELOCITY_RPM, SMART_MOTION_SLOT);
-    m_pidController.setSmartMotionMaxAccel(MAXX_ACCELERATION_RPM_PER_SEC, SMART_MOTION_SLOT);
+    m_pidController.setSmartMotionMaxAccel(MAX_ACCELERATION_RPM_PER_SEC, SMART_MOTION_SLOT);
     m_pidController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERROR, SMART_MOTION_SLOT);
 
     if (RobotBase.isSimulation()) {
