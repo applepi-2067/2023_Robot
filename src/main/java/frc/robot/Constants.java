@@ -155,16 +155,6 @@ public final class Constants {
     public static final double CAMERA_HYPOTENUSE_OFFSET = Units.inchesToMeters(7.0);
   }
 
-  public static final class ScoringPositions {
-    public static final double STOWED_POSITION_SHOULDER_DEGREES = -58.0;
-    /* Scoring positions in the format of waist degrees, shoulder degrees, and arm extension in meters
-     *C1: 
-     *C2: 0, 190, 0.3
-     *C3: 0, 170, 0.65
-     * 
-     */
-  }
-
   public static final class Field {
     public static AprilTagFieldLayout aprilTagFieldLayout = loadFieldLayout();
 
