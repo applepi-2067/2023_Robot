@@ -33,7 +33,9 @@ public class PickupAndScore extends SequentialCommandGroup {
     // Robot starts facing the grid in the top of bottom position (not in front of charge station)
           // Drive to 6.13, 4.69
 
-    Pose2d topFieldPiecePositionBlue = new Pose2d(6.13, 4.69, new Rotation2d(0.0));
+    Pose2d topFieldPiecePositionBlue = new Pose2d(6.0, 4.69, new Rotation2d(0.0));
+    Pose2d topCubeScorePositionBlue = new Pose2d(1.81, 4.69, new Rotation2d(0.0));
+
 
     addCommands(
       new DriveToPosition(0.0),
@@ -53,22 +55,38 @@ public class PickupAndScore extends SequentialCommandGroup {
       Commands.parallel(
         new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE),
         new ZeroWaistPosition().andThen(new SetWaistPosition(0.0))
+        // new DriveToPosition(-0.5).andThen(new RotateToPosition(180))
       ),
       new SetLightsColor(Lights.Color.PURPLE),
-      new DriveToAbsolutePosition(topFieldPiecePositionBlue, 0.1),
 
-      // Commands.deadline(
-      //   new ClawSensorGrab(),
-      //   new SetArmExtension(0.56)
-      // ),
-      
-      // //After piece is grabbed turn to zero
-      // new SetArmExtension(0.0),
-      // new SetWaistPosition(0.0),
+      // Drive to in front of piece
+      new DriveToAbsolutePosition(topFieldPiecePositionBlue, 0.1, true),
 
-      // // DEBUG, RESET WAIST FOR TESTING
-      new WaitCommand(1),  // DEBUG ONLY
-      new SetWaistPosition(0)  // DEBUG ONLY
+      // Pickup with 3 second timeout
+      Commands.race(
+        new WaitCommand(3),  
+        new PickupPieceFromGround()
+      ),
+
+      // Stow
+      // Rotate to face grid and drive back
+      Commands.parallel(
+        new SetArmExtension(0.0),
+        new SetShoulderPosition(-50.0)
+        // new RotateToPosition(180)
+      ),
+      new DriveToAbsolutePosition(topCubeScorePositionBlue, 0.1, false),
+
+      // Score
+      new SetWaistPosition(8),
+      new SetShoulderPosition(5),
+      new SetArmExtension(0.7),
+      new ClawOpen(),
+
+      // Go back to stow position
+      new SetArmExtension(0.0),
+      new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE),
+      new SetWaistPosition(0)
     );
   }
 }
