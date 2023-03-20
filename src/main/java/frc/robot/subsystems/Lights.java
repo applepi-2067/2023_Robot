@@ -44,6 +44,10 @@ public class Lights extends SubsystemBase {
     setRelayColor();
   }
 
+  public Color getColor() {
+    return m_color;
+  }
+
   public void on() {
     m_on = true;
     setRelayColor();
