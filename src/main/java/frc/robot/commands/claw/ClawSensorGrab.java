@@ -19,12 +19,12 @@ public class ClawSensorGrab extends SequentialCommandGroup {
     addCommands(
       new BlinkLights(0.2),
       new ClawOpen(),
-      new SetClawBeltSpeed(() -> {return -1.0;}),
+      new SetClawBeltSpeed(() -> {return 1.0;}),
       new WaitForGamePieceInClaw(),
-      new SetLightsColor(Lights.Color.WHITE),
       new ClawClose(),
       new WaitCommand(0.25),
-      new SetClawBeltSpeed(() -> {return 0.0;}),
+      new SetClawBeltSpeed(() -> {return 0.2;}),
+      new SetLightsColor(Lights.Color.WHITE),
       new DisableBlinkLights()
     );
   }

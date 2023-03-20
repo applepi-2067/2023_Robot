@@ -34,7 +34,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
   private final DigitalInput m_zeroingSensor;
 
-  private static final double GEAR_RATIO = (5.0/1.0) * (3.0/1.0) * (66.0 / 22.0) * (74.0 / 16.0);
+  private static final double GEAR_RATIO = (5.0/1.0) * (3.0/1.0) * (54.0 / 22.0) * (74.0 / 16.0);
   private static final double DEGREES_PER_REV = 360.0;
   private static final int CURRENT_LIMIT = 13; //Amps
   private static final boolean INVERT_MOTOR = true;
