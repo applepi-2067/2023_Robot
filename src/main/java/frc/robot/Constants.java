@@ -36,7 +36,7 @@ public final class Constants {
 
   public static class ZeroingOffsets {
     public static final double SHOULDER_FRONT_MINIMUM_ANGLE = -62.5;  //  Angle at which the sensor stops detecting the magnet
-    public static final double WAIST_ZERO_SENSOR_OFFSET = 14.0;  // Angle from waist zero sensor to true zero
+    public static final double WAIST_ZERO_SENSOR_OFFSET = 11.64;  // Angle from waist zero sensor to true zero
   }
 
   public static class Poses {
@@ -128,8 +128,8 @@ public final class Constants {
     public static final double WAIST_ANGLE_TOLERANCE = 0.1;
 
     // Tolerance for auto position drive commands to end 
-    public static final double AUTO_DISTANCE_TOLERANCE = 0.04;  // meters
-    public static final double AUTO_VELOCITY_TOLERANCE = 0.1;  // m/s
+    public static final double AUTO_DISTANCE_TOLERANCE = 0.08;  // meters
+    public static final double AUTO_VELOCITY_TOLERANCE = 0.2;  // m/s
   }
   
   public static final class IKPositions {
