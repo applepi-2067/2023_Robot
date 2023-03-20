@@ -35,7 +35,7 @@ public class PickupAndScore extends SequentialCommandGroup {
     // Robot starts facing the grid in the top of bottom position (not in front of charge station)
           // Drive to 6.13, 4.69
 
-    Pose2d topFieldPiecePositionBlue = new Pose2d(6.20, 4.51, new Rotation2d(0.0));
+    Pose2d topFieldPiecePositionBlue = new Pose2d(6.10, 4.51, new Rotation2d(0.0));
     Pose2d topCubeScorePositionBlue = new Pose2d(1.81, 4.69, new Rotation2d(0.0));
 
 
@@ -72,7 +72,7 @@ public class PickupAndScore extends SequentialCommandGroup {
       // Stow and drive
       Commands.parallel(
         new DriveToAbsolutePosition(topCubeScorePositionBlue, false),
-        new SetWaistPosition(8),
+        new SetWaistPosition(15),
         new SetArmExtension(0.0),
         new SetShoulderPosition(-50.0)
       ),

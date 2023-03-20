@@ -10,7 +10,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
@@ -24,12 +23,13 @@ public class DriveToAbsolutePosition extends CommandBase {
   private ProfiledPIDController m_distanceController;
   private PIDController m_rotationController;
 
+  private final double MAX_VELOCITY = 7;  // m/s
+  private final double MAX_ACCELERATION = 8;  // m/s^2
+
   public DriveToAbsolutePosition(Pose2d absoluteDestinationPose, double velocityScaling, boolean driveBackwards) {
     addRequirements(m_drivetrain);
     m_absoluteDestinationPose = absoluteDestinationPose;
     m_driveBackwards = driveBackwards;
-    double MAX_VELOCITY = 5;
-    double MAX_ACCELERATION = 5;
     TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(MAX_VELOCITY * velocityScaling, MAX_ACCELERATION);
     m_distanceController = new ProfiledPIDController(2.0, 0.0, 0.0, constraints);
     m_rotationController = new PIDController(1.3, 0, 0);
@@ -116,6 +116,6 @@ public class DriveToAbsolutePosition extends CommandBase {
   }
 
   private double clampVelocity(double input) {
-    return MathUtil.clamp(input, -Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY, Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY);
+    return MathUtil.clamp(input, -MAX_VELOCITY, MAX_VELOCITY);
   }
 }
