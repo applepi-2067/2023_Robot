@@ -7,16 +7,17 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import frc.robot.utils.TalonFXHelper;
+import com.revrobotics.SparkMaxPIDController;
 import frc.robot.utils.Util;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import frc.robot.Constants;
 
-public class IntakeRoller extends SubsystemBase implements Loggable {
+public class IntakeV2 extends SubsystemBase implements Loggable {
 
-  private static IntakeRoller instance = null;
-  private final TalonFXHelper m_leftMotor = new TalonFXHelper(Constants.CANDeviceIDs.INTAKE_LEFT_ROLLER_MOTOR_ID);
-  private final TalonFXHelper m_rightMotor = new TalonFXHelper(Constants.CANDeviceIDs.INTAKE_RIGHT_ROLLER_MOTOR_ID);
+  private static IntakeV2 instance = null;
+  private final SparkMaxPIDController m_flipMotor = new SparkMaxPIDController(Constants.CANDeviceIDs.INTAKE_FLIP_ID);
+  private final TalonFXHelper m_suckMotor = new TalonFXHelper(Constants.CANDeviceIDs.INTAKE_ROLLER_ID);
 
   // Current limit configuration
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
@@ -25,28 +26,25 @@ public class IntakeRoller extends SubsystemBase implements Loggable {
   private final double TRIGGER_THRESHOLD_LIMIT = 60; // amp
   private final double TRIGGER_THRESHOLD_TIME = 0.5; // s
 
-  public static IntakeRoller getInstance() {
+  public static IntakeV2 getInstance() {
     if (instance == null) {
-      instance = new IntakeRoller();
+      instance = new IntakeV2();
     }
     return instance;
   }
 
   /** Creates a new Intake. */
-  private IntakeRoller() {
-    m_leftMotor.configFactoryDefault();
-    m_rightMotor.configFactoryDefault();
-    m_leftMotor.setInverted(false);
-    m_rightMotor.setInverted(true);
+  private IntakeV2() {
+    m_flipMotor.configFactoryDefault();
+    m_suckMotor.configFactoryDefault();
 
-    m_leftMotor.configOpenLoopStatusFrameRates();
-    m_rightMotor.configOpenLoopStatusFrameRates();
+    m_flipMotor.configOpenLoopStatusFrameRates();
+    m_suckMotor.configOpenLoopStatusFrameRates();
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
         CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
-    m_rightMotor.configSupplyCurrentLimit(talonCurrentLimit);
-    m_leftMotor.configSupplyCurrentLimit(talonCurrentLimit);
+    m_suckMotor.configSupplyCurrentLimit(talonCurrentLimit);
   }
 
   /**
@@ -56,8 +54,8 @@ public class IntakeRoller extends SubsystemBase implements Loggable {
    */
   public void setSpeed(double speed) {
     speed = Util.limit(speed);
-    m_leftMotor.set(TalonFXControlMode.PercentOutput, speed);
-    m_rightMotor.set(TalonFXControlMode.PercentOutput, speed);
+    m_flipMotor.set(TalonFXControlMode.PercentOutput, speed);
+    m_suckMotor.set(TalonFXControlMode.PercentOutput, speed);
   }
 
   @Override

@@ -45,10 +45,9 @@ public final class Constants {
     public static final int DT_MOTOR_LEFT_2_ID = 3;
     public static final int DT_MOTOR_RIGHT_2_ID = 4;
     public static final int WAIST_MOTOR_ID = 5;
-    public static final int INTAKE_RIGHT_ROLLER_MOTOR_ID = 6;
-    public static final int INTAKE_LEFT_ROLLER_MOTOR_ID = 7;
+    public static final int INTAKE_FLIP_ID = 6;
+    public static final int INTAKE_ROLLER_ID = 7;
     public static final int ARM_MOTOR_ID = 8;
-    public static final int INTAKE_CONVEYOR_MOTOR_ID = 9;
     public static final int CLAWBELT_MOTOR_ID = 10;
 
     public static final int INTAKE_LEFT_EXTENSION_MOTOR_ID = 12;
