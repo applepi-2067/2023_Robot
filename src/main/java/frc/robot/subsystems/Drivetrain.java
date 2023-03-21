@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
@@ -126,9 +127,9 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
     // SmartDashboard.putData("Field", m_field);
 
-    Shuffleboard.getTab("Field")
+    Shuffleboard.getTab("Waist")
       .add("Field", m_field)
-      // .withWidget()
+      .withWidget(BuiltInWidgets.kField)
       .withSize(2, 1) // make the widget 2x1
       .withPosition(0, 0); // place it in the top-left corner
   }

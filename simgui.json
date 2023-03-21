@@ -37,6 +37,7 @@
       "/LiveWindow/Ungrouped/Talon FX [3]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon FX [4]": "Motor Controller",
       "/Shuffleboard/Field/Field": "Field2d",
+      "/Shuffleboard/Waist/Field": "Field2d",
       "/SmartDashboard/Arm": "Subsystem",
       "/SmartDashboard/Autonomous Mode Chooser": "String Chooser",
       "/SmartDashboard/ClawGrasp": "Subsystem",
