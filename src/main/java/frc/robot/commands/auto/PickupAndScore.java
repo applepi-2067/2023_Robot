@@ -6,6 +6,7 @@ package frc.robot.commands.auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -24,9 +25,11 @@ import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
 import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.shoulder.ZeroShoulderPosition;
+import frc.robot.commands.waist.RotateWaistToFaceAbsolutePosition;
 import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.commands.waist.ZeroWaistPosition;
 import frc.robot.subsystems.Lights;
+import frc.robot.utils.Transforms;
 
 //Auto routine to be used in the top of bottom scoring position, the routine will score the preloaded piece and leave the community
 public class PickupAndScore extends SequentialCommandGroup {
@@ -36,8 +39,10 @@ public class PickupAndScore extends SequentialCommandGroup {
           // Drive to 6.13, 4.69
 
     Pose2d topFieldPiecePositionBlue = new Pose2d(6.10, 4.51, new Rotation2d(0.0));
-    Pose2d topCubeScorePositionBlue = new Pose2d(1.81, 4.69, new Rotation2d(0.0));
-
+    Pose2d topCubeScoreRobotPositionBlue = new Pose2d(1.81, 4.69, new Rotation2d(0.0));
+    Pose2d topCubeScorePositionBlue = Transforms.targetRelativePoseToAbsoluteFieldPose(
+      6, new Pose2d(Units.inchesToMeters(-27.0), 0.0, new Rotation2d())
+    );
 
     addCommands(
       new DriveToPosition(0.0),
@@ -70,16 +75,17 @@ public class PickupAndScore extends SequentialCommandGroup {
       ),
 
       // Stow and drive
-      Commands.parallel(
-        new DriveToAbsolutePosition(topCubeScorePositionBlue, false),
-        new SetWaistPosition(15),
+      Commands.deadline(
+        new DriveToAbsolutePosition(topCubeScoreRobotPositionBlue, false),
+        new RotateWaistToFaceAbsolutePosition(topCubeScorePositionBlue),
         new SetArmExtension(0.0),
         new SetShoulderPosition(-50.0)
       ),
 
+
       // Score
       new SetShoulderPosition(10),
-      new SetArmExtension(0.7),
+      new SetArmExtension(0.8),
       new SetClawBeltSpeed(() -> {return 0.0;}),
       new ClawOpen(),
 
