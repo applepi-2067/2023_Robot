@@ -104,9 +104,6 @@ public class RobotContainer implements Loggable {
    */
   private void configureBindings() {
     /** Driver controls */
-    // Pick up piece from double substation
-    m_driverController.povUp().onTrue(new DoubleSubstationPieceAcquire());
-
     // Light control
     // m_driverController.rightTrigger().onTrue(new SetLightsColor(Lights.Color.PURPLE));
     // m_driverController.x().onTrue(new SetLightsColor(Lights.Color.PURPLE));

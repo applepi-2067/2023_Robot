@@ -104,12 +104,12 @@ public final class Constants {
     public static final Gains kVelocityGains = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0); 
 
     // Maximum drivetrain velocity in meters per seconds.
-    public static final double MAX_DRIVETRAIN_VELOCITY = 5.0;
+    public static final double MAX_DRIVETRAIN_VELOCITY = 6.0;
     
     // Drivetrain only moves when abs(stick) > deadband. Compensates for stick drift.
     public static final double DRIVETRAIN_CONTROLLER_DEADBAND = 0.03;
 
-    public static final double MOTOR_ACCELERATION = 5.0;  // m/s^2
+    public static final double MOTOR_ACCELERATION = 9.0;  // m/s^2
     public static final double MOTOR_TURN_ACCELERATION = 7.0;  // m/s^2, speed differential of the wheels
     public static final double MOTOR_ACCELERATION_AUTO = 3.0;  // m/s^2
   }
