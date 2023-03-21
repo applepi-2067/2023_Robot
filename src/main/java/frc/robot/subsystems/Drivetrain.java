@@ -26,6 +26,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -123,8 +124,16 @@ public class Drivetrain extends SubsystemBase implements Loggable{
       new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.0408, 1.2711, 0.1)
     );
 
-    SmartDashboard.putData("Field", m_field);
+    // SmartDashboard.putData("Field", m_field);
+
+    Shuffleboard.getTab("Field")
+      .add("Field", m_field)
+      // .withWidget()
+      .withSize(2, 1) // make the widget 2x1
+      .withPosition(0, 0); // place it in the top-left corner
   }
+
+  
 
   @Override
   public void periodic() {
