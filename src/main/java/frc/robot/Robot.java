@@ -94,10 +94,7 @@ public class Robot extends TimedRobot {
     m_autoChooser.addOption("Center Start", new CenterStartRoutine());
     m_autoChooser.addOption("Zero All", new ZeroAll());
     m_autoChooser.addOption("Do nothing", new SetLightsColor(Lights.Color.YELLOW));
-    m_autoChooser.addOption("DEBUG: Pickup From Ground", new PickupPieceFromGround());
-    m_autoChooser.addOption("DEBUG: Pickup Auto", new PickupAndScore());
-
-
+    m_autoChooser.addOption("Score, Pickup, Score Auto", new PickupAndScore(true));
   }
 
   /**
