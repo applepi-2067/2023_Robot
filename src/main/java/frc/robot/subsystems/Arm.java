@@ -48,7 +48,7 @@ public class Arm extends SubsystemBase implements Loggable {
 
   // PID Coefficients.
   // private Gains gains = new Gains(0.1, 1e-4, 1, 0, 1, 1.0); //raw PI controller gains (non-smart motion)
-  private Gains gains = new Gains(1e-6, 3e-6, 0.000156, 0, 1, 1.0); //smart motion gains
+  private Gains gains = new Gains(2e-4, 3e-6, 0.000156, 0, 1, 1.0); //smart motion gains
   
   // SmartMotion configs
   private static final double MAX_VELOCITY_RPM = 11_000; // NEO550 free speed 11000RPM
