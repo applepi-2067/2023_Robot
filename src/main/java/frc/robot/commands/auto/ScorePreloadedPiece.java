@@ -16,6 +16,7 @@ import frc.robot.commands.claw.ClawSensorGrab;
 import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.drivetrain.RotateToPosition;
 import frc.robot.commands.lights.SetLightsColor;
+import frc.robot.commands.shoulder.InitShoulderZero;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.shoulder.ZeroShoulderPosition;
 import frc.robot.commands.waist.SetWaistPosition;
@@ -32,7 +33,7 @@ public class ScorePreloadedPiece extends SequentialCommandGroup {
       new ClawClose(),
       // Zero arm extension and shoulder angle
       Commands.parallel(
-        new ZeroShoulderPosition(),
+        new InitShoulderZero().andThen(new ZeroShoulderPosition()),
         new ZeroArmPosition().andThen(new SetArmExtension(0.0))
       ),
 
