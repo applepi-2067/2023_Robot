@@ -7,6 +7,7 @@ package frc.robot.commands.auto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -34,8 +35,10 @@ import frc.robot.utils.ScoringPoses;
 //Auto routine to be used in the top of bottom scoring position, the routine will score the preloaded piece and leave the community
 public class PickupAndScore extends SequentialCommandGroup {
   /** Score preload, pick up cube, then score that one! */
+
   public PickupAndScore(boolean isTop) {
-    ScoringPoses m_scoringPoses = new ScoringPoses(isTop);
+    boolean isBlue = DriverStation.getAlliance().equals(DriverStation.Alliance.Blue);
+    ScoringPoses m_scoringPoses = new ScoringPoses(isBlue, isTop);
 
     addCommands(
       new DriveToPosition(0.0),

@@ -3,16 +3,13 @@ package frc.robot.utils;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 
 public class ScoringPoses {
     private Pose2d m_robotPickupPiecePose2d;
     private Pose2d m_topCubeScoreRobotPose2d;
     private Pose2d m_topCubeScorePose2d;
     
-    public ScoringPoses(boolean isTop) {
-      boolean isBlue = DriverStation.getAlliance().equals(DriverStation.Alliance.Blue);
-
+    public ScoringPoses(boolean isBlue, boolean isTop) {
       int yCoeff = getYCoeff(isBlue, isTop);
       int aprilTagID = getAprilTagID(isBlue, isTop);
 
@@ -22,35 +19,38 @@ public class ScoringPoses {
     }
     
     private int getYCoeff(boolean isBlue, boolean isTop) {
+      int yCoeff;
       if (isTop) {
-        return 1;
+        yCoeff = 1;
       }
       else {
-        return -1;
+        yCoeff = -1;
       }
+
+      return yCoeff;
     }
 
     private int getAprilTagID(boolean isBlue, boolean isTop) {
-      int tagID ;
+      int aprilTagID ;
       if (isBlue) {
         if (isTop) {
-          tagID = 6;
+          aprilTagID = 6;
         }
         else {
-          tagID = 8;
+          aprilTagID = 8;
         }
       }
 
       else {
         if (isTop) {
-          tagID = 3;
+          aprilTagID = 3;
         }
         else {
-          tagID = 1;
+          aprilTagID = 1;
         }
       }
 
-      return tagID;
+      return aprilTagID;
     }
 
     private Pose2d calcRobotPickupPiecePose2d(int yCoeff, int aprilTagID) {
