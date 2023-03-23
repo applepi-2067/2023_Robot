@@ -13,7 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import frc.robot.Robot.Position;
+import frc.robot.Robot.RobotSetupPosition;
 import frc.robot.commands.IK.IKCoordinate;
 import frc.robot.utils.Gains;
 import frc.robot.utils.ScoringPoses;
@@ -173,22 +173,22 @@ public final class Constants {
   }
 
   public static final class ScoringInfo {
-    public static int initialAprilTagID;
+    public static int m_initialAprilTagID;
     public static ScoringPoses scoringPoses;
     public static Pose2d initialPose2d;
 
-    public static void initScoringInfo(Position position) {
+    public static void initScoringInfo(RobotSetupPosition position) {
       boolean isBlue = DriverStation.getAlliance().equals(DriverStation.Alliance.Blue);
 
-      initialAprilTagID = getInitialAprilTagID(isBlue, position);
+      m_initialAprilTagID = getInitialAprilTagID(isBlue, position);
       initialPose2d = getInitialPose2d(isBlue, position);
 
-      if (position != Position.CENTER) {
-        scoringPoses = new ScoringPoses(isBlue, position == Position.TOP);
+      if (position != RobotSetupPosition.CENTER) {
+        scoringPoses = new ScoringPoses(isBlue, position == RobotSetupPosition.TOP);
       }
     }
     
-    private static int getInitialAprilTagID(boolean isBlue, Position position) {
+    private static int getInitialAprilTagID(boolean isBlue, RobotSetupPosition position) {
       if (isBlue) {
         switch (position) {
           case TOP:
@@ -222,14 +222,14 @@ public final class Constants {
       public static final double TOP_CUBE_SCORE_X_OFFSET = Units.inchesToMeters(-27.0);
     }
 
-    public static final class InitialOffsets {
-      public static final double X_OFFSET = 0.5;
+    public static final class InitialRobotPositionOffsets {
+      public static final double X_OFFSET = Units.inchesToMeters(30.0);
 
-      public static final double Y_OFFSET_TOP_BOTTOM = 0.1;
+      public static final double Y_OFFSET_TOP_BOTTOM = Units.inchesToMeters(22.0);
       public static final double Y_OFFSET_CENTER = 0.0;
     }
     
-    private static Pose2d getInitialPose2d(boolean isBlue, Position position) {
+    private static Pose2d getInitialPose2d(boolean isBlue, RobotSetupPosition position) {
       int yCoeff;
       if (isBlue) {
         yCoeff = 1;
@@ -241,17 +241,17 @@ public final class Constants {
       double yOffset;
       switch (position) {
         case TOP:
-          yOffset = InitialOffsets.Y_OFFSET_TOP_BOTTOM;
+          yOffset = InitialRobotPositionOffsets.Y_OFFSET_TOP_BOTTOM;
           break;
         case BOTTOM:
-          yOffset = -InitialOffsets.Y_OFFSET_TOP_BOTTOM;
+          yOffset = -1.0 * InitialRobotPositionOffsets.Y_OFFSET_TOP_BOTTOM;
           break;
         default:
-          yOffset = InitialOffsets.Y_OFFSET_CENTER;
+          yOffset = InitialRobotPositionOffsets.Y_OFFSET_CENTER;
       }
 
-      Pose2d targetOffsetPose2d = new Pose2d(InitialOffsets.X_OFFSET, yOffset * yCoeff, new Rotation2d());
-      return Transforms.targetRelativePoseToAbsoluteFieldPose(initialAprilTagID, targetOffsetPose2d);
+      Pose2d targetOffsetPose2d = new Pose2d(InitialRobotPositionOffsets.X_OFFSET, yOffset * yCoeff, new Rotation2d());
+      return Transforms.targetRelativePoseToAbsoluteFieldPose(m_initialAprilTagID, targetOffsetPose2d);
     }
   }
 }

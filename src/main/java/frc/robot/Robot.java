@@ -27,20 +27,20 @@ import io.github.oblarg.oblog.Logger;
 public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
-  private Position m_position;
-  private static SendableChooser<Position> m_positionChooser;
+  private RobotSetupPosition m_position;
+  private static SendableChooser<RobotSetupPosition> m_positionChooser;
 
   private Command m_autoCommand;
 
   private Drivetrain m_drivetrain = Drivetrain.getInstance();
 
-  public enum Position {
+  public enum RobotSetupPosition {
     CENTER,
     TOP,
     BOTTOM
   }
-  
-  public Command createAuto(Position position) {
+
+  public Command createAuto(RobotSetupPosition position) {
     switch (position) {
       case CENTER:
         return new CenterStartRoutine();
@@ -49,7 +49,7 @@ public class Robot extends TimedRobot {
       case BOTTOM:
         return new PickupAndScore();
       default:
-        return new SetLightsColor(Lights.Color.YELLOW);       // TODO: Default mobility auto?
+        return new SetLightsColor(Lights.Color.YELLOW); // TODO: Default mobility auto?
     }
   }
 
@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // Run the Scheduler. 
+    // Run the Scheduler.
     // Poll buttons, add newly-scheduled commands, run already-scheduled
     // commands, remove finished or interrupted commands,
     // and run subsystem periodic() methods.
@@ -94,7 +94,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    //Only allow pushing the robot around if we aren't on a real field
+    // Only allow pushing the robot around if we aren't on a real field
     if (DriverStation.isFMSAttached()) {
       m_robotContainer.setCoastEnabled(false);
     } else {
@@ -104,15 +104,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    SmartDashboard.putData("Position Chooser", m_positionChooser); 
-    m_position = (Position) m_positionChooser.getSelected();
+    SmartDashboard.putData("Position Chooser", m_positionChooser);
+    m_position = (RobotSetupPosition) m_positionChooser.getSelected();
   }
 
   public void positionSelectInit() {
-    m_positionChooser = new SendableChooser<Position>();
-    m_positionChooser.setDefaultOption("Top", Position.TOP);
-    m_positionChooser.addOption("Bottom", Position.BOTTOM);
-    m_positionChooser.addOption("Center", Position.CENTER);
+    m_positionChooser = new SendableChooser<RobotSetupPosition>();
+    m_positionChooser.setDefaultOption("Top", RobotSetupPosition.TOP);
+    m_positionChooser.addOption("Bottom", RobotSetupPosition.BOTTOM);
+    m_positionChooser.addOption("Center", RobotSetupPosition.CENTER);
   }
 
   /**
@@ -124,7 +124,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.setCoastEnabled(false);
 
     // Schedule the autonomous command
-    if (m_position != null) {                       // TODO: Schedule mobility auto?
+    if (m_position != null) { // TODO: Schedule mobility auto?
       Constants.ScoringInfo.initScoringInfo(m_position);
       m_drivetrain.setOdometryPose2d(Constants.ScoringInfo.initialPose2d);
 
@@ -135,7 +135,8 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+  }
 
   @Override
   public void teleopInit() {
@@ -151,7 +152,8 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
   public void testInit() {
@@ -161,14 +163,17 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 
 }

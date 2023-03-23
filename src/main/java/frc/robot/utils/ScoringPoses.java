@@ -12,7 +12,7 @@ public class ScoringPoses {
     
     public ScoringPoses(boolean isBlue, boolean isTop) {
       int yCoeff = getYCoeff(isBlue, isTop);
-      int aprilTagID = Constants.ScoringInfo.initialAprilTagID;
+      int aprilTagID = Constants.ScoringInfo.m_initialAprilTagID;
 
       m_robotPickupPiecePose2d = calcRobotPickupPiecePose2d(yCoeff, aprilTagID);
       m_topCubeScoreRobotPose2d = calcTopCubeScoreRobotPose2d(yCoeff, aprilTagID);
