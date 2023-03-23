@@ -37,7 +37,8 @@ public class Robot extends TimedRobot {
   public enum RobotSetupPosition {
     CENTER,
     TOP,
-    BOTTOM
+    BOTTOM,
+    NONE
   }
 
   public Command createAuto(RobotSetupPosition position) {
@@ -110,7 +111,8 @@ public class Robot extends TimedRobot {
 
   public void positionSelectInit() {
     m_positionChooser = new SendableChooser<RobotSetupPosition>();
-    m_positionChooser.setDefaultOption("Top", RobotSetupPosition.TOP);
+    m_positionChooser.setDefaultOption("None", RobotSetupPosition.NONE);
+    m_positionChooser.addOption("Top", RobotSetupPosition.TOP);
     m_positionChooser.addOption("Bottom", RobotSetupPosition.BOTTOM);
     m_positionChooser.addOption("Center", RobotSetupPosition.CENTER);
   }
