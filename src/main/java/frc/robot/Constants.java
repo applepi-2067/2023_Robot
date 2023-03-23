@@ -216,7 +216,7 @@ public final class Constants {
       public static final double ROBOT_PICKUP_PIECE_X_OFFSET = 5.073;
       public static final double ROBOT_PICKUP_PIECE_Y_OFFSET = 0.156;
 
-      public static final double TOP_CUBE_SCORE_ROBOT_X_OFFSET = 0.86;
+      public static final double TOP_CUBE_SCORE_ROBOT_X_OFFSET = 0.74;
       public static final double TOP_CUBE_SCORE_ROBOT_Y_OFFSET = 0.2;
 
       public static final double TOP_CUBE_SCORE_X_OFFSET = Units.inchesToMeters(-27.0);
@@ -250,7 +250,7 @@ public final class Constants {
           yOffset = InitialRobotPositionOffsets.Y_OFFSET_CENTER;
       }
 
-      Pose2d targetOffsetPose2d = new Pose2d(InitialRobotPositionOffsets.X_OFFSET, yOffset * yCoeff, new Rotation2d());
+      Pose2d targetOffsetPose2d = new Pose2d(InitialRobotPositionOffsets.X_OFFSET, yOffset * yCoeff, Rotation2d.fromDegrees(180));
       return Transforms.targetRelativePoseToAbsoluteFieldPose(m_initialAprilTagID, targetOffsetPose2d);
     }
   }

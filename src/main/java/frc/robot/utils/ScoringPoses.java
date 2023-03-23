@@ -28,6 +28,10 @@ public class ScoringPoses {
         yCoeff = -1;
       }
 
+      if (!isBlue) {
+        yCoeff *= -1;
+      }
+
       return yCoeff;
     }
 
