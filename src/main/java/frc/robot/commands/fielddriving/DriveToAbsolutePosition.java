@@ -18,28 +18,22 @@ public class DriveToAbsolutePosition extends CommandBase {
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
   private Pose2d m_absoluteDestinationPose;
   private double m_destinationDistance;
-  private boolean m_driveBackwards;
   
   private ProfiledPIDController m_distanceController;
   private PIDController m_rotationController;
 
-  private final double MAX_VELOCITY = 8;  // m/s
+  private final double MAX_VELOCITY = 2.0;  // m/s
 
-  public DriveToAbsolutePosition(Pose2d absoluteDestinationPose, double velocityScaling, boolean driveBackwards) {
+  public DriveToAbsolutePosition(Pose2d absoluteDestinationPose, double velocityScaling) {
     addRequirements(m_drivetrain);
     m_absoluteDestinationPose = absoluteDestinationPose;
-    m_driveBackwards = driveBackwards;
     TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(MAX_VELOCITY * velocityScaling, Constants.Drivetrain.MOTOR_ACCELERATION);
     m_distanceController = new ProfiledPIDController(2.0, 0.0, 0.0, constraints);
     m_rotationController = new PIDController(1.3, 0, 0);
   }
 
   public DriveToAbsolutePosition(Pose2d absoluteDestinationPose) {
-    this(absoluteDestinationPose, 1.0, false);
-  }
-
-  public DriveToAbsolutePosition(Pose2d absoluteDestinationPose, boolean driveBackwards) {
-    this(absoluteDestinationPose, 1.0, driveBackwards);
+    this(absoluteDestinationPose, 1.0);
   }
 
   // Called when the command is initially scheduled.
@@ -59,15 +53,16 @@ public class DriveToAbsolutePosition extends CommandBase {
   public void execute() {
     // Calculate whether we want to drive forward or backward to target
     double headingErrorRadians = getHeadingErrorRadians(false);  // First check heading error if we're going forward
-    
+    boolean driveBackwards = false;
     if (Math.abs(headingErrorRadians) > Math.PI / 2) {
-
+      driveBackwards = true;
+      headingErrorRadians = getHeadingErrorRadians(true);
     }
 
     // Calculate wheel velocities to drive toward target
     double distanceTraveled = m_destinationDistance - getDistanceFromDestination();
     double distanceControlOutput = m_distanceController.calculate(distanceTraveled);
-    if (m_driveBackwards) {
+    if (driveBackwards) {
       distanceControlOutput *= -1.0;
     }
     double leftTrackSpeedDistance = distanceControlOutput;
