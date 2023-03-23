@@ -22,7 +22,7 @@ public class DriveToAbsolutePosition extends CommandBase {
   private ProfiledPIDController m_distanceController;
   private PIDController m_rotationController;
 
-  private final double MAX_VELOCITY = 2.0;  // m/s
+  private final double MAX_VELOCITY = 8.0;  // m/s
 
   public DriveToAbsolutePosition(Pose2d absoluteDestinationPose, double velocityScaling) {
     addRequirements(m_drivetrain);
