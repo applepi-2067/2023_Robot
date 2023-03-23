@@ -23,14 +23,13 @@ public class DriveToAbsolutePosition extends CommandBase {
   private ProfiledPIDController m_distanceController;
   private PIDController m_rotationController;
 
-  private final double MAX_VELOCITY = 8.0;  // m/s
-  private final double MAX_ACCELERATION = 9.0;  // m/s^2
+  private final double MAX_VELOCITY = 8;  // m/s
 
   public DriveToAbsolutePosition(Pose2d absoluteDestinationPose, double velocityScaling, boolean driveBackwards) {
     addRequirements(m_drivetrain);
     m_absoluteDestinationPose = absoluteDestinationPose;
     m_driveBackwards = driveBackwards;
-    TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(MAX_VELOCITY * velocityScaling, MAX_ACCELERATION);
+    TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(MAX_VELOCITY * velocityScaling, Constants.Drivetrain.MOTOR_ACCELERATION);
     m_distanceController = new ProfiledPIDController(2.0, 0.0, 0.0, constraints);
     m_rotationController = new PIDController(1.3, 0, 0);
   }
