@@ -12,9 +12,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.auto.CenterStartRoutine;
 import frc.robot.commands.auto.PickupAndScore;
-import frc.robot.commands.auto.ScorePreloadedPiece;
-import frc.robot.commands.auto.PickupPieceFromGround;
-import frc.robot.commands.auto.ZeroAll;
 import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.subsystems.Lights;
 import io.github.oblarg.oblog.Logger;
@@ -27,10 +24,31 @@ import io.github.oblarg.oblog.Logger;
  * project, you must also update the build.gradle file in the project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  static Command autonomousCommand;
-  public static SendableChooser<Command> m_autoChooser;
+
+  private AutoName m_autoName;
+  private static SendableChooser<AutoName> m_autoChooser;
+
+  private Command m_autoCommand;
+
+  public enum AutoName {
+    CENTER_START,
+    PICKUP_TOP,
+    PICKUP_BOTTOM
+  }
+  
+  public Command createAuto(AutoName name) {
+    switch (name) {
+      case CENTER_START:
+        return new CenterStartRoutine();
+      case PICKUP_TOP:
+        return new PickupAndScore(true);
+      case PICKUP_BOTTOM:
+        return new PickupAndScore(false);
+      default:
+        return new SetLightsColor(Lights.Color.YELLOW);
+    }
+  }
 
   /**
    * This function is run when the robot is first started up
@@ -84,19 +102,14 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     SmartDashboard.putData("Autonomous Mode Chooser", m_autoChooser); 
-    m_autonomousCommand = (Command) m_autoChooser.getSelected();
+    m_autoName = (AutoName) m_autoChooser.getSelected();
   }
 
   public void autoSelectInit() {
-    m_autoChooser = new SendableChooser<Command>();
-    m_autoChooser.setDefaultOption("Top/Bottom Score", new ScorePreloadedPiece());
-    m_autoChooser.addOption("Top/Bottom Score", new ScorePreloadedPiece());
-    m_autoChooser.addOption("Center Start", new CenterStartRoutine());
-    m_autoChooser.addOption("Zero All", new ZeroAll());
-    m_autoChooser.addOption("Do nothing", new SetLightsColor(Lights.Color.YELLOW));
-
-    m_autoChooser.addOption("Score, Pickup, Score Auto (TOP)", new PickupAndScore(true));
-    m_autoChooser.addOption("Score, Pickup, Score Auto (BOTTOM)", new PickupAndScore(false));
+    m_autoChooser = new SendableChooser<AutoName>();
+    m_autoChooser.setDefaultOption("Pickup (Top)", AutoName.PICKUP_TOP);
+    m_autoChooser.addOption("Pickup (Bottom)", AutoName.PICKUP_BOTTOM);
+    m_autoChooser.addOption("Center", AutoName.CENTER_START);
   }
 
   /**
@@ -107,16 +120,16 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_robotContainer.setCoastEnabled(false);
 
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+    // Schedule the autonomous command
+    if (m_autoName != null) {                       // TODO: Should we schedule a mobility auto?
+      m_autoCommand = createAuto(m_autoName);
+      m_autoCommand.schedule();
     }
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
@@ -125,16 +138,14 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     m_robotContainer.setCoastEnabled(false);
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+    if (m_autoCommand != null) {
+      m_autoCommand.cancel();
     }
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {
@@ -144,17 +155,14 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {
-  }
+  public void testPeriodic() {}
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {
-  }
+  public void simulationInit() {}
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {
-  }
+  public void simulationPeriodic() {}
 
 }
