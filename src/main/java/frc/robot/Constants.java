@@ -11,9 +11,13 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import frc.robot.Robot.Position;
 import frc.robot.commands.IK.IKCoordinate;
 import frc.robot.utils.Gains;
+import frc.robot.utils.ScoringPoses;
+import frc.robot.utils.Transforms;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -157,7 +161,6 @@ public final class Constants {
 
   public static final class Field {
     public static AprilTagFieldLayout aprilTagFieldLayout = loadFieldLayout();
-
     public static AprilTagFieldLayout loadFieldLayout() {
       try {
         return AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
@@ -165,6 +168,44 @@ public final class Constants {
       catch (IOException e) {
         System.out.println("Couldn't load April Tag Field Layout.");
         return null;
+      }
+    }
+  }
+
+  public static final class ScoringInfo {
+    public static int initialAprilTagID;
+    public static ScoringPoses scoringPoses;
+    public static Pose2d initialPose2d;
+
+    public static void initScoringInfo(Position position) {
+      boolean isBlue = DriverStation.getAlliance().equals(DriverStation.Alliance.Blue);
+
+      initialAprilTagID = getInitialAprilTagID(isBlue, position);
+      scoringPoses = new ScoringPoses(isBlue, position == Position.TOP);
+      initialPose2d = getInitialPose2d(isBlue, position);
+    }
+    
+    private static int getInitialAprilTagID(boolean isBlue, Position position) {
+      if (isBlue) {
+        switch (position) {
+          case TOP:
+            return 6;
+          case BOTTOM:
+            return 8;
+          default:
+            return 7;
+        }
+      }
+
+      else {
+        switch (position) {
+          case TOP:
+            return 3;
+          case BOTTOM:
+            return 1;
+          default:
+            return 2;
+        }
       }
     }
 
@@ -176,6 +217,38 @@ public final class Constants {
       public static final double TOP_CUBE_SCORE_ROBOT_Y_OFFSET = 0.2;
 
       public static final double TOP_CUBE_SCORE_X_OFFSET = Units.inchesToMeters(-27.0);
+    }
+
+    public static final class InitialOffsets {
+      public static final double X_OFFSET = 0.5;
+
+      public static final double Y_OFFSET_TOP_BOTTOM = 0.1;
+      public static final double Y_OFFSET_CENTER = 0.0;
+    }
+    
+    private static Pose2d getInitialPose2d(boolean isBlue, Position position) {
+      int yCoeff;
+      if (isBlue) {
+        yCoeff = 1;
+      }
+      else {
+        yCoeff = -1;
+      }
+
+      double yOffset;
+      switch (position) {
+        case TOP:
+          yOffset = InitialOffsets.Y_OFFSET_TOP_BOTTOM;
+          break;
+        case BOTTOM:
+          yOffset = -InitialOffsets.Y_OFFSET_TOP_BOTTOM;
+          break;
+        default:
+          yOffset = InitialOffsets.Y_OFFSET_CENTER;
+      }
+
+      Pose2d targetOffsetPose2d = new Pose2d(InitialOffsets.X_OFFSET, yOffset * yCoeff, new Rotation2d());
+      return Transforms.targetRelativePoseToAbsoluteFieldPose(initialAprilTagID, targetOffsetPose2d);
     }
   }
 }

@@ -119,7 +119,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     // Initialize pose estimator.
     m_odometry = new DifferentialDrivePoseEstimator(
       new DifferentialDriveKinematics(WHEEL_BASE_METERS), new Rotation2d(getYawRadians()),
-      getRightMotorDistanceMeters(), getLeftMotorDistanceMeters(), Constants.Drivetrain.INITIAL_ROBOT_POSE2D,
+      getLeftMotorDistanceMeters(), getRightMotorDistanceMeters(), Constants.Drivetrain.INITIAL_ROBOT_POSE2D,
       new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.0408, 1.2711, 0.1)
     );
 
@@ -304,6 +304,12 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
   public Pose2d getLatestRobotPose2d() {
     return m_latestRobotPose2d;
+  }
+
+  public void setOdometryPose2d(Pose2d newOdometryPose2d) {
+    m_odometry.resetPosition(
+      new Rotation2d(getYawRadians()), getLeftMotorDistanceMeters(), getRightMotorDistanceMeters(), newOdometryPose2d
+    );
   }
 
   private double metersToTicks(double setpoint) {

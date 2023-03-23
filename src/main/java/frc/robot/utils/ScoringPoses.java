@@ -2,7 +2,8 @@ package frc.robot.utils;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.Constants.Field.ScoringOffsets;
+import frc.robot.Constants;
+import frc.robot.Constants.ScoringInfo.ScoringOffsets;
 
 public class ScoringPoses {
     private Pose2d m_robotPickupPiecePose2d;
@@ -11,7 +12,7 @@ public class ScoringPoses {
     
     public ScoringPoses(boolean isBlue, boolean isTop) {
       int yCoeff = getYCoeff(isBlue, isTop);
-      int aprilTagID = getAprilTagID(isBlue, isTop);
+      int aprilTagID = Constants.ScoringInfo.initialAprilTagID;
 
       m_robotPickupPiecePose2d = calcRobotPickupPiecePose2d(yCoeff, aprilTagID);
       m_topCubeScoreRobotPose2d = calcTopCubeScoreRobotPose2d(yCoeff, aprilTagID);
@@ -28,29 +29,6 @@ public class ScoringPoses {
       }
 
       return yCoeff;
-    }
-
-    private int getAprilTagID(boolean isBlue, boolean isTop) {
-      int aprilTagID ;
-      if (isBlue) {
-        if (isTop) {
-          aprilTagID = 6;
-        }
-        else {
-          aprilTagID = 8;
-        }
-      }
-
-      else {
-        if (isTop) {
-          aprilTagID = 3;
-        }
-        else {
-          aprilTagID = 1;
-        }
-      }
-
-      return aprilTagID;
     }
 
     private Pose2d calcRobotPickupPiecePose2d(int yCoeff, int aprilTagID) {

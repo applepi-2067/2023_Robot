@@ -4,11 +4,6 @@
 
 package frc.robot.commands.auto;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -18,10 +13,8 @@ import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.arm.ZeroArmPosition;
 import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
-import frc.robot.commands.claw.ClawSensorGrab;
 import frc.robot.commands.claw.SetClawBeltSpeed;
 import frc.robot.commands.drivetrain.DriveToPosition;
-import frc.robot.commands.drivetrain.RotateToPosition;
 import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
 import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.commands.shoulder.SetShoulderPosition;
@@ -36,9 +29,8 @@ import frc.robot.utils.ScoringPoses;
 public class PickupAndScore extends SequentialCommandGroup {
   /** Score preload, pick up cube, then score that one! */
 
-  public PickupAndScore(boolean isTop) {
-    boolean isBlue = DriverStation.getAlliance().equals(DriverStation.Alliance.Blue);
-    ScoringPoses m_scoringPoses = new ScoringPoses(isBlue, isTop);
+  public PickupAndScore() {
+    ScoringPoses m_scoringPoses = Constants.ScoringInfo.scoringPoses;
 
     addCommands(
       new DriveToPosition(0.0),
