@@ -57,6 +57,13 @@ public class DriveToAbsolutePosition extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // Calculate whether we want to drive forward or backward to target
+    double headingErrorRadians = getHeadingErrorRadians(false);  // First check heading error if we're going forward
+    
+    if (Math.abs(headingErrorRadians) > Math.PI / 2) {
+
+    }
+
     // Calculate wheel velocities to drive toward target
     double distanceTraveled = m_destinationDistance - getDistanceFromDestination();
     double distanceControlOutput = m_distanceController.calculate(distanceTraveled);
@@ -67,7 +74,7 @@ public class DriveToAbsolutePosition extends CommandBase {
     double rightTrackSpeedDistance = distanceControlOutput;
 
     // Calculate wheel velocities to turn to heading
-    double rotationControlOutput = m_rotationController.calculate(getHeadingErrorRadians());
+    double rotationControlOutput = m_rotationController.calculate(headingErrorRadians);
     double leftTrackSpeedRotation = -rotationControlOutput;
     double rightTrackSpeedRotation = rotationControlOutput;
 
@@ -98,13 +105,13 @@ public class DriveToAbsolutePosition extends CommandBase {
     return Math.sqrt(xError * xError + yError * yError);
   }
 
-  private double getHeadingErrorRadians() {
+  private double getHeadingErrorRadians(boolean driveBackwards) {
     Pose2d latestRobotPose = m_drivetrain.getLatestRobotPose2d();
     double xError = m_absoluteDestinationPose.getX() - latestRobotPose.getX();
     double yError = m_absoluteDestinationPose.getY() - latestRobotPose.getY();
     
     Rotation2d desiredHeading = new Rotation2d(Math.atan2(yError, xError));
-    if (m_driveBackwards) {
+    if (driveBackwards) {
       desiredHeading = desiredHeading.minus(new Rotation2d(Math.PI));
     }
 
