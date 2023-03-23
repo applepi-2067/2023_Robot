@@ -2,7 +2,7 @@ package frc.robot.utils;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
+import frc.robot.Constants.Field.ScoringOffsets;
 
 public class ScoringPoses {
     private Pose2d m_robotPickupPiecePose2d;
@@ -54,23 +54,30 @@ public class ScoringPoses {
     }
 
     private Pose2d calcRobotPickupPiecePose2d(int yCoeff, int aprilTagID) {
-      Pose2d robotPickupPiecePose2d = Transforms.targetRelativePoseToAbsoluteFieldPose(
-        aprilTagID, new Pose2d(Units.inchesToMeters(100.0), Units.inchesToMeters(10.0 * yCoeff), new Rotation2d()) // TODO: Fix offsets
+      Pose2d tagOffsetPose2d = new Pose2d(
+        ScoringOffsets.ROBOT_PICKUP_PIECE_X_OFFSET,
+        ScoringOffsets.ROBOT_PICKUP_PIECE_Y_OFFSET * yCoeff,
+        new Rotation2d()
       );
+
+      Pose2d robotPickupPiecePose2d = Transforms.targetRelativePoseToAbsoluteFieldPose(aprilTagID, tagOffsetPose2d);
       return robotPickupPiecePose2d;
     }
 
     private Pose2d calcTopCubeScoreRobotPose2d(int yCoeff, int aprilTagID) {
-      Pose2d topCubeScoreRobotPose2d = Transforms.targetRelativePoseToAbsoluteFieldPose(
-        aprilTagID, new Pose2d(Units.inchesToMeters(10.0), Units.inchesToMeters(10.0 * yCoeff), new Rotation2d()) // TODO: Fix offsets
+      Pose2d tagOffsetPose2d = new Pose2d(
+        ScoringOffsets.TOP_CUBE_SCORE_ROBOT_X_OFFSET,
+        ScoringOffsets.TOP_CUBE_SCORE_ROBOT_Y_OFFSET * yCoeff,
+        new Rotation2d()
       );
+
+      Pose2d topCubeScoreRobotPose2d = Transforms.targetRelativePoseToAbsoluteFieldPose(aprilTagID, tagOffsetPose2d);
       return topCubeScoreRobotPose2d;
     }
 
     private Pose2d calcTopCubeScorePose2d(int aprilTagID) {
-      Pose2d topCubeScorePose2d = Transforms.targetRelativePoseToAbsoluteFieldPose(
-        aprilTagID, new Pose2d(Units.inchesToMeters(-27.0), 0.0, new Rotation2d())
-      );
+      Pose2d tagOffsetPose2d = new Pose2d(ScoringOffsets.TOP_CUBE_SCORE_X_OFFSET, 0.0, new Rotation2d());
+      Pose2d topCubeScorePose2d = Transforms.targetRelativePoseToAbsoluteFieldPose(aprilTagID, tagOffsetPose2d);
       return topCubeScorePose2d;
     }
 

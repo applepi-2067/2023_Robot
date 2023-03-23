@@ -167,5 +167,15 @@ public final class Constants {
         return null;
       }
     }
+
+    public static final class ScoringOffsets {
+      public static final double ROBOT_PICKUP_PIECE_X_OFFSET = 5.073;
+      public static final double ROBOT_PICKUP_PIECE_Y_OFFSET = 0.156;
+
+      public static final double TOP_CUBE_SCORE_ROBOT_X_OFFSET = 0.86;
+      public static final double TOP_CUBE_SCORE_ROBOT_Y_OFFSET = 0.2;
+
+      public static final double TOP_CUBE_SCORE_X_OFFSET = Units.inchesToMeters(-27.0);
+    }
   }
 }
