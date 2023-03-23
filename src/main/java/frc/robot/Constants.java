@@ -181,8 +181,11 @@ public final class Constants {
       boolean isBlue = DriverStation.getAlliance().equals(DriverStation.Alliance.Blue);
 
       initialAprilTagID = getInitialAprilTagID(isBlue, position);
-      scoringPoses = new ScoringPoses(isBlue, position == Position.TOP);
       initialPose2d = getInitialPose2d(isBlue, position);
+
+      if (position != Position.CENTER) {
+        scoringPoses = new ScoringPoses(isBlue, position == Position.TOP);
+      }
     }
     
     private static int getInitialAprilTagID(boolean isBlue, Position position) {
