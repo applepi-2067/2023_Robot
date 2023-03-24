@@ -68,7 +68,7 @@ public class DriveToAbsolutePosition extends CommandBase {
     }
     // Scale forward/backwards speed by the cosine of the heading error
     // This is so we turn toward the goal before we speed up
-    distanceControlOutput *= Math.pow(Math.cos(headingErrorRadians), 2);
+    // distanceControlOutput *= Math.pow(Math.cos(headingErrorRadians), 2);
      
     double leftTrackSpeedDistance = distanceControlOutput;
     double rightTrackSpeedDistance = distanceControlOutput;

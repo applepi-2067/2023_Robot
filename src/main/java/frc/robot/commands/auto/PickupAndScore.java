@@ -96,9 +96,10 @@ public class PickupAndScore extends SequentialCommandGroup {
       new ClawOpen(),
 
       // Go back to stow position
-      new SetArmExtension(0.0),
-      new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE),
-      new SetWaistPosition(0)
+      Commands.parallel(
+        new SetArmExtension(0.0).andThen(new SetWaistPosition(0)),
+        new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE))
+      )
     );
   }
 }
