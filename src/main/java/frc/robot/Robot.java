@@ -10,10 +10,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.auto.CenterStartRoutine;
-import frc.robot.commands.auto.ScorePreloadedPiece;
-import frc.robot.commands.auto.PickupPieceFromGround;
-import frc.robot.commands.auto.ZeroAll;
+import frc.robot.commands.auto.PickupAndScore;
 import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.subsystems.Lights;
 import io.github.oblarg.oblog.Logger;
@@ -26,10 +25,34 @@ import io.github.oblarg.oblog.Logger;
  * project, you must also update the build.gradle file in the project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  static Command autonomousCommand;
-  public static SendableChooser<Command> m_autoChooser;
+
+  private RobotSetupPosition m_position;
+  private static SendableChooser<RobotSetupPosition> m_positionChooser;
+
+  private Command m_autoCommand;
+
+  private Drivetrain m_drivetrain = Drivetrain.getInstance();
+
+  public enum RobotSetupPosition {
+    CENTER,
+    TOP,
+    BOTTOM,
+    NONE
+  }
+
+  public Command createAuto(RobotSetupPosition position) {
+    switch (position) {
+      case CENTER:
+        return new CenterStartRoutine();
+      case TOP:
+        return new PickupAndScore();
+      case BOTTOM:
+        return new PickupAndScore();
+      default:
+        return new SetLightsColor(Lights.Color.YELLOW); // TODO: Default mobility auto?
+    }
+  }
 
   /**
    * This function is run when the robot is first started up
@@ -41,8 +64,8 @@ public class Robot extends TimedRobot {
     // and put the autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    // Initialize Autonomous Selector Choices
-    autoSelectInit();
+    // Initialize Position Selector Choices
+    positionSelectInit();
   }
 
   /**
@@ -56,7 +79,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // Run the Scheduler. 
+    // Run the Scheduler.
     // Poll buttons, add newly-scheduled commands, run already-scheduled
     // commands, remove finished or interrupted commands,
     // and run subsystem periodic() methods.
@@ -72,7 +95,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    //Only allow pushing the robot around if we aren't on a real field
+    // Only allow pushing the robot around if we aren't on a real field
     if (DriverStation.isFMSAttached()) {
       m_robotContainer.setCoastEnabled(false);
     } else {
@@ -82,19 +105,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    SmartDashboard.putData("Autonomous Mode Chooser", m_autoChooser); 
-    m_autonomousCommand = (Command) m_autoChooser.getSelected();
+    SmartDashboard.putData("Position Chooser", m_positionChooser);
+    m_position = (RobotSetupPosition) m_positionChooser.getSelected();
   }
 
-  public void autoSelectInit() {
-    m_autoChooser = new SendableChooser<Command>();
-    m_autoChooser.setDefaultOption("Top/Bottom Score", new ScorePreloadedPiece());
-    m_autoChooser.addOption("Top/Bottom Score", new ScorePreloadedPiece());
-    m_autoChooser.addOption("Center Start", new CenterStartRoutine());
-    m_autoChooser.addOption("Zero All", new ZeroAll());
-    m_autoChooser.addOption("Do nothing", new SetLightsColor(Lights.Color.YELLOW));
-    m_autoChooser.addOption("DEBUG: Pickup From Ground", new PickupPieceFromGround());
-
+  public void positionSelectInit() {
+    m_positionChooser = new SendableChooser<RobotSetupPosition>();
+    m_positionChooser.setDefaultOption("None", RobotSetupPosition.NONE);
+    m_positionChooser.addOption("Top", RobotSetupPosition.TOP);
+    m_positionChooser.addOption("Bottom", RobotSetupPosition.BOTTOM);
+    m_positionChooser.addOption("Center", RobotSetupPosition.CENTER);
   }
 
   /**
@@ -105,9 +125,13 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_robotContainer.setCoastEnabled(false);
 
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+    // Schedule the autonomous command
+    if (m_position != null) { // TODO: Schedule mobility auto?
+      Constants.ScoringInfo.initScoringInfo(m_position);
+      m_drivetrain.setOdometryPose2d(Constants.ScoringInfo.initialPose2d);
+
+      m_autoCommand = createAuto(m_position);
+      m_autoCommand.schedule();
     }
   }
 
@@ -123,15 +147,14 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     m_robotContainer.setCoastEnabled(false);
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+    if (m_autoCommand != null) {
+      m_autoCommand.cancel();
     }
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
   }
 
   @Override

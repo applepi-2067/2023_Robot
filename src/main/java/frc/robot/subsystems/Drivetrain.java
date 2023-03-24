@@ -49,7 +49,8 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
-  public static final double GEAR_RATIO = 8.0;
+  public static final double DISTANCE_FUDGE_FACTOR = 1 / 1.1289;
+  public static final double GEAR_RATIO = 8.0 * DISTANCE_FUDGE_FACTOR;
   public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4.0);
   public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI; // meters
   public static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
@@ -119,7 +120,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     // Initialize pose estimator.
     m_odometry = new DifferentialDrivePoseEstimator(
       new DifferentialDriveKinematics(WHEEL_BASE_METERS), new Rotation2d(getYawRadians()),
-      getRightMotorDistanceMeters(), getLeftMotorDistanceMeters(), Constants.Drivetrain.INITIAL_ROBOT_POSE2D,
+      getLeftMotorDistanceMeters(), getRightMotorDistanceMeters(), Constants.Drivetrain.INITIAL_ROBOT_POSE2D,
       new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.0408, 1.2711, 0.1)
     );
 
@@ -304,6 +305,12 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
   public Pose2d getLatestRobotPose2d() {
     return m_latestRobotPose2d;
+  }
+
+  public void setOdometryPose2d(Pose2d newOdometryPose2d) {
+    m_odometry.resetPosition(
+      new Rotation2d(getYawRadians()), getLeftMotorDistanceMeters(), getRightMotorDistanceMeters(), newOdometryPose2d
+    );
   }
 
   private double metersToTicks(double setpoint) {

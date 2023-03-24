@@ -26,29 +26,14 @@ public class PickupPieceFromGround extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ClawClose(),
-      Commands.parallel(
-        new ZeroShoulderPosition(),
-        new ZeroArmPosition().andThen(new SetArmExtension(0.0))
-      ),
+      new ClawOpen(),
       new SetShoulderPosition(-55.0),
       Commands.parallel(
         new SetArmExtension(0.30),
         new ClawSensorGrab(),
-        new DriveAtVelocity(0.5)
+        new DriveAtVelocity(-0.5)
       ),
-      new DriveAtVelocity(0.0),
-      // new ClawOpen(),
-      // new WaitCommand(0.2),
-      // new ClawSensorGrab(),
-      Commands.parallel(
-        new SetArmExtension(0.0),
-        new SetShoulderPosition(-50.0)
-      ),
-      new WaitCommand(1),
-      new ClawOpen(),
-      new DriveToPosition(-1)
-
+      new DriveAtVelocity(0.0)
     );
   }
 }

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.arm.ZeroArmPosition;
+import frc.robot.commands.shoulder.InitShoulderZero;
 import frc.robot.commands.shoulder.ZeroShoulderPosition;
 import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.commands.waist.ZeroWaistPosition;
@@ -13,7 +14,7 @@ public class ZeroAll extends SequentialCommandGroup {
     public ZeroAll() {
         addCommands(
             Commands.parallel(
-                new ZeroShoulderPosition(),
+                new InitShoulderZero().andThen(new ZeroShoulderPosition()),
                 new ZeroArmPosition().andThen(new SetArmExtension(0.0))
             ),
             Commands.parallel(
