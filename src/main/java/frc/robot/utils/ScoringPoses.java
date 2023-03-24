@@ -9,6 +9,8 @@ public class ScoringPoses {
     private Pose2d m_robotPickupPiecePose2d;
     private Pose2d m_topCubeScoreRobotPose2d;
     private Pose2d m_topCubeScorePose2d;
+
+    private double m_robotPickupPieceAbsoluteAngleDegrees;
     
     public ScoringPoses(boolean isBlue, boolean isTop) {
       int yCoeff = getYCoeff(isBlue, isTop);
@@ -17,6 +19,8 @@ public class ScoringPoses {
       m_robotPickupPiecePose2d = calcRobotPickupPiecePose2d(yCoeff, aprilTagID);
       m_topCubeScoreRobotPose2d = calcTopCubeScoreRobotPose2d(yCoeff, aprilTagID);
       m_topCubeScorePose2d = calcTopCubeScorePose2d(aprilTagID);
+
+      m_robotPickupPieceAbsoluteAngleDegrees = calcRobotPickupPieceAbsoluteAngleDegrees(isBlue);
     }
     
     private int getYCoeff(boolean isBlue, boolean isTop) {
@@ -63,6 +67,15 @@ public class ScoringPoses {
       return topCubeScorePose2d;
     }
 
+    private double calcRobotPickupPieceAbsoluteAngleDegrees(boolean isBlue) {
+      if (isBlue) {
+        return 180.0;
+      }
+      else {
+        return 0.0;
+      }
+    }
+
     public Pose2d getRobotPickupPiecePose2d() {
       return m_robotPickupPiecePose2d;
     }
@@ -73,5 +86,9 @@ public class ScoringPoses {
 
     public Pose2d getTopCubeScorePose2d() {
       return m_topCubeScorePose2d;
+    }
+
+    public double getRobotPickupPieceAbsoluteAngleDegrees() {
+      return m_robotPickupPieceAbsoluteAngleDegrees;
     }
   }
