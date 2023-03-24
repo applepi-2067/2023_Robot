@@ -13,7 +13,9 @@ import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.arm.ZeroArmPosition;
 import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
+import frc.robot.commands.claw.ClawSensorGrab;
 import frc.robot.commands.claw.SetClawBeltSpeed;
+import frc.robot.commands.drivetrain.DriveAtVelocity;
 import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
 import frc.robot.commands.fielddriving.RotateToAbsoluteAngle;
@@ -58,14 +60,25 @@ public class PickupAndScore extends SequentialCommandGroup {
         new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-55.0))
       ),
 
-      // Square up to cube.
       new RotateToAbsoluteAngle(scoringPoses.getRobotPickupPieceAbsoluteAngleDegrees()),
 
       // Pickup with 3 second timeout
       Commands.race(
-        new WaitCommand(3),  
-        new PickupPieceFromGround().andThen(new SetLightsColor(Lights.Color.WHITE))
+        new WaitCommand(3),
+        Commands.sequence(
+          new ClawOpen(),
+          new SetShoulderPosition(-55.0),
+          Commands.parallel(
+            new SetArmExtension(0.30),
+            new ClawSensorGrab(),
+            // new RotateToAbsoluteAngle(scoringPoses.getRobotPickupPieceAbsoluteAngleDegrees()).andThen(new DriveAtVelocity(-0.5))
+            new DriveAtVelocity(-0.5)
+          ),
+          new DriveAtVelocity(0.0)
+        )
       ),
+
+      new ClawClose(),
 
       // Stow and drive
       Commands.deadline(

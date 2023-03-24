@@ -57,7 +57,7 @@ public class RotateToFaceAbsolutePosition extends CommandBase {
   // Returns true when we are within an acceptable distance of our target position
   @Override
   public boolean isFinished() {
-    double angleError = getAngleError().getDegrees();
+    double angleError = getAngleError();
     boolean withinPositionTolerance = Math.abs(angleError) < ANGLE_TOLERANCE;
     boolean withinVelocityTolerance = Math.abs(m_pidController.getVelocityError()) < ANGULAR_VELOCITY_TOLERANCE;
     return withinPositionTolerance && withinVelocityTolerance;
@@ -67,9 +67,9 @@ public class RotateToFaceAbsolutePosition extends CommandBase {
    * Return the angle error
    */
   @Log
-  private Rotation2d getAngleError() {
+  private double getAngleError() {
     Rotation2d angleError = getRobotLatestRotation2d().minus(m_setpointRotationOffset);
-    return angleError;
+    return angleError.getDegrees();
   }
 
   /**
@@ -82,7 +82,7 @@ public class RotateToFaceAbsolutePosition extends CommandBase {
 
   @Log
   private double getRotationPower() {
-    double rotationPower = m_pidController.calculate(getAngleError().getDegrees());
+    double rotationPower = m_pidController.calculate(getAngleError());
 
     // Set "floor" of power output to start at m_minimumPower, the minimum power % to move the robot at all
     if (rotationPower > 0) {

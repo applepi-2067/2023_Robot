@@ -16,9 +16,9 @@ public class RotateToAbsoluteAngle extends CommandBase implements Loggable {
     private Drivetrain m_drivetrain;
     private Rotation2d m_setpointAngleOffset;
 
-    private final double ANGLE_TOLERANCE = 1; // deg
+    private final double ANGLE_TOLERANCE = 2; // deg
     private final double ANGULAR_VELOCITY_TOLERANCE = 5;  // deg/s
-    private final double MINIMUM_POWER = 0.10; // Minimum power to turn the robot at all
+    private final double MINIMUM_POWER = 0.12; // Minimum power to turn the robot at all
 
     private PIDController m_pidController = new PIDController(0.005, 0.0, 0.0);
 

@@ -69,10 +69,10 @@ public class ScoringPoses {
 
     private double calcRobotPickupPieceAbsoluteAngleDegrees(boolean isBlue) {
       if (isBlue) {
-        return 0.0;
+        return 180.0;
       }
       else {
-        return 180.0;
+        return 0.0;
       }
     }
 
