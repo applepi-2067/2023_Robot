@@ -54,7 +54,7 @@ public class PickupAndScore extends SequentialCommandGroup {
         new DriveToAbsolutePosition(scoringPoses.getRobotPickupPiecePose2d()),
         new ZeroWaistPosition().andThen(new SetWaistPosition(180.0)),
         new SetArmExtension(0.0),
-        new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE))
+        new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-55.0))
       ),
 
       // Pickup with 3 second timeout
@@ -68,7 +68,7 @@ public class PickupAndScore extends SequentialCommandGroup {
         new DriveToAbsolutePosition(scoringPoses.getTopCubeScoreRobotPose2d()),
         new RotateWaistToFaceAbsolutePosition(scoringPoses.getTopCubeScorePose2d()),
         new SetArmExtension(0.0),
-        new SetShoulderPosition(-50.0)
+        new SetShoulderPosition(10.0)
       ),
 
 

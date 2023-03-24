@@ -23,6 +23,7 @@ public class DriveToAbsolutePosition extends CommandBase {
   private PIDController m_rotationController;
 
   private final double MAX_VELOCITY = 8.0;  // m/s
+  private final double MAX_DIFFERENTIAL_VELOCITY = 0.5;  // Turning wheel differential, m/s
 
   public DriveToAbsolutePosition(Pose2d absoluteDestinationPose, double velocityScaling) {
     addRequirements(m_drivetrain);
@@ -65,16 +66,21 @@ public class DriveToAbsolutePosition extends CommandBase {
     if (driveBackwards) {
       distanceControlOutput *= -1.0;
     }
+    // Scale forward/backwards speed by the cosine of the heading error
+    // This is so we turn toward the goal before we speed up
+    distanceControlOutput *= Math.pow(Math.cos(headingErrorRadians), 2);
+     
     double leftTrackSpeedDistance = distanceControlOutput;
     double rightTrackSpeedDistance = distanceControlOutput;
 
     // Calculate wheel velocities to turn to heading
     double rotationControlOutput = m_rotationController.calculate(headingErrorRadians);
+    rotationControlOutput = clampVelocity(rotationControlOutput, MAX_DIFFERENTIAL_VELOCITY);
     double leftTrackSpeedRotation = -rotationControlOutput;
     double rightTrackSpeedRotation = rotationControlOutput;
 
-    double leftTrackSpeed = clampVelocity(leftTrackSpeedDistance + leftTrackSpeedRotation);
-    double rightTrackSpeed = clampVelocity(rightTrackSpeedDistance + rightTrackSpeedRotation);
+    double leftTrackSpeed = clampVelocity(leftTrackSpeedDistance + leftTrackSpeedRotation, MAX_VELOCITY);
+    double rightTrackSpeed = clampVelocity(rightTrackSpeedDistance + rightTrackSpeedRotation, MAX_VELOCITY);
 
     m_drivetrain.setSetPointVelocity(leftTrackSpeed, rightTrackSpeed);
   }
@@ -116,7 +122,7 @@ public class DriveToAbsolutePosition extends CommandBase {
     return headingError;
   }
 
-  private double clampVelocity(double input) {
-    return MathUtil.clamp(input, -MAX_VELOCITY, MAX_VELOCITY);
+  private double clampVelocity(double input, double limit) {
+    return MathUtil.clamp(input, -limit, limit);
   }
 }
