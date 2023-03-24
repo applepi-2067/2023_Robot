@@ -51,7 +51,7 @@ public class PickupAndScore extends SequentialCommandGroup {
 
       // Drive to in front of piece, rotate waist to 180 deg
       Commands.parallel(
-        new DriveToAbsolutePosition(scoringPoses.getRobotPickupPiecePose2d(), true),
+        new DriveToAbsolutePosition(scoringPoses.getRobotPickupPiecePose2d()),
         new ZeroWaistPosition().andThen(new SetWaistPosition(180.0)),
         new SetArmExtension(0.0),
         new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE))
@@ -65,7 +65,7 @@ public class PickupAndScore extends SequentialCommandGroup {
 
       // Stow and drive
       Commands.deadline(
-        new DriveToAbsolutePosition(scoringPoses.getTopCubeScoreRobotPose2d(), false),
+        new DriveToAbsolutePosition(scoringPoses.getTopCubeScoreRobotPose2d()),
         new RotateWaistToFaceAbsolutePosition(scoringPoses.getTopCubeScorePose2d()),
         new SetArmExtension(0.0),
         new SetShoulderPosition(-50.0)
