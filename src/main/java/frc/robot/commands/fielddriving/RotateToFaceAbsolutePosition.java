@@ -3,16 +3,11 @@ package frc.robot.commands.fielddriving;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import java.lang.Math;
 
-import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class RotateToFaceAbsolutePosition extends CommandBase {
@@ -22,19 +17,9 @@ public class RotateToFaceAbsolutePosition extends CommandBase {
 
   private final double ANGLE_TOLERANCE = 5; // deg
   private final double ANGULAR_VELOCITY_TOLERANCE = 5;  // deg/s
-  private final double MINIMUM_POWER = 0.20; // Minimum power to turn the robot at all
+  private final double MINIMUM_POWER = 0.10; // Minimum power to turn the robot at all
 
-  // Velocity and acceleration constrained PID control. maxVelocity and maxAcceleration are deg/s and deg/s^2, respectively
-  // Ex. a maxAcceleration of 10 deg/s^2 would reach a 40 deg/s angular velocity in 4 seconds
-  // Reference values for maximum velocity on 2022 robot:
-  // 50 - pokey, motor power = 33%
-  // 100 - decent, motor power = 42%
-  // 150 - fast, motor power = 50%
-  // 200 - competitive, motor power = 61%
-  // >250 - scary
-
-  private TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(150, 50);
-  private ProfiledPIDController m_pidController = new ProfiledPIDController(0.007, 0.0, 0.0, constraints);
+  private PIDController m_pidController = new PIDController(0.005, 0.0, 0.0);
 
   public RotateToFaceAbsolutePosition(Pose2d absolutePose2d) {
     m_absolutePose2d = absolutePose2d;
@@ -54,8 +39,7 @@ public class RotateToFaceAbsolutePosition extends CommandBase {
     double yDiff = m_absolutePose2d.getY() - latestRobotPose2d.getY();
     m_setpointRotationOffset = Rotation2d.fromRadians(Math.atan2(yDiff, xDiff));
 
-    m_pidController.reset(0);
-    m_pidController.setGoal(0);
+    m_pidController.setSetpoint(0.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -84,7 +68,7 @@ public class RotateToFaceAbsolutePosition extends CommandBase {
    */
   @Log
   private Rotation2d getAngleError() {
-    Rotation2d angleError = m_setpointRotationOffset.minus(getRobotLatestRotation2d());
+    Rotation2d angleError = getRobotLatestRotation2d().minus(m_setpointRotationOffset);
     return angleError;
   }
 
@@ -108,8 +92,8 @@ public class RotateToFaceAbsolutePosition extends CommandBase {
       rotationPower -= MINIMUM_POWER;
     }
 
-    // Limit power to 65% no matter what controller asks for
-    rotationPower = MathUtil.clamp(rotationPower, -0.65, 0.65);
+    // Limit power to 40% no matter what controller asks for
+    rotationPower = MathUtil.clamp(rotationPower, -0.4, 0.4);
     return rotationPower; 
   }
 }
