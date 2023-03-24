@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,7 +17,7 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class RotateToFaceAbsolutePosition extends CommandBase {
   private Drivetrain m_drivetrain;
-  private double m_absoluteAngleSetpointDegrees;
+  private Rotation2d m_setpointRotationOffset;
   private Pose2d m_absolutePose2d;
 
   private final double ANGLE_TOLERANCE = 5; // deg
@@ -51,10 +52,10 @@ public class RotateToFaceAbsolutePosition extends CommandBase {
     // Calculate angle between poses.
     double xDiff = m_absolutePose2d.getX() - latestRobotPose2d.getX();
     double yDiff = m_absolutePose2d.getY() - latestRobotPose2d.getY();
-    m_absoluteAngleSetpointDegrees = Units.radiansToDegrees(Math.atan2(yDiff, xDiff));
+    m_setpointRotationOffset = Rotation2d.fromRadians(Math.atan2(yDiff, xDiff));
 
-    m_pidController.setGoal(m_absoluteAngleSetpointDegrees);
-    m_pidController.reset(getCurrentAngleDegrees());
+    m_pidController.reset(0);
+    m_pidController.setGoal(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -72,7 +73,7 @@ public class RotateToFaceAbsolutePosition extends CommandBase {
   // Returns true when we are within an acceptable distance of our target position
   @Override
   public boolean isFinished() {
-    double angleError = getAngleError();
+    double angleError = getAngleError().getDegrees();
     boolean withinPositionTolerance = Math.abs(angleError) < ANGLE_TOLERANCE;
     boolean withinVelocityTolerance = Math.abs(m_pidController.getVelocityError()) < ANGULAR_VELOCITY_TOLERANCE;
     return withinPositionTolerance && withinVelocityTolerance;
@@ -82,30 +83,22 @@ public class RotateToFaceAbsolutePosition extends CommandBase {
    * Return the angle error
    */
   @Log
-  private double getAngleError() {
-    return m_absoluteAngleSetpointDegrees - getCurrentAngleDegrees();
+  private Rotation2d getAngleError() {
+    Rotation2d angleError = m_setpointRotationOffset.minus(getRobotLatestRotation2d());
+    return angleError;
   }
 
   /**
-   * Return the current absolute angle [-180, 180]
+   * Return the robot's latest rotation
    */
-  private double getCurrentAngleDegrees() {
-    double currentAngle = m_drivetrain.getLatestRobotPose2d().getRotation().getDegrees();
-    return shiftAngleHalfCircle(currentAngle);
-  }
-
-  private double shiftAngleHalfCircle(double angleDegrees) {
-    if (angleDegrees <= 180) {
-      return angleDegrees;
-    } 
-    else {
-      return angleDegrees - 360;
-    }
+  private Rotation2d getRobotLatestRotation2d() {
+    Rotation2d robotLatestRotation2d = m_drivetrain.getLatestRobotPose2d().getRotation();
+    return robotLatestRotation2d;
   }
 
   @Log
   private double getRotationPower() {
-    double rotationPower = m_pidController.calculate(getCurrentAngleDegrees());
+    double rotationPower = m_pidController.calculate(getAngleError().getDegrees());
 
     // Set "floor" of power output to start at m_minimumPower, the minimum power % to move the robot at all
     if (rotationPower > 0) {
