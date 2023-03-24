@@ -51,7 +51,6 @@ public class PickupAndScore extends SequentialCommandGroup {
 
       // Drive to in front of piece, rotate waist to 180 deg
       Commands.parallel(
-        new DriveToAbsolutePosition(topFieldPiecePositionBlue),
         new DriveToAbsolutePosition(scoringPoses.getRobotPickupPiecePose2d()),
         new ZeroWaistPosition().andThen(new SetWaistPosition(180.0)),
         new SetArmExtension(0.0),
