@@ -6,6 +6,8 @@ import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -16,7 +18,8 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class RotateToAbsoluteAngle extends CommandBase implements Loggable {
     private Drivetrain m_drivetrain;
-    private double m_absoluteAngleSetpointDegrees;
+    private Rotation2d m_setpointAngleOffset;
+
     private final double ANGLE_TOLERANCE = 1; // deg
     private final double ANGULAR_VELOCITY_TOLERANCE = 5;  // deg/s
     private final double MINIMUM_POWER = 0.20; // Minimum power to turn the robot at all
@@ -35,18 +38,17 @@ public class RotateToAbsoluteAngle extends CommandBase implements Loggable {
 
 
     public RotateToAbsoluteAngle(double degreesAbsolute) { 
-        Drivetrain drivetrain = Drivetrain.getInstance(); 
-        addRequirements(drivetrain);
-        m_drivetrain = drivetrain;
-        m_absoluteAngleSetpointDegrees = shiftAngleHalfCircle(degreesAbsolute);
+        m_drivetrain = Drivetrain.getInstance(); 
+        addRequirements(m_drivetrain);
+
+        m_setpointAngleOffset = Rotation2d.fromDegrees(degreesAbsolute);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
         m_pidController.reset(0);
-        m_pidController.setGoal(m_absoluteAngleSetpointDegrees);
-        m_pidController.reset(getCurrentAngleDegrees());
+        m_pidController.setGoal(0); // Set goal to 0 (setpoint = 0).
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -64,8 +66,8 @@ public class RotateToAbsoluteAngle extends CommandBase implements Loggable {
     // Returns true when we are within an acceptable distance of our target position
     @Override
     public boolean isFinished() {
-        double angleError = getAngleError();
-        boolean withinPositionTolerance = Math.abs(angleError) < ANGLE_TOLERANCE;
+        Rotation2d angleError = getAngleError();
+        boolean withinPositionTolerance = Math.abs(angleError.getDegrees()) < ANGLE_TOLERANCE;
         boolean withinVelocityTolerance = Math.abs(m_pidController.getVelocityError()) < ANGULAR_VELOCITY_TOLERANCE;
         return withinPositionTolerance && withinVelocityTolerance;
     }
@@ -74,29 +76,22 @@ public class RotateToAbsoluteAngle extends CommandBase implements Loggable {
      * Return the angle error
      */
     @Log
-    private double getAngleError() {
-        return m_absoluteAngleSetpointDegrees - getCurrentAngleDegrees();
+    private Rotation2d getAngleError() {
+        Rotation2d angleError = m_setpointAngleOffset.minus(getRobotLatestRotation2d());
+        return angleError;
     }
 
     /**
-     * Return the current absolute angle [-180, 180]
+     * Return the robot's latest rotation
      */
-    private double getCurrentAngleDegrees() {
-        double currentAngle = m_drivetrain.getLatestRobotPose2d().getRotation().getDegrees();
-        return shiftAngleHalfCircle(currentAngle);
-    }
-
-    private double shiftAngleHalfCircle(double angleDegrees) {
-        if (angleDegrees <= 180) {
-            return angleDegrees;
-        } else {
-            return angleDegrees - 360;
-        }
+    private Rotation2d getRobotLatestRotation2d() {
+        Rotation2d robotLatestRotation2d = m_drivetrain.getLatestRobotPose2d().getRotation();
+        return robotLatestRotation2d;
     }
 
     @Log
     private double getRotationPower() {
-        double rotationPower = m_pidController.calculate(getCurrentAngleDegrees());
+        double rotationPower = m_pidController.calculate(getAngleError().getDegrees());
 
         // Set "floor" of power output to start at m_minimumPower, the minimum power % to move the robot at all
         if (rotationPower > 0) {
