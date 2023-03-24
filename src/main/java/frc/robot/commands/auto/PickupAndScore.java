@@ -15,6 +15,7 @@ import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
 import frc.robot.commands.claw.ClawSensorGrab;
 import frc.robot.commands.claw.SetClawBeltSpeed;
+import frc.robot.commands.claw.WaitForGamePieceNotInClaw;
 import frc.robot.commands.drivetrain.DriveAtVelocity;
 import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
@@ -71,7 +72,6 @@ public class PickupAndScore extends SequentialCommandGroup {
           Commands.parallel(
             new SetArmExtension(0.30),
             new ClawSensorGrab(),
-            // new RotateToAbsoluteAngle(scoringPoses.getRobotPickupPieceAbsoluteAngleDegrees()).andThen(new DriveAtVelocity(-0.5))
             new DriveAtVelocity(-0.5)
           ),
           new DriveAtVelocity(0.0)
@@ -88,12 +88,12 @@ public class PickupAndScore extends SequentialCommandGroup {
         new SetShoulderPosition(10.0)
       ),
 
-
       // Score
       new SetShoulderPosition(10),
       new SetArmExtension(0.8),
       new SetClawBeltSpeed(() -> {return 0.0;}),
       new ClawOpen(),
+      new WaitForGamePieceNotInClaw(),
 
       // Go back to stow position
       Commands.parallel(
