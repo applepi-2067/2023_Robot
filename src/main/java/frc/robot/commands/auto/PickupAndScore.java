@@ -16,6 +16,7 @@ import frc.robot.commands.claw.ClawOpen;
 import frc.robot.commands.claw.SetClawBeltSpeed;
 import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
+import frc.robot.commands.fielddriving.RotateToAbsoluteAngle;
 import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.commands.shoulder.InitShoulderZero;
 import frc.robot.commands.shoulder.SetShoulderPosition;
@@ -56,6 +57,9 @@ public class PickupAndScore extends SequentialCommandGroup {
         new SetArmExtension(0.0),
         new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE))
       ),
+
+      // Square up to cube.
+      new RotateToAbsoluteAngle(scoringPoses.getRobotPickupPieceAbsoluteAngleDegrees()),
 
       // Pickup with 3 second timeout
       Commands.race(
