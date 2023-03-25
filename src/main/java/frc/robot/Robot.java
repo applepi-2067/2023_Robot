@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.auto.CenterStartRoutine;
 import frc.robot.commands.auto.PickupAndScore;
+import frc.robot.commands.auto.ScorePreloadedPiece;
+import frc.robot.commands.auto.ZeroAll;
 import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.subsystems.Lights;
 import io.github.oblarg.oblog.Logger;
@@ -38,6 +40,8 @@ public class Robot extends TimedRobot {
     CENTER,
     TOP,
     BOTTOM,
+    ScorePreloadedPiece,
+    ZeroAll,
     NONE
   }
 
@@ -49,6 +53,10 @@ public class Robot extends TimedRobot {
         return new PickupAndScore();
       case BOTTOM:
         return new PickupAndScore();
+      case ScorePreloadedPiece:
+        return new ScorePreloadedPiece();
+      case ZeroAll:
+        return new ZeroAll();
       default:
         return new SetLightsColor(Lights.Color.YELLOW); // TODO: Default mobility auto?
     }
@@ -115,6 +123,8 @@ public class Robot extends TimedRobot {
     m_positionChooser.addOption("Top", RobotSetupPosition.TOP);
     m_positionChooser.addOption("Bottom", RobotSetupPosition.BOTTOM);
     m_positionChooser.addOption("Center", RobotSetupPosition.CENTER);
+    m_positionChooser.addOption("ScorePreLoadBackup", RobotSetupPosition.ScorePreloadedPiece);
+    m_positionChooser.addOption("ZeroAll", RobotSetupPosition.ZeroAll);
   }
 
   /**
