@@ -144,7 +144,7 @@ public class RobotContainer implements Loggable {
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
 
     // Zero everything
-    m_operatorController.back().onTrue(new PanicZeroWaist());
+    m_operatorController.back().onTrue(new PanicZeroEverything());
   }
 
   /**
