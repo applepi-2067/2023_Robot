@@ -93,7 +93,10 @@ public class PickupAndScore extends SequentialCommandGroup {
       new SetArmExtension(0.8),
       new SetClawBeltSpeed(() -> {return 0.0;}),
       new ClawOpen(),
-      new WaitForGamePieceNotInClaw(),
+      Commands.parallel(
+        new WaitForGamePieceNotInClaw(),
+        new WaitCommand(0.5)
+      ),
 
       // Go back to stow position
       Commands.parallel(
