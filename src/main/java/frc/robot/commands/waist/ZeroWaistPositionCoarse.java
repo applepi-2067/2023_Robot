@@ -38,12 +38,12 @@ public class ZeroWaistPositionCoarse extends CommandBase {
   public void execute() {
     // Rapidly seek CCW 180 deg for the magnet
     if (seekCCW && m_waist.getPosition() < 180) {
-      m_waist.setSpeed(1);
+      m_waist.setSpeed(0.2);
     } else if (seekCCW && m_waist.getPosition() >= 180) {
       seekCCW = false;
       seekCW = true;
     } else if (seekCW && m_waist.getPosition() > -180) {
-      m_waist.setSpeed(-1);
+      m_waist.setSpeed(-0.2);
     } else if (seekCW && m_waist.getPosition() <= -180) {
       seekCCW = false;
       seekCW = false;

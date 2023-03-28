@@ -33,7 +33,7 @@ public class Arm extends SubsystemBase implements Loggable {
   private final RelativeEncoder m_encoder;
   private final DigitalInput m_endOfTravelSensor;
 
-  private static final int CURRENT_LIMIT = 20; //Amps
+  private static final int CURRENT_LIMIT = 30; //Amps
   private static final double GEAR_RATIO = (84 / 29) * (76 / 21);
   private static final double OUTPUT_SPROCKET_PITCH_DIAMETER_METERS = 0.020574;
   private static final double RIGGING_EXTENSION_RATIO = 2.0;
