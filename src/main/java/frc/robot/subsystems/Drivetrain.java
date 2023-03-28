@@ -45,8 +45,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   private final SlewRateLimiter m_forwardBackLimitered = new SlewRateLimiter(Constants.Drivetrain.MOTOR_ACCELERATION);
   private final SlewRateLimiter m_turnLimiter = new SlewRateLimiter(Constants.Drivetrain.MOTOR_TURN_ACCELERATION);
 
-  private static PigeonIMU m_pidgey;
-  private static TalonSRX m_pidgeyController;
+  private static PigeonIMU m_pidgey = new PigeonIMU(Constants.CANDeviceIDs.PIGEON_IMU_ID);
 
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
@@ -72,19 +71,10 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     return instance;
   }
 
-  private Drivetrain() {  // Constructor is private since this class is singleton
-    // Set values to factory default.
-    if (RobotContainer.isPracticeBot()) {
-      m_pidgey = new PigeonIMU(Constants.CANDeviceIDs.PIGEON_IMU_ID);
-    }
-    else {
-      //This is for the 2022 robot testing
-      m_pidgeyController = new TalonSRX(11);
-      m_pidgey = new PigeonIMU(m_pidgeyController);
-    }
-
+  private Drivetrain() {  // Constructor is private since this class is singleton    
     m_drivetrain.setSafetyEnabled(false);
-
+    
+    // Set values to factory default.
     m_leftMotor.configFactoryDefault();
     m_rightMotor.configFactoryDefault();
     m_leftMotorFollower.configFactoryDefault();
@@ -199,16 +189,19 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
   /**
    * 
-   * @param setPoint distance in meters (fwd positive)
+   * @param distanceMeters distance in meters (fwd positive)
    */
-  public void setSetPointDistance(double setPoint) {
+  public void setSetPointDistance(double distanceMeters) {
     m_leftMotor.selectProfileSlot(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPIDLoopIdx);
     m_rightMotor.selectProfileSlot(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPIDLoopIdx);
+    
+    double currentLeftTicks = m_leftMotor.getSelectedSensorPosition();
+    double currentRightTicks = m_rightMotor.getSelectedSensorPosition();
 
-    double setPointTicks = metersToTicks(setPoint);
-    // Flipped the signs to mirror robot driving patterns
-    m_leftMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
-    m_rightMotor.set(TalonFXControlMode.MotionMagic, setPointTicks);
+    double distanceToTravelTicks = metersToTicks(distanceMeters);
+
+    m_leftMotor.set(TalonFXControlMode.MotionMagic, currentLeftTicks + distanceToTravelTicks);
+    m_rightMotor.set(TalonFXControlMode.MotionMagic, currentRightTicks + distanceToTravelTicks);
   }
 
   /**
@@ -234,6 +227,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   /**
    * @return right motor distance in meters.
    */
+  @Log
   public double getRightMotorDistanceMeters() {
     return ticksToMeters(m_rightMotor.getSelectedSensorPosition());
   }
@@ -241,10 +235,12 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   /**
    * @return left motor distance in meters.
    */
+  @Log
   public double getLeftMotorDistanceMeters() {
     return ticksToMeters(m_leftMotor.getSelectedSensorPosition());
   }
 
+  @Log
   public double getAverageMotorDistanceMeters() {
     return (getRightMotorDistanceMeters() + getLeftMotorDistanceMeters()) / 2.0;
   }
@@ -296,13 +292,13 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     double waistAngleRadians = Units.degreesToRadians(m_waist.getPosition());
 
     Pose2d cameraShift = new Pose2d(
-      Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.sin(waistAngleRadians),
-      Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * -Math.cos(waistAngleRadians), 
-      Rotation2d.fromRadians(waistAngleRadians)
+      Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.sin(waistAngleRadians), // +x is forward
+      Constants.Camera.CAMERA_HYPOTENUSE_OFFSET * Math.cos(waistAngleRadians), // +y is right
+      Rotation2d.fromRadians(-waistAngleRadians)
     );
 
     Pose2d correctedVisionPoseEstimate = Transforms.shiftAbsolutePoseByRelativePose(visionPoseEstimated, cameraShift);
-
+    
     m_odometry.addVisionMeasurement(correctedVisionPoseEstimate, timestampSeconds);
   }
 
@@ -368,6 +364,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     _talon.config_kP(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPositionGains.kP, Constants.Drivetrain.kTimeoutMs);
     _talon.config_kI(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPositionGains.kI, Constants.Drivetrain.kTimeoutMs);
     _talon.config_kD(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPositionGains.kD, Constants.Drivetrain.kTimeoutMs);
+    _talon.config_IntegralZone(Constants.Drivetrain.kPositionSlotIdx, Constants.Drivetrain.kPositionGains.kIzone, Constants.Drivetrain.kTimeoutMs);
 
     /* Set acceleration and vcruise velocity - see documentation */
     // Constants stolen from team 2168's 2022 repo

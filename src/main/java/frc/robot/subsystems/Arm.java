@@ -33,12 +33,13 @@ public class Arm extends SubsystemBase implements Loggable {
   private final RelativeEncoder m_encoder;
   private final DigitalInput m_endOfTravelSensor;
 
-  private static final int CURRENT_LIMIT = 10; //Amps
-  private static final double GEAR_RATIO = 5.23 * 3.61 * (18.0 / 34.0);
+  private static final int CURRENT_LIMIT = 20; //Amps
+  private static final double GEAR_RATIO = (84 / 29) * (76 / 21);
   private static final double OUTPUT_SPROCKET_PITCH_DIAMETER_METERS = 0.020574;
   private static final double RIGGING_EXTENSION_RATIO = 2.0;
-  private static final double METERS_PER_REV = Math.PI * OUTPUT_SPROCKET_PITCH_DIAMETER_METERS * RIGGING_EXTENSION_RATIO;
-  private static final boolean INVERT_MOTOR = false;
+  private static final double FUDGE_FACTOR = 0.55; // 0.5m / 0.23m
+  private static final double METERS_PER_REV = Math.PI * OUTPUT_SPROCKET_PITCH_DIAMETER_METERS * RIGGING_EXTENSION_RATIO * FUDGE_FACTOR;
+  private static final boolean INVERT_MOTOR = true;
   public static final double MAX_ARM_EXTENSION_METERS = Units.inchesToMeters(36.25);
 
   private static double max_voltage_open_loop = 6.0;
@@ -138,6 +139,11 @@ public class Arm extends SubsystemBase implements Loggable {
   @Log (name = "Position (M)", rowIndex = 2, columnIndex = 0)
   public double getPosition() {
     return motorRotationsToMeters(m_encoder.getPosition());
+  }
+
+  @Log (name = "Motor Current (A)", rowIndex = 2, columnIndex = 3)
+  private double getMotorOutputCurrent() {
+    return m_motor.getOutputCurrent();
   }
 
 
