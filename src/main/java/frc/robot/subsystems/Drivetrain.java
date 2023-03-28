@@ -44,6 +44,9 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
   private final SlewRateLimiter m_forwardBackLimitered = new SlewRateLimiter(Constants.Drivetrain.MOTOR_ACCELERATION);
   private final SlewRateLimiter m_turnLimiter = new SlewRateLimiter(Constants.Drivetrain.MOTOR_TURN_ACCELERATION);
+  private final SlewRateLimiter m_slowTurnLimiter = new SlewRateLimiter(Constants.Drivetrain.SLOW_MOTOR_TURN_ACCELERATION);
+  private boolean m_slowMode = false;
+  private double m_lastSpeedDiffSetpoint = 0.0;
 
   private static PigeonIMU m_pidgey = new PigeonIMU(Constants.CANDeviceIDs.PIGEON_IMU_ID);
 
@@ -176,16 +179,29 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
     double averageForwardSpeed = (leftMotorVelocity_MetersPerSec + rightMotorVelocity_MetersPerSec) / 2;
     double speedDiff = rightMotorVelocity_MetersPerSec - leftMotorVelocity_MetersPerSec;
+    m_lastSpeedDiffSetpoint = speedDiff;
 
     double averageForwardSpeedFiltered = m_forwardBackLimitered.calculate(averageForwardSpeed);
-
-    double speedDiffFiltered = m_turnLimiter.calculate(speedDiff);
+    
+    double speedDiffFiltered;
+    if (m_slowMode == true) {
+      speedDiffFiltered = m_slowTurnLimiter.calculate(speedDiff);
+    } else {
+      speedDiffFiltered = m_turnLimiter.calculate(speedDiff);
+    }
 
     double filteredLeftMotorVelocity_MetersPerSec = averageForwardSpeedFiltered - speedDiffFiltered;
     double filteredRightMotorVelocity_MetersPerSec = averageForwardSpeedFiltered + speedDiffFiltered;
 
     m_leftMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(filteredLeftMotorVelocity_MetersPerSec));
     m_rightMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(filteredRightMotorVelocity_MetersPerSec));
+  }
+
+  public void setSlowMode(boolean mode) {
+    if (mode) {
+      m_slowTurnLimiter.reset(m_lastSpeedDiffSetpoint);
+    }
+    m_slowMode = mode;
   }
 
   /**

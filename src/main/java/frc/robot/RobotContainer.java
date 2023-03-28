@@ -111,7 +111,9 @@ public class RobotContainer implements Loggable {
     // m_driverController.y().onTrue(new SetLightsColor(Lights.Color.YELLOW));
 
     m_driverController.back().onTrue(new StopDrivetrain());  // E-Stop the drivetrain when back button is pressed
-
+    m_driverController.rightTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setSlowMode(true)));
+    m_driverController.rightTrigger().onFalse(new InstantCommand(() -> m_drivetrain.setSlowMode(false)));
+    
     /** Operator Controls */
     // Lights
     m_operatorController.leftTrigger().onTrue(new SetLightsColor(Lights.Color.YELLOW));
