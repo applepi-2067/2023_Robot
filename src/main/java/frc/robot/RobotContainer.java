@@ -43,6 +43,7 @@ import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.IK.IKCoordinate;
 import frc.robot.commands.IK.RobotRelativeIK;
 import frc.robot.commands.arm.*;
+import frc.robot.commands.waist.ScoringWaistControl;
 
 /**
  * This class is where the bulk of the robot should be declared.
@@ -110,6 +111,8 @@ public class RobotContainer implements Loggable {
     // m_driverController.leftTrigger().onTrue(new SetLightsColor(Lights.Color.YELLOW));
     // m_driverController.y().onTrue(new SetLightsColor(Lights.Color.YELLOW));
 
+    m_driverController.povLeft().onTrue(new ScoringWaistControl(2.0));
+    m_driverController.povRight().onTrue(new ScoringWaistControl(-2.0));
     m_driverController.back().onTrue(new StopDrivetrain());  // E-Stop the drivetrain when back button is pressed
 
     /** Operator Controls */
