@@ -113,6 +113,8 @@ public class RobotContainer implements Loggable {
 
     m_driverController.rightBumper().onTrue(new ScoringWaistControl(2.0));
     m_driverController.leftBumper().onTrue(new ScoringWaistControl(-2.0));
+    m_driverController.povUp().onTrue(new ExtendArmBy(0.1));
+    m_driverController.povDown().onTrue(new ExtendArmBy(-0.1));
     m_driverController.back().onTrue(new StopDrivetrain());  // E-Stop the drivetrain when back button is pressed
 
     /** Operator Controls */
