@@ -57,6 +57,10 @@ public class IntakeV2 extends SubsystemBase implements Loggable {
     m_suckMotor.configSupplyCurrentLimit(talonCurrentLimit);
   }
 
+  public double getFlipCurrent() {
+    return m_flipMotor.getOutputCurrent();
+  }
+
   /**
    * Set motor speed.
    * 
