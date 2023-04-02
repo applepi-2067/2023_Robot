@@ -29,7 +29,8 @@ import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
 import frc.robot.commands.fielddriving.DriveToTargetOffset;
 import frc.robot.commands.estop.*;
-import frc.robot.commands.intake.*;
+import frc.robot.commands.IntakeV2Flip.*;
+import frc.robot.commands.IntakeV2Suck;
 import frc.robot.commands.lights.DisableBlinkLights;
 import frc.robot.commands.lights.DisableLights;
 import frc.robot.commands.lights.SetLightsColor;
@@ -143,7 +144,6 @@ public class RobotContainer implements Loggable {
    
     m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new SetWaistPosition(0)));
     m_operatorController.leftBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new SetWaistPosition(180)));
-    
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
   }
 

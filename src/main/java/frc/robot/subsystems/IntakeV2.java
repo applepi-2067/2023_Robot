@@ -62,12 +62,17 @@ public class IntakeV2 extends SubsystemBase implements Loggable {
    * 
    * @param speed (-1.0 to 1.0)
    */
-  public void setSpeed(double speed) {
+  public void setSuckSpeed(double speed) {
     speed = Util.limit(speed);
     double voltage = Util.limit(speed) * max_voltage_open_loop;
     m_suckMotor.set(TalonFXControlMode.PercentOutput, speed);
+    
   }
-
+  public void setFlipSpeed(double speed) {
+      speed = Util.limit(speed);
+      double voltage = Util.limit(speed) * max_voltage_open_loop;
+      m_flipMotor.set(speed);
+  }
   @Override
   public void periodic() {
 
