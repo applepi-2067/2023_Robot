@@ -13,6 +13,7 @@ import frc.robot.Constants;
 public class IntakeV2Suck extends CommandBase {
   private IntakeV2 intake;
   private Double speed;
+  private boolean suckToggle = false;
 
   public IntakeV2Suck(Double s) {
   
@@ -30,6 +31,14 @@ public class IntakeV2Suck extends CommandBase {
   @Override
   public void execute() {
     intake.setSuckSpeed(speed);
+    if (suckToggle == false) {
+      intake.setSuckSpeed(0.0);
+    } else {
+      if (suckToggle == true) {
+        intake.setSuckSpeed(1.0);
+      }
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
