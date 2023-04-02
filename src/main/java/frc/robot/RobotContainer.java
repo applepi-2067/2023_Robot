@@ -121,7 +121,7 @@ public class RobotContainer implements Loggable {
     m_operatorController.rightTrigger().onTrue(new SetLightsColor(Lights.Color.PURPLE));
 
     // Claw
-    m_operatorController.a().onTrue(new ClawOpen());
+    m_operatorController.a().onTrue(new ClawOpenSpitWaitSuck(0.5));
     m_operatorController.a().onFalse(new SetClawBeltSpeed(() -> {return 1.0;}).andThen(
       new ClawClose()).andThen(
       new WaitCommand(0.4)).andThen(
