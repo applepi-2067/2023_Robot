@@ -98,6 +98,18 @@ public class Waist extends SubsystemBase implements Loggable {
     m_encoder.setPosition(degreesToMotorRotations(encoderPosition));
   }
 
+  public double toggleWaistRotation() {
+    double x = 0.0;
+    if (getPosition() >= -10.0 && getPosition() <= 10) {
+      x = 180.0;
+    } else {
+      if (getPosition() >= 170 && getPosition() <= 190) {
+        x = 0.0;
+      }
+    }
+    return x;
+  }
+
   /**
    * Set waist rotation.
    * @param degrees
