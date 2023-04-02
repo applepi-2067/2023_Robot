@@ -4,6 +4,8 @@
 
 package frc.robot.commands.waist;
 
+import org.apache.commons.io.filefilter.TrueFileFilter;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Waist;
 import frc.robot.Constants;
@@ -11,6 +13,7 @@ import frc.robot.Constants;
 public class ToggleWaistRotation extends CommandBase {
   private Waist m_waist;
   private double targetPositionDegrees = 0.0;
+  private boolean waistToggle;
   /** Creates a new ToggleWaistRotation. */
   public ToggleWaistRotation() {
     m_waist = Waist.getInstance();
@@ -27,14 +30,17 @@ public class ToggleWaistRotation extends CommandBase {
   @Override
   public void execute() {
     
-    if (m_waist.getPosition() >= -10.0 && m_waist.getPosition() <= 10) {
+    if (waistToggle == false) {
       targetPositionDegrees = 180.0;
+      waistToggle = true;
     } else {
-      if (m_waist.getPosition() >= 170 && m_waist.getPosition() <= 190) {
+      if (waistToggle == true) {
         targetPositionDegrees = 0.0;
+        waistToggle = false;
       }
     }
     
+    m_waist.setPosition(targetPositionDegrees);
   }
 
   // Called once the command ends or is interrupted.
