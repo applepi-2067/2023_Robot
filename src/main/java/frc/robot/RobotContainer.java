@@ -129,7 +129,7 @@ public class RobotContainer implements Loggable {
       new DisableBlinkLights()).andThen(
       new DisableLights()));
     m_operatorController.povUp().onTrue(new ClawSensorGrab());
-    m_operatorController.povLeft().onTrue(new ClawGrabCancel());
+
     
     // Arm locations
     m_operatorController.povRight().onTrue(
@@ -148,6 +148,8 @@ public class RobotContainer implements Loggable {
 
     // Zero everything
     m_operatorController.back().onTrue(new PanicZeroEverything());
+
+    m_operatorController.povLeft().onTrue(new PickupOffGround());
   }
 
   /**
