@@ -25,14 +25,14 @@ public class IntakeV2Flip extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if  (!flipToggle) {
+    if  (flipToggle == false) {
       intake.setFlipSpeed(1.0);
     } else {
-      if (flipToggle) {
+      if (flipToggle == true) {
         intake.setFlipSpeed(-1.0);
       }
     }
-    flipToggle = !flipToggle;
+    
   }
 
   // Called once the command ends or is interrupted.
