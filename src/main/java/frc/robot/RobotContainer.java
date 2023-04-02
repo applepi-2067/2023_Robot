@@ -30,7 +30,7 @@ import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
 import frc.robot.commands.fielddriving.DriveToTargetOffset;
 import frc.robot.commands.estop.*;
 import frc.robot.commands.IntakeV2Flip.*;
-import frc.robot.commands.IntakeV2Suck;
+import frc.robot.commands.IntakeV2Suck.*;
 import frc.robot.commands.lights.DisableBlinkLights;
 import frc.robot.commands.lights.DisableLights;
 import frc.robot.commands.lights.SetLightsColor;
@@ -41,9 +41,12 @@ import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.IntakeV2Flip;
+import frc.robot.commands.IntakeV2Suck;
 import frc.robot.commands.IK.IKCoordinate;
 import frc.robot.commands.IK.RobotRelativeIK;
 import frc.robot.commands.arm.*;
+//import frc.robot.commands.waist.ScoringWaistControl;
 
 /**
  * This class is where the bulk of the robot should be declared.
@@ -105,15 +108,14 @@ public class RobotContainer implements Loggable {
    */
   private void configureBindings() {
     /** Driver controls */
-    // Pick up piece from double substation
-    m_driverController.povUp().onTrue(new DoubleSubstationPieceAcquire());
-
     // Light control
     // m_driverController.rightTrigger().onTrue(new SetLightsColor(Lights.Color.PURPLE));
     // m_driverController.x().onTrue(new SetLightsColor(Lights.Color.PURPLE));
     // m_driverController.leftTrigger().onTrue(new SetLightsColor(Lights.Color.YELLOW));
     // m_driverController.y().onTrue(new SetLightsColor(Lights.Color.YELLOW));
 
+    //m_driverController.povRight().onTrue(new ScoringWaistControl(2.0));
+    //m_driverController.povLeft().onTrue(new ScoringWaistControl(-2.0));
     m_driverController.back().onTrue(new StopDrivetrain());  // E-Stop the drivetrain when back button is pressed
 
     /** Operator Controls */
@@ -129,8 +131,8 @@ public class RobotContainer implements Loggable {
       new SetClawBeltSpeed(() -> {return 0.0;})).andThen(
       new DisableBlinkLights()).andThen(
       new DisableLights()));
-    m_operatorController.povUp().onTrue(new ClawSensorGrab());
-    m_operatorController.povLeft().onTrue(new ClawGrabCancel());
+    
+
     
     // Arm locations
     m_operatorController.povRight().onTrue(
@@ -138,13 +140,20 @@ public class RobotContainer implements Loggable {
         new SetArmExtension(0.0),
         new BlockUntilArmLessThan(0.2).andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE)))); // stowed/retracted position
     m_operatorController.x().onTrue(new SetShoulderPosition(17).andThen(new SetArmExtension(0.894))); // High cone scoring position
-    m_operatorController.povDown().onTrue(new SetShoulderPosition(5).andThen(new SetArmExtension(0.894))); // High cube scoring position
+    m_operatorController.povDown().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.894))); // High cube scoring position
     m_operatorController.b().onTrue(new SetShoulderPosition(5).andThen(new SetArmExtension(0.429))); // Mid scoring position
-    m_operatorController.y().onTrue(new SetShoulderPosition(6).andThen(new SetArmExtension(0.18)));  //Get Game Piece from human / feed station
-   
-    m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new SetWaistPosition(0)));
-    m_operatorController.leftBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new SetWaistPosition(180)));
+    m_operatorController.y().onTrue(new SetShoulderPosition(5).andThen(new SetArmExtension(0.18)).andThen(new ClawSensorGrab()));  //Get Game Piece from human / feed station
+    
+    m_operatorController.povLeft().onTrue(new IntakeV2Flip().andThen(new IntakeV2Suck(1.0)));
+
+    m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new ToggleWaistRotation()));
+    
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
+
+    // Zero everything
+    //m_operatorController.back().onTrue(new PanicZeroEverything());
+
+    //m_operatorController.povLeft().onTrue(new PickupOffGround());
   }
 
   /**
