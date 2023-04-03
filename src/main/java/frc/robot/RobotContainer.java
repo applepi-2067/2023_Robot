@@ -121,7 +121,7 @@ public class RobotContainer implements Loggable {
     m_operatorController.rightTrigger().onTrue(new SetLightsColor(Lights.Color.PURPLE));
 
     // Claw
-    m_operatorController.a().onTrue(new ClawOpenSpitWaitSuck(0.4));
+    m_operatorController.a().onTrue(new ClawOpenSpitWaitSuck(0.5));
     m_operatorController.a().onFalse(new SetClawBeltSpeed(() -> {return 1.0;}).andThen(
       new ClawClose()).andThen(
       new WaitCommand(0.4)).andThen(
@@ -138,8 +138,9 @@ public class RobotContainer implements Loggable {
     m_operatorController.x().onTrue(new SetShoulderPosition(17).andThen(new SetArmExtension(0.780))); // High cone scoring position
     m_operatorController.povDown().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.894))); // High cube scoring position
     m_operatorController.b().onTrue(new SetShoulderPosition(5).andThen(new SetArmExtension(0.391))); // Mid scoring position
-    m_operatorController.y().onTrue(new SetShoulderPosition(6).andThen(new SetArmExtension(0.18)).alongWith(new ClawSensorGrab()));  //Get Game Piece from human / feed station
-   
+    m_operatorController.y().onTrue(new SetShoulderPosition(6).andThen(new SetArmExtension(0.0)).alongWith(new ClawSensorGrab()));  //Get Game Piece from human / feed station
+    m_operatorController.povLeft().onTrue(new SetShoulderPosition(-2).andThen(new SetArmExtension(0.385)));
+
     m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new SetWaistPosition(0)));
     m_operatorController.leftBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new SetWaistPosition(180)));
     
