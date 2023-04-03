@@ -12,7 +12,7 @@ public class ClawOpenSpitWaitSuck extends SequentialCommandGroup {
   public ClawOpenSpitWaitSuck(double seconds) {
     addCommands(
       new ClawOpen(),
-      new SetClawBeltSpeed(() -> {return -0.5;}),
+      new SetClawBeltSpeed(() -> {return -0.4;}),
       new WaitCommand(seconds),
       new SetClawBeltSpeed(() -> {return 0.0;})
     );
