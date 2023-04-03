@@ -23,7 +23,7 @@ public class ClawBelt extends SubsystemBase implements Loggable {
   private static TalonSRX m_motor;
   private static DigitalInput m_gamePieceSensor;
 
-  private static final boolean INVERT_MOTOR = false;
+  private static final boolean INVERT_MOTOR = true;
 
   // Current limit configuration
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
