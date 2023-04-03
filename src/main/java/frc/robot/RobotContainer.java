@@ -111,8 +111,8 @@ public class RobotContainer implements Loggable {
     // m_driverController.leftTrigger().onTrue(new SetLightsColor(Lights.Color.YELLOW));
     // m_driverController.y().onTrue(new SetLightsColor(Lights.Color.YELLOW));
 
-    m_driverController.povRight().onTrue(new ScoringWaistControl(2.0));
-    m_driverController.povLeft().onTrue(new ScoringWaistControl(-2.0));
+    m_driverController.rightBumper().onTrue(new ScoringWaistControl(2.0));
+    m_driverController.leftBumper().onTrue(new ScoringWaistControl(-2.0));
     m_driverController.back().onTrue(new StopDrivetrain());  // E-Stop the drivetrain when back button is pressed
 
     /** Operator Controls */
@@ -121,7 +121,7 @@ public class RobotContainer implements Loggable {
     m_operatorController.rightTrigger().onTrue(new SetLightsColor(Lights.Color.PURPLE));
 
     // Claw
-    m_operatorController.a().onTrue(new ClawOpen());
+    m_operatorController.a().onTrue(new ClawOpenSpitWaitSuck(0.5));
     m_operatorController.a().onFalse(new SetClawBeltSpeed(() -> {return 1.0;}).andThen(
       new ClawClose()).andThen(
       new WaitCommand(0.4)).andThen(
@@ -139,7 +139,7 @@ public class RobotContainer implements Loggable {
     m_operatorController.x().onTrue(new SetShoulderPosition(17).andThen(new SetArmExtension(0.894))); // High cone scoring position
     m_operatorController.povDown().onTrue(new SetShoulderPosition(10).andThen(new SetArmExtension(0.894))); // High cube scoring position
     m_operatorController.b().onTrue(new SetShoulderPosition(5).andThen(new SetArmExtension(0.429))); // Mid scoring position
-    m_operatorController.y().onTrue(new SetShoulderPosition(5).andThen(new SetArmExtension(0.18)));  //Get Game Piece from human / feed station
+    m_operatorController.y().onTrue(new SetShoulderPosition(4).andThen(new SetArmExtension(0.18)));  //Get Game Piece from human / feed station
    
     m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new SetWaistPosition(0)));
     m_operatorController.leftBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new SetWaistPosition(180)));
