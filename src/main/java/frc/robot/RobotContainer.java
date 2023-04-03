@@ -146,7 +146,7 @@ public class RobotContainer implements Loggable {
     
     m_operatorController.povLeft().onTrue(new IntakeV2Flip().andThen(new IntakeV2Suck(1.0)));
 
-    m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new ToggleWaistRotation()));
+    m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()));
     
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
 
