@@ -11,6 +11,7 @@ public class ScoringPoses {
     private Pose2d m_topCubeScorePose2d;
 
     private double m_robotPickupPieceAbsoluteAngleDegrees;
+    private double m_pickupWaistRotationDegrees;
     
     public ScoringPoses(boolean isBlue, boolean isTop) {
       int yCoeff = getYCoeff(isBlue, isTop);
@@ -21,6 +22,7 @@ public class ScoringPoses {
       m_topCubeScorePose2d = calcTopCubeScorePose2d(aprilTagID);
 
       m_robotPickupPieceAbsoluteAngleDegrees = calcRobotPickupPieceAbsoluteAngleDegrees(isBlue);
+      m_pickupWaistRotationDegrees = calcPickupWaistRotationDegrees(isBlue, isTop);
     }
     
     private int getYCoeff(boolean isBlue, boolean isTop) {
@@ -76,6 +78,19 @@ public class ScoringPoses {
       }
     }
 
+    private double calcPickupWaistRotationDegrees(boolean isBlue, boolean isTop) {
+      double pickupWaistRotationDegrees = 180.0;
+
+      if (!isBlue) {
+        pickupWaistRotationDegrees *= -1.0;
+      }
+      if (!isTop) {
+        pickupWaistRotationDegrees *= -1.0;
+      }
+
+      return pickupWaistRotationDegrees;
+    }
+
     public Pose2d getRobotPickupPiecePose2d() {
       return m_robotPickupPiecePose2d;
     }
@@ -90,5 +105,9 @@ public class ScoringPoses {
 
     public double getRobotPickupPieceAbsoluteAngleDegrees() {
       return m_robotPickupPieceAbsoluteAngleDegrees;
+    }
+
+    public double getPickupWaistRotationDegrees() {
+      return m_pickupWaistRotationDegrees;
     }
   }
