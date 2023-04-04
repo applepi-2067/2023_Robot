@@ -70,7 +70,7 @@ public class PickupAndScore extends SequentialCommandGroup {
           new ClawOpen(),
           new SetShoulderPosition(-55.0),
           Commands.parallel(
-            new SetArmExtension(0.30),
+            new SetArmExtension(0.25),
             new ClawSensorGrab(),
             new DriveAtVelocity(-1.0)
           ),
@@ -89,9 +89,9 @@ public class PickupAndScore extends SequentialCommandGroup {
       ),
 
       // Score
-      new SetShoulderPosition(10),
-      new SetArmExtension(0.8),
-      new SetClawBeltSpeed(() -> {return -1.0;}),
+      new SetShoulderPosition(8),
+      new SetArmExtension(0.730),
+      new SetClawBeltSpeed(() -> {return -0.5;}),
       new ClawOpen(),
       Commands.parallel(
         new WaitForGamePieceNotInClaw(),
