@@ -46,10 +46,10 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
   // PID Coefficients.
   // private static Gains gains = new Gains(0.11, 0.001, 0, 0, 1, 0.65); //raw PI controller gains (non-smart motion)
-  private Gains gains = new Gains(1.5e-4, 3e-6, 0.000156, 0, 1, 0.65); //smart motion gains
+  private Gains gains = new Gains(1.5e-4, 3e-6, 0.000156, 0, 1, 0.75); //smart motion gains
   
   // SmartMotion configs
-  private static final double MAX_VELOCITY_RPM = 5_000; // NEO free speed 5676 RPM
+  private static final double MAX_VELOCITY_RPM = 5_676; // NEO free speed 5676 RPM
   private static final double MIN_VELOCITY_RPM = 0;
   private static final double MAXX_ACCELERATION_RPM_PER_SEC = 30_000;
   private static final double ALLOWED_ERROR = 0.1; //motor rotations

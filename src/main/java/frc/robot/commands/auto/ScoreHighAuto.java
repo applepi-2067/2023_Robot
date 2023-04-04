@@ -17,9 +17,7 @@ public class ScoreHighAuto extends ParallelCommandGroup {
   public ScoreHighAuto() {
     addCommands(
       new SetShoulderPosition(20.0),  // Forward is 20 deg  -- High scoring position
-      new BlockUntilShoulderGreaterThan(-64.0).andThen(
-      new SetArmExtension(0.2)).andThen(
-      new BlockUntilShoulderGreaterThan(0)).andThen(
+      new BlockUntilShoulderGreaterThan(0.0).andThen(
       new SetArmExtension(0.84)) // High scoring position
     );
   }
