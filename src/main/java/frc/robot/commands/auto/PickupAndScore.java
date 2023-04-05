@@ -50,6 +50,7 @@ public class PickupAndScore extends SequentialCommandGroup {
       // Raise arm and drop the cone
       new ScoreHighAuto(),
       new ClawOpen(),
+      new WaitCommand(0.2),
 
       // Retract arm into stow position then drive
       new SetLightsColor(Lights.Color.WHITE),
