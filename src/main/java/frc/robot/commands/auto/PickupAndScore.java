@@ -39,7 +39,8 @@ public class PickupAndScore extends SequentialCommandGroup {
 
     addCommands(
       new DriveToPosition(0.0),
-      new ClawClose(),
+      new SetClawBeltSpeed(() -> {return 0.2;}),
+  
       // Zero arm extension and shoulder angle
       Commands.parallel(
         new InitShoulderZero().andThen(new ZeroShoulderPosition()),
@@ -49,6 +50,7 @@ public class PickupAndScore extends SequentialCommandGroup {
       // Raise arm and drop the cone
       new ScoreHighAuto(),
       new ClawOpen(),
+      new WaitCommand(0.2),
 
       // Retract arm into stow position then drive
       new SetLightsColor(Lights.Color.WHITE),
@@ -56,7 +58,7 @@ public class PickupAndScore extends SequentialCommandGroup {
       // Drive to in front of piece, rotate waist to 180 deg
       Commands.parallel(
         new DriveToAbsolutePosition(scoringPoses.getRobotPickupPiecePose2d()),
-        new ZeroWaistPosition().andThen(new SetWaistPosition(180.0)),
+        new ZeroWaistPosition().andThen(new SetWaistPosition(scoringPoses.getPickupWaistRotationDegrees())),
         new SetArmExtension(0.0),
         new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-55.0))
       ),
@@ -102,7 +104,8 @@ public class PickupAndScore extends SequentialCommandGroup {
       Commands.parallel(
         new SetArmExtension(0.0).andThen(new SetWaistPosition(0)),
         new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE))
-      )
+      ),
+      new SetClawBeltSpeed(() -> {return 0.0;})
     );
   }
 }
