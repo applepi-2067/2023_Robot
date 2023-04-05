@@ -11,6 +11,7 @@ import frc.robot.Constants;
 public class IntakeV2Flip extends CommandBase {
   private IntakeV2 intake;
   private Double speed;
+  private CANSparkMax
 
   
   public IntakeV2Flip() {

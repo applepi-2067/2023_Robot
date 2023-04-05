@@ -73,7 +73,11 @@ public class IntakeV2 extends SubsystemBase implements Loggable {
       double voltage = Util.limit(speed) * max_voltage_open_loop;
       m_flipMotor.set(speed);
   }
-  @Override
+
+  public double getMotorCurrent(){
+    return m_suckMotor.getStatorCurrent();
+  }
+    @Override
   public void periodic() {
 
   }
