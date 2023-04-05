@@ -39,7 +39,8 @@ public class PickupAndScore extends SequentialCommandGroup {
 
     addCommands(
       new DriveToPosition(0.0),
-      new ClawClose(),
+      new SetClawBeltSpeed(() -> {return 0.2;}),
+  
       // Zero arm extension and shoulder angle
       Commands.parallel(
         new InitShoulderZero().andThen(new ZeroShoulderPosition()),
@@ -102,7 +103,8 @@ public class PickupAndScore extends SequentialCommandGroup {
       Commands.parallel(
         new SetArmExtension(0.0).andThen(new SetWaistPosition(0)),
         new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE))
-      )
+      ),
+      new SetClawBeltSpeed(() -> {return 0.0;})
     );
   }
 }
