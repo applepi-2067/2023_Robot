@@ -43,9 +43,9 @@ public class Waist extends SubsystemBase implements Loggable {
   private Gains gains = new Gains(3e-4, 3e-6, 0.000156, 0, 1, 0.7); //smart motion gains
 
   // SmartMotion configs
-  private static final double MAX_VELOCITY_RPM = 5_000; // NEO free speed 5676 RPM
+  private static final double MAX_VELOCITY_RPM = 5_676; // NEO free speed 5676 RPM
   private static final double MIN_VELOCITY_RPM = 0;
-  private static final double MAXX_ACCELERATION_RPM_PER_SEC = 8_000;
+  private static final double MAXX_ACCELERATION_RPM_PER_SEC = 12_000;
   private static final double ALLOWED_ERROR = 0.0; //motor rotations
 
   public static Waist getInstance() {
