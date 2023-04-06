@@ -44,7 +44,8 @@ public final class Constants {
   }
 
   public static class Poses {
-    public static final double SHOULDER_STOW_ANGLE = -60.0;  // degrees
+    public static final double SHOULDER_STOW_ANGLE = -65.0;  // degrees
+    public static final double SHOULDER_ROTATE_ANGLE = -60.0;
   }
 
   public static class CANDeviceIDs {

@@ -141,8 +141,18 @@ public class RobotContainer implements Loggable {
     m_operatorController.y().onTrue(new SetShoulderPosition(6).andThen(new SetArmExtension(0.0)).alongWith(new ClawSensorGrab()));  //Get Game Piece from human / feed station
     m_operatorController.povLeft().onTrue(new SetShoulderPosition(-2).andThen(new SetArmExtension(0.385)));
 
-    m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new SetWaistPosition(0)));
-    m_operatorController.leftBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new SetWaistPosition(180)));
+    m_operatorController.rightBumper().onTrue(
+      new SetArmExtension(0.005).asProxy().andThen(
+      new SetShoulderPosition(Constants.Poses.SHOULDER_ROTATE_ANGLE).asProxy()).andThen(
+      new SetWaistPosition(0)).andThen(
+      new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy())
+    );
+    m_operatorController.leftBumper().onTrue(
+      new SetArmExtension(0.005).asProxy().andThen(
+      new SetShoulderPosition(Constants.Poses.SHOULDER_ROTATE_ANGLE).asProxy()).andThen(
+      new SetWaistPosition(180.0)).andThen(
+      new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy())
+    );
     
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
 
