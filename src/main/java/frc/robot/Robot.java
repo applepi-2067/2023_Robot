@@ -119,12 +119,11 @@ public class Robot extends TimedRobot {
 
   public void positionSelectInit() {
     m_positionChooser = new SendableChooser<RobotSetupPosition>();
-    m_positionChooser.setDefaultOption("None", RobotSetupPosition.NONE);
+    m_positionChooser.setDefaultOption("ZeroAll", RobotSetupPosition.ZeroAll);
     m_positionChooser.addOption("Top", RobotSetupPosition.TOP);
     m_positionChooser.addOption("Bottom", RobotSetupPosition.BOTTOM);
     m_positionChooser.addOption("Center", RobotSetupPosition.CENTER);
     m_positionChooser.addOption("ScorePreLoadBackup", RobotSetupPosition.ScorePreloadedPiece);
-    m_positionChooser.addOption("ZeroAll", RobotSetupPosition.ZeroAll);
   }
 
   /**
