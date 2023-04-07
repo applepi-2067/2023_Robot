@@ -35,7 +35,7 @@ public class CenterStartRoutine extends SequentialCommandGroup {
       new ScoreHighAuto(),
       new ClawOpen(),
       Commands.deadline(
-        new BlockUntilDistanceTraveled(1.0),
+        new BlockUntilDistanceTraveled(2.7),
         Commands.sequence(
           Commands.parallel(
             new SetArmExtension(0.0),
