@@ -9,6 +9,8 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -122,11 +124,8 @@ public class RobotContainer implements Loggable {
     m_operatorController.rightTrigger().onTrue(new SetLightsColor(Lights.Color.PURPLE));
 
     // Debug 90 error.
-    m_operatorController.a().onTrue(
-      new DriveToAbsolutePosition(Transforms.shiftAbsolutePoseByRelativePose(
-        m_drivetrain.getLatestRobotPose2d(), new Pose2d(0.0, -1.0, m_drivetrain.getLatestRobotPose2d().getRotation())
-        )
-      )
+    m_operatorController.a().onTrue(new DriveToAbsolutePosition(
+      m_drivetrain.getLatestRobotPose2d().plus(new Transform2d(new Translation2d(0.0, 1.0), new Rotation2d())))
     );
 
     // Claw
