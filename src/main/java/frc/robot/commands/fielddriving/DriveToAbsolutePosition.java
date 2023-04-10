@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
@@ -22,6 +23,7 @@ public class DriveToAbsolutePosition extends CommandBase {
   private ProfiledPIDController m_distanceController;
   private PIDController m_rotationController;
 
+  private final double TRANSLATION_HEADING_ERROR_THRESHOLD_RADIANS = Units.degreesToRadians(10.0);
   private final double MAX_VELOCITY = 8.0;  // m/s
   private final double MAX_DIFFERENTIAL_VELOCITY = 0.5;  // Turning wheel differential, m/s
 
@@ -54,6 +56,7 @@ public class DriveToAbsolutePosition extends CommandBase {
   public void execute() {
     // Calculate whether we want to drive forward or backward to target
     double headingErrorRadians = getHeadingErrorRadians(false);  // First check heading error if we're going forward
+
     boolean driveBackwards = false;
     if (Math.abs(headingErrorRadians) > Math.PI / 2) {
       driveBackwards = true;
@@ -66,9 +69,11 @@ public class DriveToAbsolutePosition extends CommandBase {
     if (driveBackwards) {
       distanceControlOutput *= -1.0;
     }
-    // Scale forward/backwards speed by the cosine of the heading error
-    // This is so we turn toward the goal before we speed up
-    // distanceControlOutput *= Math.pow(Math.cos(headingErrorRadians), 2);
+
+    // Only go forward/back if the |theta| is within limit
+    if (Math.abs(headingErrorRadians) > TRANSLATION_HEADING_ERROR_THRESHOLD_RADIANS) {
+      distanceControlOutput = 0.0;
+    }
      
     double leftTrackSpeedDistance = distanceControlOutput;
     double rightTrackSpeedDistance = distanceControlOutput;

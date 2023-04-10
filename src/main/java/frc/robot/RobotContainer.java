@@ -7,42 +7,23 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.waist.*;
 import frc.robot.subsystems.*;
-import frc.robot.utils.Transforms;
-import frc.robot.utils.Util;
-import frc.robot.commands.chargestation.*;
 import frc.robot.commands.claw.*;
-import frc.robot.commands.drivetrain.*;
-import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
-import frc.robot.commands.fielddriving.DriveToTargetOffset;
 import frc.robot.commands.estop.*;
-import frc.robot.commands.intake.*;
 import frc.robot.commands.lights.DisableBlinkLights;
 import frc.robot.commands.lights.DisableLights;
 import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.commands.shoulder.*;
-import frc.robot.commands.teleop_auto.DoubleSubstationPieceAcquire;
 import frc.robot.commands.teleop_auto.GroundPickup;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
-import io.github.oblarg.oblog.annotations.Log;
-import frc.robot.commands.auto.*;
-import frc.robot.commands.drivetrain.*;
-import frc.robot.commands.IK.IKCoordinate;
-import frc.robot.commands.IK.RobotRelativeIK;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.waist.ScoringWaistControl;
 
