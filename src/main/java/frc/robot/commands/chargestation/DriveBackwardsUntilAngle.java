@@ -37,6 +37,6 @@ public class DriveBackwardsUntilAngle extends CommandBase {
   @Override
   public boolean isFinished() {
     // Check if we're at the angle, if so return true
-    return Math.abs(m_driveTrain.getPitchDegrees()) > 8;
+    return Math.abs(m_driveTrain.getRollDegrees()) > 8;
   }
 }
