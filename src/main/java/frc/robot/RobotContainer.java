@@ -35,6 +35,7 @@ import frc.robot.commands.lights.DisableLights;
 import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.commands.shoulder.*;
 import frc.robot.commands.teleop_auto.DoubleSubstationPieceAcquire;
+import frc.robot.commands.teleop_auto.GroundPickup;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Log;
@@ -137,12 +138,23 @@ public class RobotContainer implements Loggable {
         new BlockUntilArmLessThan(0.2).andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE)))); // stowed/retracted position
     m_operatorController.x().onTrue(new SetShoulderPosition(20).andThen(new SetArmExtension(0.780))); // High cone scoring position
     m_operatorController.povDown().onTrue(new SetShoulderPosition(8).andThen(new SetArmExtension(0.780))); // High cube scoring position
-    m_operatorController.b().onTrue(new SetShoulderPosition(5).andThen(new SetArmExtension(0.391))); // Mid scoring position
+    m_operatorController.b().onTrue(new SetShoulderPosition(5).andThen(new SetArmExtension(0.391))); // Mid cone scoring position
     m_operatorController.y().onTrue(new SetShoulderPosition(6).andThen(new SetArmExtension(0.0)).alongWith(new ClawSensorGrab()));  //Get Game Piece from human / feed station
-    m_operatorController.povLeft().onTrue(new SetShoulderPosition(-2).andThen(new SetArmExtension(0.385)));
+    m_operatorController.povLeft().onTrue(new SetShoulderPosition(-2).andThen(new SetArmExtension(0.385))); // Mid cube scoring position
+    m_operatorController.povUp().onTrue(new GroundPickup());
 
-    m_operatorController.rightBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new SetWaistPosition(0)));
-    m_operatorController.leftBumper().onTrue(new SetArmExtension(0.005).asProxy().andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy()).andThen(new SetWaistPosition(180)));
+    m_operatorController.rightBumper().onTrue(
+      new SetArmExtension(0.005).asProxy().andThen(
+      new SetShoulderPosition(Constants.Poses.SHOULDER_ROTATE_ANGLE).asProxy()).andThen(
+      new SetWaistPosition(0)).andThen(
+      new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy())
+    );
+    m_operatorController.leftBumper().onTrue(
+      new SetArmExtension(0.005).asProxy().andThen(
+      new SetShoulderPosition(Constants.Poses.SHOULDER_ROTATE_ANGLE).asProxy()).andThen(
+      new SetWaistPosition(180.0)).andThen(
+      new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy())
+    );
     
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
 

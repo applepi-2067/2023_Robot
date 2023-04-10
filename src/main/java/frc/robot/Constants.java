@@ -44,7 +44,8 @@ public final class Constants {
   }
 
   public static class Poses {
-    public static final double SHOULDER_STOW_ANGLE = -60.0;  // degrees
+    public static final double SHOULDER_STOW_ANGLE = -65.0;  // degrees
+    public static final double SHOULDER_ROTATE_ANGLE = -60.0;
   }
 
   public static class CANDeviceIDs {
@@ -108,7 +109,7 @@ public final class Constants {
     public static final Gains kVelocityGains = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0); 
 
     // Maximum drivetrain velocity in meters per seconds.
-    public static final double MAX_DRIVETRAIN_VELOCITY = 6.5;
+    public static final double MAX_DRIVETRAIN_VELOCITY = 6.0;
     
     // Drivetrain only moves when abs(stick) > deadband. Compensates for stick drift.
     public static final double DRIVETRAIN_CONTROLLER_DEADBAND = 0.03;
@@ -132,7 +133,7 @@ public final class Constants {
     public static final double WAIST_ANGLE_TOLERANCE = 0.1;
 
     // Tolerance for auto position drive commands to end 
-    public static final double AUTO_DISTANCE_TOLERANCE = 0.08;  // meters
+    public static final double AUTO_DISTANCE_TOLERANCE = 0.15;  // meters
     public static final double AUTO_VELOCITY_TOLERANCE = 0.2;  // m/s
   }
   
