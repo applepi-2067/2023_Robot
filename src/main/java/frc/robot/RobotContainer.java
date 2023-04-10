@@ -121,14 +121,22 @@ public class RobotContainer implements Loggable {
     m_operatorController.leftTrigger().onTrue(new SetLightsColor(Lights.Color.YELLOW));
     m_operatorController.rightTrigger().onTrue(new SetLightsColor(Lights.Color.PURPLE));
 
+    // Debug 90 error.
+    m_operatorController.a().onTrue(
+      new DriveToAbsolutePosition(Transforms.shiftAbsolutePoseByRelativePose(
+        m_drivetrain.getLatestRobotPose2d(), new Pose2d(0.0, -1.0, m_drivetrain.getLatestRobotPose2d().getRotation())
+        )
+      )
+    );
+
     // Claw
-    m_operatorController.a().onTrue(new ClawOpenSpitWaitSuck(0.5));
-    m_operatorController.a().onFalse(new SetClawBeltSpeed(() -> {return 1.0;}).andThen(
-      new ClawClose()).andThen(
-      new WaitCommand(0.4)).andThen(
-      new SetClawBeltSpeed(() -> {return 0.0;})).andThen(
-      new DisableBlinkLights()).andThen(
-      new DisableLights()));
+    // m_operatorController.a().onTrue(new ClawOpenSpitWaitSuck(0.5));
+    // m_operatorController.a().onFalse(new SetClawBeltSpeed(() -> {return 1.0;}).andThen(
+    //   new ClawClose()).andThen(
+    //   new WaitCommand(0.4)).andThen(
+    //   new SetClawBeltSpeed(() -> {return 0.0;})).andThen(
+    //   new DisableBlinkLights()).andThen(
+    //   new DisableLights()));
 
     
     // Arm locations
