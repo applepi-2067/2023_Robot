@@ -267,7 +267,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
    */
   @Log
   public double getRollDegrees() {
-    return m_pidgey.getRoll();
+    return -m_pidgey.getRoll();
   }
 
   /**
