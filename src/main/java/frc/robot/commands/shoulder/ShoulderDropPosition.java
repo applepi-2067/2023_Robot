@@ -21,6 +21,7 @@ public class ShoulderDropPosition extends CommandBase {
     addRequirements(m_shoulder);
     m_angleToDrop = angleToDrop;
   }
+  double currentPosition = m_shoulder.getPosition();
 
   // Called when the command is initially scheduled.
   @Override
@@ -30,7 +31,6 @@ public class ShoulderDropPosition extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double currentPosition = m_shoulder.getPosition();
     m_shoulder.setPosition(currentPosition - m_angleToDrop);
   }
 
@@ -40,6 +40,7 @@ public class ShoulderDropPosition extends CommandBase {
     if(interrupted) {
       // stop moving
       m_shoulder.setSpeed(0);
+      m_shoulder.setPosition(currentPosition + m_angleToDrop);
     }
     //otherwise, do nothing... i.e. keep holding last commanded position on exit
   }
