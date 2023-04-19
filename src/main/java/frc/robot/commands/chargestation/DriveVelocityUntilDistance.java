@@ -7,16 +7,19 @@ package frc.robot.commands.chargestation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
-public class DriveBackwardsUntilDistance extends CommandBase {
+public class DriveVelocityUntilDistance extends CommandBase {
   private static Drivetrain m_drivetrain;
+
+  private double m_velocity;
 
   private double m_startingDistanceMeters;
   private double m_distanceSetpointMeters;
 
-  public DriveBackwardsUntilDistance(double distanceSetpointMeters) {
+  public DriveVelocityUntilDistance (double velocity, double distanceSetpointMeters) {
     m_drivetrain = Drivetrain.getInstance();
     addRequirements(m_drivetrain);
 
+    m_velocity = velocity;
     m_distanceSetpointMeters = distanceSetpointMeters;
   }
 
@@ -29,7 +32,7 @@ public class DriveBackwardsUntilDistance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drivetrain.arcadeDrive(-1.0, 0.0);
+    m_drivetrain.arcadeDrive(m_velocity, 0.0);
   }
 
   // Called once the command ends or is interrupted.
