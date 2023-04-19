@@ -8,6 +8,7 @@ import frc.robot.commands.arm.BlockUntilArmLessThan;
 import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.arm.ZeroArmPosition;
 import frc.robot.commands.chargestation.DriveBackwardsUntilAngle;
+import frc.robot.commands.chargestation.DriveBackwardsUntilDistance;
 import frc.robot.commands.chargestation.BalanceOnCharge;
 import frc.robot.commands.shoulder.BlockUntilShoulderGreaterThan;
 import frc.robot.commands.shoulder.InitShoulderZero;
@@ -19,6 +20,7 @@ import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
 import frc.robot.commands.drivetrain.BlockUntilDistanceTraveled;
 import frc.robot.commands.estop.StopDrivetrain;
+import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -34,21 +36,23 @@ public class CenterStartRoutine extends SequentialCommandGroup {
       ),
       new ScoreHighAuto(),
       new ClawOpen(),
-      Commands.deadline(
-        new BlockUntilDistanceTraveled(2.7),
-        Commands.sequence(
-          Commands.parallel(
-            new SetArmExtension(0.0),
-            new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-65.0)), // down in front
-            new DriveBackwardsUntilAngle()
-          ),
-          Commands.parallel(
-            new BalanceOnCharge(),
-            new ZeroWaistPosition().andThen(new WaitCommand(0.5)).andThen(new SetWaistPosition(0))
-          )
-        )
+
+      Commands.parallel(
+        // Retract arm and lower shoulder.
+        new SetArmExtension(0.0),
+        new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-65.0)),
+        
+        // Drive backwards to get mobility.
+        new DriveBackwardsUntilDistance(3.5), // TODO: Find distance meters to mobility
       ),
-      new StopDrivetrain()
+
+      // Drive forwards until we get on the charge station.
+      new DriveBackwardsUntilAngle(8),
+    
+      Commands.parallel(
+        new BalanceOnCharge(),
+        new ZeroWaistPosition().andThen(new WaitCommand(0.5)).andThen(new SetWaistPosition(0))
+      )
     );
   }
 }
