@@ -24,31 +24,27 @@ public class BalanceOnCharge extends CommandBase {
     public void execute() {
         double angle = m_driveTrain.getRollDegrees();
         
-        if (angleOnIntervalInclusive(angle, -90, -10)) {
+        if (angle <= -10) {
             m_driveTrain.arcadeDrive(0.25, 0);
         }
-        else if (angleOnIntervalInclusive(angle, -10, -5)) {
+        else if (angle <= -5) {
             m_driveTrain.arcadeDrive(0.18, 0.0);
         }
-        else if (angleOnIntervalInclusive(angle, -5, -2.5)) {
+        else if (angle <= -2.5) {
             m_driveTrain.arcadeDrive(0.15, 0.0);
         }
-        else if (angleOnIntervalInclusive(angle, -2.5, 2.5)) {
+        else if (angle <= 2.5) {
             m_driveTrain.arcadeDrive(0.0, 0.0);
         }
-        else if (angleOnIntervalInclusive(angle, 2.5, 5)) {
+        else if (angle <= 5) {
             m_driveTrain.arcadeDrive(-0.15, 0.0);
         }
-        else if (angleOnIntervalInclusive(angle, 5, 10)) {
+        else if (angle <= 10) {
             m_driveTrain.arcadeDrive(-0.18, 0.0);
         }
-        else if (angleOnIntervalInclusive(angle, 10, 90)) {
+        else {
             m_driveTrain.arcadeDrive(-0.25, 0.0);
         }
-    }
-
-    public boolean angleOnIntervalInclusive(double angle, double lowAngle, double highAngle) {
-        return ((angle >= lowAngle) && (angle <= highAngle));
     }
     
     // Called once the command ends or is interrupted.
