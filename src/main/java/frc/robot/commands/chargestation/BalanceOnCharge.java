@@ -25,25 +25,25 @@ public class BalanceOnCharge extends CommandBase {
         double angle = m_driveTrain.getRollDegrees();
         
         if (angle <= -10) {
-            m_driveTrain.arcadeDrive(0.25, 0);
+            m_driveTrain.arcadeDrive(-0.25, 0);
         }
         else if (angle <= -5) {
-            m_driveTrain.arcadeDrive(0.18, 0.0);
+            m_driveTrain.arcadeDrive(-0.18, 0.0);
         }
         else if (angle <= -2.5) {
-            m_driveTrain.arcadeDrive(0.15, 0.0);
+            m_driveTrain.arcadeDrive(-0.15, 0.0);
         }
         else if (angle <= 2.5) {
             m_driveTrain.arcadeDrive(0.0, 0.0);
         }
         else if (angle <= 5) {
-            m_driveTrain.arcadeDrive(-0.15, 0.0);
+            m_driveTrain.arcadeDrive(0.15, 0.0);
         }
         else if (angle <= 10) {
-            m_driveTrain.arcadeDrive(-0.18, 0.0);
+            m_driveTrain.arcadeDrive(0.18, 0.0);
         }
         else {
-            m_driveTrain.arcadeDrive(-0.25, 0.0);
+            m_driveTrain.arcadeDrive(0.25, 0.0);
         }
     }
     

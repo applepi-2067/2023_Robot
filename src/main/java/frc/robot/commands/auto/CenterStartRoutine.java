@@ -17,6 +17,7 @@ import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.commands.waist.ZeroWaistPosition;
 import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
+import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -39,11 +40,11 @@ public class CenterStartRoutine extends SequentialCommandGroup {
         new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-65.0)),
         
         // Drive backwards to get mobility.
-        new DriveVelocityUntilDistance(-0.5, 3.5) // TODO: Find distance meters to mobility
+        new DriveVelocityUntilDistance(-0.5, 3.9) // TODO: Find distance meters to mobility, add failsafe
       ),
 
       // Drive forwards until we get on the charge station.
-      new DriveVelocityUntilAngle(0.4, -8.0),
+      new DriveVelocityUntilAngle(0.4, 5.0),
     
       Commands.parallel(
         new BalanceOnCharge(),

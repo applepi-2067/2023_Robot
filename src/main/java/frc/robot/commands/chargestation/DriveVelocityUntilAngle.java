@@ -41,6 +41,6 @@ public class DriveVelocityUntilAngle extends CommandBase {
   @Override
   public boolean isFinished() {
     // Check if we're at the angle, if so return true
-    return Math.abs(m_drivetrain.getRollDegrees()) > m_angle;
+    return m_drivetrain.getRollDegrees() >= m_angle;
   }
 }
