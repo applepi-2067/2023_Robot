@@ -40,14 +40,14 @@ public class CenterStartRoutine extends SequentialCommandGroup {
         new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-65.0)),
         
         // Drive backwards to get mobility.
-        new DriveVelocityUntilDistance(-0.5, 3.9) // TODO: Find distance meters to mobility, add failsafe
+        new DriveVelocityUntilDistance(-0.55, 4.0) // TODO: failsafe
       ),
 
       // Drive forwards until we get on the charge station.
-      new DriveVelocityUntilAngle(0.4, 7.0),
+      new DriveVelocityUntilDistance(0.7, 0.85),
     
       Commands.parallel(
-        new BalanceOnCharge(),
+        new BalanceOnCharge(), // TODO: failsafe w/ distance
         new ZeroWaistPosition().andThen(new WaitCommand(0.5)).andThen(new SetWaistPosition(0))
       )
     );
