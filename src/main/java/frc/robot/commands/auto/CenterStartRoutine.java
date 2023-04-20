@@ -44,7 +44,7 @@ public class CenterStartRoutine extends SequentialCommandGroup {
       ),
 
       // Drive forwards until we get on the charge station.
-      new DriveVelocityUntilAngle(0.4, 5.0),
+      new DriveVelocityUntilAngle(0.4, 7.0),
     
       Commands.parallel(
         new BalanceOnCharge(),
