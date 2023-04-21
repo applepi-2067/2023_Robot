@@ -9,44 +9,48 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Shoulder;
 
 public class SetShoulderPosition extends CommandBase {
-
   private Shoulder m_shoulder;
-  private double targetPositionDegrees = 0.0;
+
+  private double m_targetPositionDegrees;
+
+  private int m_targetPositionCount;
+  private int m_targetPositionCountThreshold = 10;
 
   /** Creates a new SetShoulderPosition. */
-  public SetShoulderPosition(double positionDegrees) {
+  public SetShoulderPosition(double targetPositionDegrees) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shoulder = Shoulder.getInstance();
     addRequirements(m_shoulder);
 
-    targetPositionDegrees = positionDegrees;
+    m_targetPositionDegrees = targetPositionDegrees;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    m_targetPositionCount = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shoulder.setPosition(targetPositionDegrees);
+    m_shoulder.setPosition(m_targetPositionDegrees);
+
+    double currShoulderPosition = m_shoulder.getPosition();
+    double shoulderPositionError = Math.abs(m_targetPositionDegrees - currShoulderPosition);
+    if (shoulderPositionError < Constants.SetpointTolerances.SHOULDER_ANGLE_TOLERANCE){
+      m_targetPositionCount++;
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // if(interrupted) {
-    //   // stop moving
-    //   shoulder.setSpeed(0);
-    // }
-    //otherwise, do nothing... i.e. keep holding last commanded position on exit
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(targetPositionDegrees - m_shoulder.getPosition()) < Constants.SetpointTolerances.SHOULDER_ANGLE_TOLERANCE;
+    return m_targetPositionCount > m_targetPositionCountThreshold;
   }
 }
