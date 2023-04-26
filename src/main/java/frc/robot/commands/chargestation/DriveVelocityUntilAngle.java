@@ -7,14 +7,18 @@ package frc.robot.commands.chargestation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
-public class DriveBackwardsUntilAngle extends CommandBase {
-  private static Drivetrain m_driveTrain;
+public class DriveVelocityUntilAngle extends CommandBase {
+  private static Drivetrain m_drivetrain;
 
-  /** Creates a new DriveForwardUntilAngle. */
-  public DriveBackwardsUntilAngle() {
-    Drivetrain drivetrain = Drivetrain.getInstance();
-    addRequirements(drivetrain);
-    m_driveTrain = drivetrain;
+  private double m_velocity;
+  private double m_angle;
+
+  public DriveVelocityUntilAngle(double velocity, double angle) {
+    m_drivetrain = Drivetrain.getInstance();
+    addRequirements(m_drivetrain);
+    
+    m_velocity = velocity;
+    m_angle = angle;
   }
 
   // Called when the command is initially scheduled.
@@ -25,18 +29,18 @@ public class DriveBackwardsUntilAngle extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_driveTrain.arcadeDrive(-0.5, 0);
+    m_drivetrain.arcadeDrive(m_velocity, 0);
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_driveTrain.setSetPointVelocity(0.0, 0.0);
+    m_drivetrain.setSetPointVelocity(0.0, 0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     // Check if we're at the angle, if so return true
-    return Math.abs(m_driveTrain.getRollDegrees()) > 8;
+    return m_drivetrain.getRollDegrees() >= m_angle;
   }
 }
