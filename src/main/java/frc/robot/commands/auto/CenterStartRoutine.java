@@ -13,6 +13,7 @@ import frc.robot.commands.chargestation.BalanceOnCharge;
 import frc.robot.commands.shoulder.InitShoulderZero;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.shoulder.ZeroShoulderPosition;
+import frc.robot.commands.teleop_auto.GroundPickup;
 import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.commands.waist.ZeroWaistPosition;
 import frc.robot.commands.claw.ClawClose;
@@ -43,7 +44,7 @@ public class CenterStartRoutine extends SequentialCommandGroup {
         new BlockUntilDistanceTraveled(2.0).andThen(new SetShoulderPosition(-65.0)),
         
         // Drive backwards to get mobility.
-        new DriveVelocityUntilDistance(-0.5, 4.0) // TODO: failsafe
+        new DriveVelocityUntilDistance(-0.5, 4.0).alongWith(new SetWaistPosition(180)).andThen(new GroundPickup()) // TODO: failsafe
       ),
 
       // Drive forwards until we get on the charge station.
