@@ -44,31 +44,28 @@ public class CenterStartRoutine extends SequentialCommandGroup {
         // Retract arm.
         new SetArmExtension(0.0),
 
-        // Stow shoulder.
-        new SetShoulderPosition(-65.0),
-
-        // Spin waist.
-        new BlockUntilArmLessThan(0.2).andThen(new SetWaistPosition(180)),
+        // Stow shoulder and spin waist.
+        new BlockUntilArmLessThan(0.2).andThen(
+          Commands.parallel(
+            new SetShoulderPosition(-65.0),
+            new SetWaistPosition(180)
+          )
+        ),
         
         // Drive backward to pickup position.
-        new DriveToAbsolutePosition(new Pose2d(6.54, 2.17, new Rotation2d()), 0.5)
+        new DriveToAbsolutePosition(new Pose2d(6.0, 2.15, new Rotation2d()), 0.3)
       ),
       
       // Drive backwards and pickup.
       Commands.race(
-        new WaitCommand(2.5),
-        Commands.parallel(
-          new GroundPickup(),
-          new DriveVelocityUntilDistance(-0.5, 1.0)
-        )
+        new GroundPickup(),
+        new DriveVelocityUntilDistance(-0.5, 1.25)
       ),
 
       // Drive forwards until we get on the charge station.
-      new DriveVelocityUntilDistance(0.6, 1.45),
+      new DriveVelocityUntilDistance(0.6, 2.2),
 
-      Commands.parallel(
-        new BalanceOnCharge() // TODO: failsafe w/ distance
-      )
+      new BalanceOnCharge() // TODO: failsafe w/ distance
     );
   }
 }

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -136,8 +138,10 @@ public class Robot extends TimedRobot {
 
     // Schedule the autonomous command
     if (m_position != null) { // TODO: Schedule mobility auto?
-      Constants.ScoringInfo.initScoringInfo(m_position);
-      m_drivetrain.setOdometryPose2d(Constants.ScoringInfo.initialPose2d);
+      // Constants.ScoringInfo.initScoringInfo(m_position);
+      // m_drivetrain.setOdometryPose2d(Constants.ScoringInfo.initialPose2d);
+
+      m_drivetrain.setOdometryPose2d(new Pose2d(1.869, 2.19, Rotation2d.fromDegrees(180)));
 
       m_autoCommand = createAuto(m_position);
       m_autoCommand.schedule();
