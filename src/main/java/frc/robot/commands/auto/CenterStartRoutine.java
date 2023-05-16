@@ -20,6 +20,8 @@ import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
 import frc.robot.commands.drivetrain.BlockUntilDistanceTraveled;
 import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -37,21 +39,28 @@ public class CenterStartRoutine extends SequentialCommandGroup {
       new ScoreHighAuto(),
       new ClawOpen(),
 
+      //Runs after dropping preload
       Commands.parallel(
         // Retract arm.
         new SetArmExtension(0.0),
 
-        // Wait and then lower shoulder.
-        new BlockUntilDistanceTraveled(2.0).andThen(new SetShoulderPosition(-65.0)),
+        // Stow shoulder.
+        new SetShoulderPosition(-65.0),
+
+        // Spin waist.
+        new BlockUntilArmLessThan(0.2).andThen(new SetWaistPosition(180)),
         
-        // drive to position 
-        new DriveVelocityUntilDistance(-0.5, 3.5),
-        new BlockUntilArmLessThan(0.2).andThen(new SetWaistPosition(180))
+        // Drive backward to pickup position.
+        new DriveToAbsolutePosition(new Pose2d(6.54, 2.17, new Rotation2d()), 0.5)
       ),
       
-      Commands.deadline(
-        new GroundPickup(),
-        new DriveVelocityUntilDistance(-0.5, 1.5).alongWith(new SetArmExtension(-65.0))
+      // Drive backwards and pickup.
+      Commands.race(
+        new WaitCommand(2.5),
+        Commands.parallel(
+          new GroundPickup(),
+          new DriveVelocityUntilDistance(-0.5, 1.0)
+        )
       ),
 
       // Drive forwards until we get on the charge station.
