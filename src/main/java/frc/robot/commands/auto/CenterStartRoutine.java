@@ -40,12 +40,16 @@ public class CenterStartRoutine extends SequentialCommandGroup {
 
       //Runs after dropping preload
       Commands.parallel(
-        // Retract arm.
-        new DriveToAbsolutePosition(new Pose2d(6.0, 2.15, new Rotation2d()), 0.3),
+        // Drives to position while:
+        new DriveToAbsolutePosition(new Pose2d(6.25, 2.15, new Rotation2d()), 0.3),
+        // 1. Retracting Arm
         new SetArmExtension(0.0),
-        new BlockUntilArmLessThan(0.2).andThen(
-        new ZeroWaistPosition().andThen(new SetWaistPosition(180.0)),
-        new SetShoulderPosition(-65.0)
+        new BlockUntilArmLessThan(0.35).andThen(
+          Commands.parallel(
+        // 2. Once arm is mostly retracted, lower shoulder, zero waist, and set waist to 180
+        new SetShoulderPosition(-65.0),
+        new ZeroWaistPosition().andThen(new SetWaistPosition(180.0))
+            )
           )
         ),
       
@@ -56,7 +60,7 @@ public class CenterStartRoutine extends SequentialCommandGroup {
       ),
 
       // Drive forwards until we get on the charge station.
-      new DriveVelocityUntilDistance(0.6, 2.2),
+      new DriveVelocityUntilDistance(0.6, 2.35),
 
       new BalanceOnCharge() // TODO: failsafe w/ distance
     );
