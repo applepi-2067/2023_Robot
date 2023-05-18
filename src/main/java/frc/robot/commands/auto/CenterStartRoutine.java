@@ -33,7 +33,6 @@ public class CenterStartRoutine extends SequentialCommandGroup {
       // Zero arm extension and shoulder angle
       Commands.parallel(
         new InitShoulderZero().andThen(new ZeroShoulderPosition()),
-        new ZeroWaistPosition().andThen(new SetWaistPosition(0.0)),
         new ZeroArmPosition().andThen(new SetArmExtension(0.0))
       ),
       new ScoreHighAuto(),
@@ -42,26 +41,18 @@ public class CenterStartRoutine extends SequentialCommandGroup {
       //Runs after dropping preload
       Commands.parallel(
         // Retract arm.
+        new DriveToAbsolutePosition(new Pose2d(6.0, 2.15, new Rotation2d()), 0.3),
         new SetArmExtension(0.0),
-        
-        // Stow shoulder and spin waist.
         new BlockUntilArmLessThan(0.2).andThen(
-          Commands.parallel(
-            new SetShoulderPosition(-65.0)
+        new ZeroWaistPosition().andThen(new SetWaistPosition(180.0)),
+        new SetShoulderPosition(-65.0)
           )
         ),
-        
-        // Drive backward to pickup position.
-        Commands.parallel(
-        new DriveToAbsolutePosition(new Pose2d(6.0, 2.15, new Rotation2d()), 0.3),
-        new SetWaistPosition(180)
-        )
-      ),
       
       // Drive backwards and pickup.
       Commands.race(
         new GroundPickup(),
-        new DriveVelocityUntilDistance(-0.5, 1.25).alongWith(new SetArmExtension(0.0))
+        new DriveVelocityUntilDistance(-0.5, 1.45).alongWith(new SetArmExtension(0.0))
       ),
 
       // Drive forwards until we get on the charge station.
