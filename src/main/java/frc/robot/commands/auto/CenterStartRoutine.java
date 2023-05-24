@@ -41,7 +41,10 @@ public class CenterStartRoutine extends SequentialCommandGroup {
       //Runs after dropping preload
       Commands.parallel(
         // Drives to position while:
-        new DriveToAbsolutePosition(new Pose2d(6.25, 2.15, new Rotation2d()), 0.3),
+        Commands.sequence(
+          new DriveToAbsolutePosition(new Pose2d(3.889, 2.15, new Rotation2d()), 0.8),
+          new DriveToAbsolutePosition(new Pose2d(6.528, 2.155, new Rotation2d()),0.8 )
+        ),
         // 1. Retracting Arm
         new SetArmExtension(0.0),
         new BlockUntilArmLessThan(0.35).andThen(
@@ -56,12 +59,14 @@ public class CenterStartRoutine extends SequentialCommandGroup {
       // Drive backwards and pickup.
       Commands.race(
         new GroundPickup(),
-        new DriveVelocityUntilDistance(-0.5, 1.45).alongWith(new SetArmExtension(0.0))
+        new DriveVelocityUntilDistance(-0.5, 1.25)
       ),
 
       // Drive forwards until we get on the charge station.
-      new DriveVelocityUntilDistance(0.6, 2.35),
-
+      Commands.parallel(
+        new DriveToAbsolutePosition(new Pose2d(3.889, 2.15, new Rotation2d()), 0.9),
+        new SetArmExtension(0.0)
+      ),
       new BalanceOnCharge() // TODO: failsafe w/ distance
     );
   }
