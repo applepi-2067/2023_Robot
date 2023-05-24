@@ -31,9 +31,9 @@ public final class PresetPoses {
     }
 
     public static final class Red {
-      public static final Pose2d TOP_POSE2D = new Pose2d(RED_START_X, TOP_START_Y, Rotation2d.fromDegrees(180.0));
-      public static final Pose2d CENTER_POSE2D = new Pose2d(RED_START_X, CENTER_START_Y, Rotation2d.fromDegrees(180.0));
-      public static final Pose2d BOTTOM_POSE2D = new Pose2d(RED_START_X, BOTTOM_START_Y, Rotation2d.fromDegrees(180.0));
+      public static final Pose2d TOP_POSE2D = new Pose2d(RED_START_X, TOP_START_Y, Rotation2d.fromDegrees(0.0));
+      public static final Pose2d CENTER_POSE2D = new Pose2d(RED_START_X, CENTER_START_Y, Rotation2d.fromDegrees(0.0));
+      public static final Pose2d BOTTOM_POSE2D = new Pose2d(RED_START_X, BOTTOM_START_Y, Rotation2d.fromDegrees(0.0));
     }
   }
 
@@ -72,18 +72,18 @@ public final class PresetPoses {
 
     public static final class Red {
       public static final class Top {
-        public static final Pose2d CUBE_PICKUP_POSE2D = new Pose2d(RED_CUBE_PICKUP_X, TOP_CUBE_PICKUP_Y, Rotation2d.fromDegrees(180.0));
-        public static final Pose2d CUBE_SCORE_POSE2D = new Pose2d(InitialPoses.RED_START_X, TOP_CUBE_SCORE_Y, Rotation2d.fromDegrees(180.0));
+        public static final Pose2d CUBE_PICKUP_POSE2D = new Pose2d(RED_CUBE_PICKUP_X, TOP_CUBE_PICKUP_Y, Rotation2d.fromDegrees(0.0));
+        public static final Pose2d CUBE_SCORE_POSE2D = new Pose2d(InitialPoses.RED_START_X, TOP_CUBE_SCORE_Y, Rotation2d.fromDegrees(0.0));
 
         public static final double CUBE_PICKUP_WAIST_ROTATION_DEGREES = -180.0;
         public static final double CUBE_PICKUP_ROBOT_ABSOLUTE_ANGLE_DEGREES = 0.0;
       }
       public static final class Center {
-        public static final Pose2d CUBE_PICKUP_POSE2D = new Pose2d(RED_CUBE_PICKUP_X, CENTER_CUBE_PICKUP_Y, Rotation2d.fromDegrees(180.0));
+        public static final Pose2d CUBE_PICKUP_POSE2D = new Pose2d(RED_CUBE_PICKUP_X, CENTER_CUBE_PICKUP_Y, Rotation2d.fromDegrees(0.0));
       }
       public static final class Bottom {
-        public static final Pose2d CUBE_PICKUP_POSE2D = new Pose2d(RED_CUBE_PICKUP_X, BOTTOM_CUBE_PICKUP_Y, Rotation2d.fromDegrees(180.0));
-        public static final Pose2d CUBE_SCORE_POSE2D = new Pose2d(InitialPoses.RED_START_X, BOTTOM_CUBE_SCORE_Y, Rotation2d.fromDegrees(180.0));
+        public static final Pose2d CUBE_PICKUP_POSE2D = new Pose2d(RED_CUBE_PICKUP_X, BOTTOM_CUBE_PICKUP_Y, Rotation2d.fromDegrees(0.0));
+        public static final Pose2d CUBE_SCORE_POSE2D = new Pose2d(InitialPoses.RED_START_X, BOTTOM_CUBE_SCORE_Y, Rotation2d.fromDegrees(0.0));
 
         public static final double CUBE_PICKUP_WAIST_ROTATION_DEGREES = 180.0;
         public static final double CUBE_PICKUP_ROBOT_ABSOLUTE_ANGLE_DEGREES = 0.0;
