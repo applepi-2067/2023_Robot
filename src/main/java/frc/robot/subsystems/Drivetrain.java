@@ -5,7 +5,11 @@
 package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.chargestation.BalanceOnCharge;
+import frc.robot.commands.teleop_auto.GroundPickup;
 import frc.robot.utils.Transforms;
+
+import java.util.HashMap;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -15,19 +19,30 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPRamseteCommand;
 
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import io.github.oblarg.oblog.Loggable;
@@ -119,7 +134,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
     // Initialize pose estimator.
     m_odometry = new DifferentialDrivePoseEstimator(
-      new DifferentialDriveKinematics(WHEEL_BASE_METERS), new Rotation2d(getYawRadians()),
+      Constants.Drivetrain.kDriveKinematics, new Rotation2d(getYawRadians()),
       getLeftMotorDistanceMeters(), getRightMotorDistanceMeters(), Constants.Drivetrain.INITIAL_ROBOT_POSE2D,
       new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.0408, 1.2711, 0.1)
     );
@@ -186,7 +201,9 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
     m_leftMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(filteredLeftMotorVelocity_MetersPerSec));
     m_rightMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(filteredRightMotorVelocity_MetersPerSec));
+
   }
+
 
   /**
    * 
@@ -215,6 +232,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_leftMotor.setSelectedSensorPosition(0.0);
     m_rightMotor.setSelectedSensorPosition(0.0);
   }
+
 
   /**
    * Reset the gyro yaw values
@@ -426,4 +444,64 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_rightMotor.setNeutralMode(NeutralMode.Brake);
     m_rightMotorFollower.setNeutralMode(NeutralMode.Brake);
   }
+
+  /*
+  * stuff for trajectory following
+  */
+
+  /**
+   * Method to drive the robot via applied voltage.
+   *
+   * @param leftVolts Voltage to be applied to the left motors
+   * @param rightVolts Voltage to be applied to the right motors
+   */
+
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    m_leftMotor.setVoltage(leftVolts);
+    m_rightMotor.setVoltage(rightVolts);
+    m_drivetrain.feed();
+  }
+  
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(ticksToMeters(m_leftMotor.getSensorCollection().getIntegratedSensorVelocity()), ticksToMeters(m_rightMotor.getSensorCollection().getIntegratedSensorVelocity()));
+  }
+
+
+
+  public HashMap PPHash(){
+    // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
+    PathPlannerTrajectory centerPickupPath = PathPlanner.loadPath("CenterPickup", new PathConstraints(4, 3));
+
+    // This is just an example event map. It would be better to have a constant, global event map
+    // in your code that will be used by all path following commands.
+    HashMap<String, Command> eventMap = new HashMap<String, Command>();
+    eventMap.put("GroundPickup", new GroundPickup());
+    eventMap.put("balance", new BalanceOnCharge());
+    return eventMap;
+  }
+
+  public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> {
+          // Reset odometry for the first path you run during auto
+          if(isFirstPath){
+              this.setOdometryPose2d(traj.getInitialPose());
+          }
+        }),
+        new PPRamseteCommand(
+            traj, 
+            this::getLatestRobotPose2d, // Pose supplier
+            new RamseteController(),
+            new SimpleMotorFeedforward(Constants.Drivetrain.ksVolts, Constants.Drivetrain.kvVoltSecondsPerMeter, Constants.Drivetrain.kaVoltSecondsSquaredPerMeter),
+            Constants.Drivetrain.kDriveKinematics, // DifferentialDriveKinematics
+            this::getWheelSpeeds, // DifferentialDriveWheelSpeeds supplier
+            new PIDController(0.1, 0.0, 0.0), // Left controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(0.1, 0.0, 0.0), // Right controller (usually the same values as left controller)
+            this::tankDriveVolts, // Voltage biconsumer
+            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+            this // Requires this drive subsystem
+        )
+    );
+  }
+
 }

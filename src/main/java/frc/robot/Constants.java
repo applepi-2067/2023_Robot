@@ -5,14 +5,21 @@
 package frc.robot;
 
 import java.io.IOException;
+import java.util.HashMap;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot.RobotSetupPosition;
 import frc.robot.commands.IK.IKCoordinate;
 import frc.robot.utils.Gains;
@@ -117,7 +124,21 @@ public final class Constants {
     public static final double MOTOR_ACCELERATION = 9.5;  // m/s^2
     public static final double MOTOR_TURN_ACCELERATION = 8.0;  // m/s^2, speed differential of the wheels
     public static final double MOTOR_ACCELERATION_AUTO = 3.0;  // m/s^2
+
+    /*
+     * Gains used in Ramsete controller for trajectory following
+     * DO NOT DEPLOY UNTIL RUNNING SYS ID TO DETERMINE!!!!!!!! 
+     */
+    public static final double ksVolts = 0.0; // volts
+    public static final double kvVoltSecondsPerMeter = 0.0; // volts*sec/meter
+    public static final double kaVoltSecondsSquaredPerMeter = 0.0; // volts*sec^2/meter
+    public static final double kTrackWidthMeters = Units.inchesToMeters(22.0);
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
+    public static DifferentialDriveKinematics kDriveKinematics =
+    new DifferentialDriveKinematics(Constants.Drivetrain.kTrackWidthMeters);
   }
+
 
   public static final class PneumaticsDevices {
     public static final int INTAKE_CONVEYOR_IN = 0;
@@ -159,6 +180,8 @@ public final class Constants {
   public static final class Camera {
     public static final double CAMERA_HYPOTENUSE_OFFSET = Units.inchesToMeters(6.5);
   }
+
+
 
   public static final class Field {
     public static AprilTagFieldLayout aprilTagFieldLayout = loadFieldLayout();
