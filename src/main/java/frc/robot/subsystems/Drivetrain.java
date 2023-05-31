@@ -49,13 +49,14 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
   public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
-  public static final double DISTANCE_FUDGE_FACTOR = 1 / 1.1289;
-  public static final double GEAR_RATIO = 8.0 * DISTANCE_FUDGE_FACTOR;
+  //public static final double DISTANCE_FUDGE_FACTOR = 1 / 1.1289;
+  public static final double GEAR_RATIO = 7.0; 
   public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4.0);
   public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI; // meters
   public static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
   public static final double DEGREES_PER_REV = 360.0;
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
+  
   public static final double WHEEL_BASE_METERS = Units.inchesToMeters(22.0); // distance between wheels (width) in meters
 
   private final DifferentialDrivePoseEstimator m_odometry;
@@ -125,6 +126,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     );
 
     SmartDashboard.putData("Field", m_field);
+    
   }
 
   @Override
@@ -140,6 +142,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     double rightVelocity = motorVelocities.right * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY;
 
     setSetPointVelocity(leftVelocity, rightVelocity);
+  
   }
 
   /**
@@ -233,6 +236,14 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     return ticksToMeters(m_rightMotor.getSelectedSensorPosition());
   }
 
+  
+
+  @Log (name="leftvelocity")
+  public double getLeftVelocity() {
+    return TicksPer100msToMetersPerSec(m_leftMotor.getSelectedSensorVelocity());
+    
+  }
+
   /**
    * @return left motor distance in meters.
    */
@@ -323,6 +334,10 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   
   private double metersPerSecToTicksPer100ms(double setpoint) {
     return metersToTicks(setpoint) / 10.0;
+  }
+
+  private double TicksPer100msToMetersPerSec(double setpoint) {
+    return ticksToMeters(setpoint) * 10.0;
   }
 
   private void configMotionMagic(WPI_TalonFX _talon) {
