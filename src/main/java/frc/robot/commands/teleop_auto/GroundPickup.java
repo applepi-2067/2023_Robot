@@ -17,9 +17,9 @@ public class GroundPickup extends SequentialCommandGroup {
     addCommands(
       new ClawOpen(),
       new SetArmExtension(0.0),
-      new SetShoulderPosition(-55.0),
+      new SetShoulderPosition(-60.0),
       Commands.parallel(
-        new SetArmExtension(0.25),
+        new SetArmExtension(0.3),
         new ClawSensorGrab()
       ),
       new SetArmExtension(0.0),

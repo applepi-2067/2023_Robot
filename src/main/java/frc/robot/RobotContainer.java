@@ -72,8 +72,10 @@ public class RobotContainer implements Loggable {
     m_drivetrain.setDefaultCommand(
         Commands.run(
             () -> m_drivetrain.arcadeDrive(
-                -m_driverController.getLeftY(),
+                 -m_driverController.getLeftY(),
+               
                 -m_driverController.getRightX() / 1.7),
+                
             m_drivetrain));
   }
 
@@ -117,11 +119,11 @@ public class RobotContainer implements Loggable {
       Commands.parallel(
         new SetArmExtension(0.0),
         new BlockUntilArmLessThan(0.2).andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE)))); // stowed/retracted position
-    m_operatorController.x().onTrue(new SetShoulderPosition(20).andThen(new SetArmExtension(0.780))); // High cone scoring position
-    m_operatorController.povDown().onTrue(new SetShoulderPosition(8).andThen(new SetArmExtension(0.780))); // High cube scoring position
-    m_operatorController.b().onTrue(new SetShoulderPosition(7).andThen(new SetArmExtension(0.366))); // Mid cone scoring position
-    m_operatorController.y().onTrue(new SetShoulderPosition(8.5).andThen(new SetArmExtension(0.0)).alongWith(new ClawSensorGrab()));  //Get Game Piece from human / feed station
-    m_operatorController.povLeft().onTrue(new SetShoulderPosition(-2).andThen(new SetArmExtension(0.355))); // Mid cube scoring position
+    m_operatorController.x().onTrue(new SetShoulderPosition(15).andThen(new SetArmExtension(0.780))); // High cone scoring position
+    m_operatorController.povDown().onTrue(new SetShoulderPosition(3).andThen(new SetArmExtension(0.780))); // High cube scoring position
+    m_operatorController.b().onTrue(new SetShoulderPosition(2).andThen(new SetArmExtension(0.366))); // Mid cone scoring position
+    m_operatorController.y().onTrue(new SetShoulderPosition(-1.5).andThen(new SetArmExtension(0.0)).alongWith(new ClawSensorGrab()));  //Get Game Piece from human / feed station
+    m_operatorController.povLeft().onTrue(new SetShoulderPosition(-12).andThen(new SetArmExtension(0.355))); // Mid cube scoring position
     m_operatorController.povUp().onTrue(new GroundPickup());
 
     m_operatorController.rightBumper().onTrue(

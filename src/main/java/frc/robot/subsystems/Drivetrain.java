@@ -31,9 +31,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class Drivetrain extends SubsystemBase implements Loggable{
+public class Drivetrain extends SubsystemBase implements Loggable {
   /** Creates a new DriveTrain. */
   private static Drivetrain instance = null;
   private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDeviceIDs.DT_MOTOR_LEFT_1_ID);
@@ -140,9 +141,9 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     WheelSpeeds motorVelocities = DifferentialDrive.arcadeDriveIK(fwd, rot, true);
     double leftVelocity = motorVelocities.left * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY;
     double rightVelocity = motorVelocities.right * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY;
-
+    SmartDashboard.putNumber("Left motor velocity pre-command", leftVelocity);
+    SmartDashboard.putNumber("Right motor velocity pre-command", rightVelocity);
     setSetPointVelocity(leftVelocity, rightVelocity);
-  
   }
 
   /**
@@ -177,7 +178,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_rightMotor.selectProfileSlot(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kPIDLoopIdx);
 
 
-    double averageForwardSpeed = (leftMotorVelocity_MetersPerSec + rightMotorVelocity_MetersPerSec) / 2;
+    double averageForwardSpeed = (leftMotorVelocity_MetersPerSec + rightMotorVelocity_MetersPerSec) / 2.0;
     double speedDiff = rightMotorVelocity_MetersPerSec - leftMotorVelocity_MetersPerSec;
 
     double averageForwardSpeedFiltered = m_forwardBackLimitered.calculate(averageForwardSpeed);
@@ -186,6 +187,9 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
     double filteredLeftMotorVelocity_MetersPerSec = averageForwardSpeedFiltered - speedDiffFiltered;
     double filteredRightMotorVelocity_MetersPerSec = averageForwardSpeedFiltered + speedDiffFiltered;
+
+    SmartDashboard.putNumber("Left motor velocity command", filteredLeftMotorVelocity_MetersPerSec);
+    SmartDashboard.putNumber("Right motor velocity command", filteredRightMotorVelocity_MetersPerSec);
 
     m_leftMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(filteredLeftMotorVelocity_MetersPerSec));
     m_rightMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(filteredRightMotorVelocity_MetersPerSec));
@@ -423,10 +427,21 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     _talon.config_kI(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kVelocityGains.kI, Constants.Drivetrain.kTimeoutMs);
     _talon.config_kD(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kVelocityGains.kD, Constants.Drivetrain.kTimeoutMs);
   
-
     /* Zero the sensor once on robot boot up */
     _talon.setSelectedSensorPosition(0, Constants.Drivetrain.kPIDLoopIdx, Constants.Drivetrain.kTimeoutMs);
   }
+
+  // @Config
+  // private void configPIDGains(double kP, double kI, double kD, double kF) {
+  //   WPI_TalonFX[] motors = {m_leftMotor, m_leftMotorFollower, m_rightMotor, m_rightMotorFollower};
+  //   for (WPI_TalonFX motor : motors) {
+  //     motor.selectProfileSlot(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kPIDLoopIdx);
+  //     motor.config_kF(Constants.Drivetrain.kVelocitySlotIdx, kF, Constants.Drivetrain.kTimeoutMs);
+  //     motor.config_kP(Constants.Drivetrain.kVelocitySlotIdx, kP, Constants.Drivetrain.kTimeoutMs);
+  //     motor.config_kI(Constants.Drivetrain.kVelocitySlotIdx, kI, Constants.Drivetrain.kTimeoutMs);
+  //     motor.config_kD(Constants.Drivetrain.kVelocitySlotIdx, kD, Constants.Drivetrain.kTimeoutMs);
+  //   }
+  // }
 
   public void setMotorsCoast() {
     m_leftMotor.setNeutralMode(NeutralMode.Coast);
@@ -440,5 +455,10 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_leftMotorFollower.setNeutralMode(NeutralMode.Brake);
     m_rightMotor.setNeutralMode(NeutralMode.Brake);
     m_rightMotorFollower.setNeutralMode(NeutralMode.Brake);
+  }
+
+  @Log (name="Drivetrain Velocity (m/s)")
+  public double getVelocity() {
+    return TicksPer100msToMetersPerSec(m_leftMotor.getSelectedSensorVelocity());
   }
 }

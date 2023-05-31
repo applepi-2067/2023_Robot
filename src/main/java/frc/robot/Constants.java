@@ -44,8 +44,8 @@ public final class Constants {
   }
 
   public static class Poses {
-    public static final double SHOULDER_STOW_ANGLE = -65.0;  // degrees
-    public static final double SHOULDER_ROTATE_ANGLE = -60.0;
+    public static final double SHOULDER_STOW_ANGLE = -75.0;  // degrees
+    public static final double SHOULDER_ROTATE_ANGLE = -70.0;
   }
 
   public static class CANDeviceIDs {
@@ -106,16 +106,16 @@ public final class Constants {
      */
     public static final Gains kPositionGains = new Gains(0.035, 0.0, 0.0, 0.0, 0.0, 1.0);
     // public static final Gains kPositionGains = new Gains(0.013, 0.0001, 0.0, 0.0, 200.0, 1.0);
-    public static final Gains kVelocityGains = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0); 
+    public static final Gains kVelocityGains = new Gains(0.1, 0.0, 0.0, 0.0479, 0.0, 1.0); 
 
     // Maximum drivetrain velocity in meters per seconds.
-    public static final double MAX_DRIVETRAIN_VELOCITY = 4.0;
+    public static final double MAX_DRIVETRAIN_VELOCITY = 4.5;
     
     // Drivetrain only moves when abs(stick) > deadband. Compensates for stick drift.
     public static final double DRIVETRAIN_CONTROLLER_DEADBAND = 0.03;
 
     public static final double MOTOR_ACCELERATION = 9.5;  // m/s^2
-    public static final double MOTOR_TURN_ACCELERATION = 8.0;  // m/s^2, speed differential of the wheels
+    public static final double MOTOR_TURN_ACCELERATION = 6.5;  // m/s^2, speed differential of the wheels
     public static final double MOTOR_ACCELERATION_AUTO = 3.0;  // m/s^2
   }
 
@@ -157,7 +157,7 @@ public final class Constants {
   }
 
   public static final class Camera {
-    public static final double CAMERA_HYPOTENUSE_OFFSET = Units.inchesToMeters(6.5);
+    public static final double CAMERA_HYPOTENUSE_OFFSET = Units.inchesToMeters(7.0);
   }
 
   public static final class Field {
