@@ -114,7 +114,7 @@ public final class Constants {
     // Drivetrain only moves when abs(stick) > deadband. Compensates for stick drift.
     public static final double DRIVETRAIN_CONTROLLER_DEADBAND = 0.03;
 
-    public static final double MOTOR_ACCELERATION = 9.5;  // m/s^2
+    public static final double MOTOR_ACCELERATION = 8.0;  // m/s^2
     public static final double MOTOR_TURN_ACCELERATION = 6.5;  // m/s^2, speed differential of the wheels
     public static final double MOTOR_ACCELERATION_AUTO = 3.0;  // m/s^2
   }
