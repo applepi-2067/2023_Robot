@@ -35,24 +35,24 @@ public final class Constants {
   }
 
   public static class ZeroingOffsets {
-    public static final double SHOULDER_FRONT_MINIMUM_ANGLE = -62.5;  //  Angle at which the sensor stops detecting the magnet
+    public static final double SHOULDER_FRONT_MINIMUM_ANGLE = -56;  //  Angle at which the sensor stops detecting the magnet
     public static final double WAIST_ZERO_SENSOR_OFFSET = 11.64;  // Angle from waist zero sensor to true zero
   }
 
   public static class Poses {
     public static class ShoulderAngles {
       // Degrees.
-      public static final double STOW = -75.0;
-      public static final double ROTATE = -70.0;
+      public static final double STOW = -65.0;
+      public static final double ROTATE = -60.0;
 
-      public static final double MID_CUBE = -12.0;
-      public static final double MID_CONE = 2.0;
+      public static final double MID_CUBE = -2.0;
+      public static final double MID_CONE = 7.0;
 
-      public static final double HIGH_CUBE = 3.0;
-      public static final double HIGH_CONE = 12.0;
+      public static final double HIGH_CUBE = 8.0;
+      public static final double HIGH_CONE = 20.0;
 
-      public static final double PIECE_GRAB = 3.5;
-      public static final double GROUND_PICKUP = -60.0;
+      public static final double PIECE_GRAB = 8.5;
+      public static final double GROUND_PICKUP = -55.0;
   }
 
     public static class ArmExtensions {
@@ -64,7 +64,7 @@ public final class Constants {
 
       public static final double SAFE_ROTATION = 0.3;
 
-      public static final double GROUND_PICKUP = 0.3;
+      public static final double GROUND_PICKUP = 0.25;
     }
   }
 
