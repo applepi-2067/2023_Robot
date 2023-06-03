@@ -16,14 +16,14 @@ public class GroundPickup extends SequentialCommandGroup {
   public GroundPickup() {
     addCommands(
       new ClawOpen(),
-      new SetArmExtension(0.0),
-      new SetShoulderPosition(-60.0),
+      new SetArmExtension(Constants.Poses.ArmExtensions.RETRACTED),
+      new SetShoulderPosition(Constants.Poses.ShoulderAngles.GROUND_PICKUP),
       Commands.parallel(
-        new SetArmExtension(0.3),
+        new SetArmExtension(Constants.Poses.ArmExtensions.GROUND_PICKUP),
         new ClawSensorGrab()
       ),
-      new SetArmExtension(0.0),
-      new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE)
+      new SetArmExtension(Constants.Poses.ArmExtensions.RETRACTED),
+      new SetShoulderPosition(Constants.Poses.ShoulderAngles.STOW)
     );
   }
 }

@@ -40,22 +40,32 @@ public final class Constants {
   }
 
   public static class Poses {
-    public static final double SHOULDER_STOW_ANGLE = -75.0;  // degrees
-    public static final double SHOULDER_ROTATE_ANGLE = -70.0;
+    public static class ShoulderAngles {
+      // Degrees.
+      public static final double STOW = -75.0;
+      public static final double ROTATE = -70.0;
 
-    public static final double SHOULDER_HIGH_CONE_ANGLE = 12.0;
-    public static final double SHOULDER_HIGH_CUBE_ANGLE = 3.0;
+      public static final double MID_CUBE = -12.0;
+      public static final double MID_CONE = 2.0;
 
-    public static final double ARM_HIGH_EXTENSION = 0.78;
+      public static final double HIGH_CUBE = 3.0;
+      public static final double HIGH_CONE = 12.0;
 
-    public static final double SHOULDER_MID_CONE_ANGLE = 2.0;
-    public static final double SHOULDER_MID_CUBE_ANGLE = -12.0;
+      public static final double PIECE_GRAB = 3.5;
+      public static final double GROUND_PICKUP = -60.0;
+  }
 
-    public static final double ARM_MID_EXTENSION = 0.36;
+    public static class ArmExtensions {
+      public static final double RETRACTED = 0.0;
 
-    public static final double SHOULDER_PIECE_GRAB_ANGLE = 3.5;
-    
-    public static final double ARM_RETRACTED_EXTENSION = 0.0;
+      public static final double MID = 0.36;
+      
+      public static final double HIGH = 0.78;
+
+      public static final double SAFE_ROTATION = 0.3;
+
+      public static final double GROUND_PICKUP = 0.3;
+    }
   }
 
   public static class CANDeviceIDs {

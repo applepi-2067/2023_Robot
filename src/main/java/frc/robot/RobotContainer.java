@@ -48,10 +48,6 @@ public class RobotContainer implements Loggable {
   private final Vision m_vision = Vision.getInstance();
   private final Arm m_arm = Arm.getInstance();
   private final ClawGrasp m_ClawGrasp = ClawGrasp.getInstance();
-  // private final IntakeExtensionMotor m_IntakeExtensionMotor = IntakeExtensionMotor.getInstance();
-  // private final IntakeConveyorBelt m_IntakeConveyorBelt = IntakeConveyorBelt.getInstance();
-  // private final IntakeRoller m_IntakeRoller = IntakeRoller.getInstance();
-  // private final IntakeConveyorExtension m_IntakeConveyorExtension = IntakeConveyorExtension.getInstance();
 
   private final Lights m_lights = Lights.getInstance();
   private final ClawBelt m_clawBelt = ClawBelt.getInstance();
@@ -119,8 +115,8 @@ public class RobotContainer implements Loggable {
     // Stow.
     m_operatorController.povRight().onTrue(
       Commands.parallel(
-        new SetArmExtension(Constants.Poses.ARM_RETRACTED_EXTENSION),
-        new BlockUntilArmLessThan(0.2).andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE))
+        new SetArmExtension(Constants.Poses.ArmExtensions.RETRACTED),
+        new BlockUntilArmLessThan(0.2).andThen(new SetShoulderPosition(Constants.Poses.ShoulderAngles.STOW))
       )
     );
 
@@ -129,37 +125,37 @@ public class RobotContainer implements Loggable {
 
     // Load station pickup.
     m_operatorController.y().onTrue(
-      new SetShoulderPosition(Constants.Poses.SHOULDER_PIECE_GRAB_ANGLE).andThen(
-        new SetArmExtension(Constants.Poses.ARM_RETRACTED_EXTENSION)).alongWith(new ClawSensorGrab())
+      new SetShoulderPosition(Constants.Poses.ShoulderAngles.PIECE_GRAB).andThen(
+        new SetArmExtension(Constants.Poses.ArmExtensions.RETRACTED)).alongWith(new ClawSensorGrab())
     );
 
     // Mid.
     m_operatorController.b().onTrue(
-      new SetShoulderPosition(Constants.Poses.SHOULDER_MID_CONE_ANGLE).andThen(new SetArmExtension(Constants.Poses.SHOULDER_MID_CONE_ANGLE))
+      new SetShoulderPosition(Constants.Poses.ShoulderAngles.MID_CONE).andThen(new SetArmExtension(Constants.Poses.ArmExtensions.MID))
     );
     m_operatorController.povLeft().onTrue(
-      new SetShoulderPosition(Constants.Poses.SHOULDER_MID_CUBE_ANGLE).andThen(new SetArmExtension(Constants.Poses.SHOULDER_MID_CUBE_ANGLE))
+      new SetShoulderPosition(Constants.Poses.ShoulderAngles.MID_CUBE).andThen(new SetArmExtension(Constants.Poses.ArmExtensions.MID))
     );
 
     // High.
     m_operatorController.x().onTrue(
-      new SetShoulderPosition(Constants.Poses.SHOULDER_HIGH_CONE_ANGLE).andThen(new SetArmExtension(Constants.Poses.ARM_HIGH_EXTENSION))
+      new SetShoulderPosition(Constants.Poses.ShoulderAngles.HIGH_CONE).andThen(new SetArmExtension(Constants.Poses.ArmExtensions.HIGH))
     );
     m_operatorController.povDown().onTrue(
-      new SetShoulderPosition(Constants.Poses.SHOULDER_HIGH_CUBE_ANGLE).andThen(new SetArmExtension(Constants.Poses.ARM_HIGH_EXTENSION))
+      new SetShoulderPosition(Constants.Poses.ShoulderAngles.HIGH_CUBE).andThen(new SetArmExtension(Constants.Poses.ArmExtensions.HIGH))
     );    
 
     m_operatorController.rightBumper().onTrue(
-      new SetArmExtension(0.005).asProxy().andThen(
-      new SetShoulderPosition(Constants.Poses.SHOULDER_ROTATE_ANGLE).asProxy()).andThen(
+      new SetArmExtension(Constants.Poses.ArmExtensions.RETRACTED).asProxy().andThen(
+      new SetShoulderPosition(Constants.Poses.ShoulderAngles.ROTATE).asProxy()).andThen(
       new SetWaistPosition(0)).andThen(
-      new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy())
+      new SetShoulderPosition(Constants.Poses.ShoulderAngles.STOW).asProxy())
     );
     m_operatorController.leftBumper().onTrue(
-      new SetArmExtension(0.005).asProxy().andThen(
-      new SetShoulderPosition(Constants.Poses.SHOULDER_ROTATE_ANGLE).asProxy()).andThen(
+      new SetArmExtension(Constants.Poses.ArmExtensions.RETRACTED).asProxy().andThen(
+      new SetShoulderPosition(Constants.Poses.ShoulderAngles.ROTATE).asProxy()).andThen(
       new SetWaistPosition(180.0)).andThen(
-      new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE).asProxy())
+      new SetShoulderPosition(Constants.Poses.ShoulderAngles.STOW).asProxy())
     );
     
     m_operatorController.rightStick().onTrue(new StopArmWaistShoulder());  // Stop arm/waist/shoulder when right stick is pressed in
