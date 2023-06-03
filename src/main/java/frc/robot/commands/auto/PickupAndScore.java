@@ -14,16 +14,17 @@ import frc.robot.commands.arm.SetArmExtension;
 import frc.robot.commands.arm.ZeroArmPosition;
 import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawOpen;
+import frc.robot.commands.claw.ClawSensorGrab;
 import frc.robot.commands.claw.SetClawBeltSpeed;
 import frc.robot.commands.claw.WaitForGamePieceNotInClaw;
 import frc.robot.commands.drivetrain.DriveAtVelocity;
+import frc.robot.commands.drivetrain.DriveToPosition;
 import frc.robot.commands.fielddriving.DriveToAbsolutePosition;
 import frc.robot.commands.fielddriving.RotateToAbsoluteAngle;
 import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.commands.shoulder.InitShoulderZero;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.commands.shoulder.ZeroShoulderPosition;
-import frc.robot.commands.teleop_auto.GroundPickup;
 import frc.robot.commands.waist.RotateWaistToFaceAbsolutePosition;
 import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.commands.waist.ZeroWaistPosition;
@@ -83,37 +84,32 @@ public class PickupAndScore extends SequentialCommandGroup {
     Drivetrain.getInstance().setOdometryPose2d(m_initalPose2d);
 
     addCommands(
-      // Grip cone.
-      Commands.parallel(
-        new ClawClose(),
-        new SetClawBeltSpeed(() -> {return 0.2;})
-      ),
-      
+      new DriveToPosition(0.0),
+      new SetClawBeltSpeed(() -> {return 0.2;}),
+  
       // Zero arm extension and shoulder angle
       Commands.parallel(
         new InitShoulderZero().andThen(new ZeroShoulderPosition()),
         new ZeroArmPosition().andThen(new SetArmExtension(0.0))
       ),
 
-      // Score high auto.      
+      // Raise arm and drop the cone
       new ScoreHighAuto(),
-      new WaitCommand(0.1),
+      new ClawOpen(),
+      new WaitCommand(0.2),
 
+      // Retract arm into stow position then drive
       new SetLightsColor(Lights.Color.WHITE),
 
-      // Stow and drive.
+      // Drive to in front of piece, rotate waist to 180 deg
       Commands.parallel(
-        // Retract arm and shoulder.
+        new DriveToAbsolutePosition(m_cubePickupPose2d),
+        new WaitCommand(0.5).andThen(new ZeroWaistPosition()).andThen(
+          new SetWaistPosition(m_cubePickupWaistRotationDegrees)
+        ),
         new SetArmExtension(0.0),
-
-        // Wait until arm is in safety zone, and then stow and drive back for mobility.
         new BlockUntilArmLessThan(Constants.Poses.ArmExtensions.SAFE_ROTATION).andThen(
-          Commands.parallel(
-            new SetShoulderPosition(Constants.Poses.ShoulderAngles.STOW),
-            new DriveToAbsolutePosition(m_cubePickupPose2d),
-
-            new ZeroWaistPosition().andThen(new SetWaistPosition(m_cubePickupWaistRotationDegrees))
-          )
+          new SetShoulderPosition(Constants.Poses.ShoulderAngles.STOW)
         )
       ),
 
@@ -121,24 +117,27 @@ public class PickupAndScore extends SequentialCommandGroup {
 
       // Pickup with 3 second timeout
       Commands.race(
-        new WaitCommand(3.0),
-        Commands.parallel(
-          new DriveAtVelocity(-1.0),
-          new GroundPickup()
+        new WaitCommand(3),
+        Commands.sequence(
+          new ClawOpen(),
+          new SetShoulderPosition(Constants.Poses.ShoulderAngles.GROUND_PICKUP),
+          Commands.parallel(
+            new SetArmExtension(Constants.Poses.ArmExtensions.GROUND_PICKUP),
+            new ClawSensorGrab(),
+            new DriveAtVelocity(-1.0)
+          ),
+          new DriveAtVelocity(0.0)
         )
       ),
 
-      Commands.parallel(
-        new ClawClose(),
-        new SetArmExtension(Constants.Poses.ArmExtensions.RETRACTED),
+      new ClawClose(),
 
-        new BlockUntilArmLessThan(Constants.Poses.ArmExtensions.SAFE_ROTATION).andThen(
-          Commands.parallel(
-            new SetShoulderPosition(Constants.Poses.ShoulderAngles.STOW),
-            new DriveToAbsolutePosition(m_cubeScorePose2d),
-            new RotateWaistToFaceAbsolutePosition(m_cubeScorePose2d)
-          )
-        )
+      // Stow and drive
+      Commands.deadline(
+        new DriveToAbsolutePosition(m_cubeScorePose2d),
+        new RotateWaistToFaceAbsolutePosition(m_cubeScorePose2d),
+        new SetArmExtension(Constants.Poses.ArmExtensions.RETRACTED),
+        new SetShoulderPosition(Constants.Poses.ShoulderAngles.STOW)
       ),
 
       // Score
@@ -146,17 +145,19 @@ public class PickupAndScore extends SequentialCommandGroup {
       new SetArmExtension(Constants.Poses.ArmExtensions.HIGH),
       new SetClawBeltSpeed(() -> {return -0.5;}),
       new ClawOpen(),
-
       Commands.parallel(
         new WaitForGamePieceNotInClaw(),
         new WaitCommand(0.5)
       ),
-      new SetClawBeltSpeed(() -> {return 0.0;}),
 
       // Go back to stow position
-      new BlockUntilArmLessThan(Constants.Poses.ArmExtensions.SAFE_ROTATION).andThen(
-        new SetShoulderPosition(Constants.Poses.ShoulderAngles.STOW)
-      )
+      Commands.parallel(
+        new SetArmExtension(0.0).andThen(new SetWaistPosition(0)),
+        new BlockUntilArmLessThan(Constants.Poses.ArmExtensions.SAFE_ROTATION).andThen(
+          new SetShoulderPosition(Constants.Poses.ShoulderAngles.STOW)
+        )
+      ),
+      new SetClawBeltSpeed(() -> {return 0.0;})
     );
   }
 }
