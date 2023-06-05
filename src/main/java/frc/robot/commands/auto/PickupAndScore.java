@@ -39,45 +39,55 @@ public class PickupAndScore extends SequentialCommandGroup {
   public PickupAndScore(boolean isBlue, boolean isTop) {
     Pose2d m_initalPose2d;
     Pose2d m_cubePickupPose2d;
-    Pose2d m_cubeScorePose2d;
+    Pose2d m_robotCubeScorePose2d;
 
     double m_cubePickupWaistRotationDegrees;
     double m_cubePickupRobotAbsoluteAngleDegrees;
+    
+    Pose2d m_cubeScorePose2d;
 
     if (isBlue) {
       if (isTop) {
         m_initalPose2d = PresetPoses.InitialPoses.Blue.TOP_POSE2D;
         m_cubePickupPose2d = PresetPoses.AutoPoses.Blue.Top.CUBE_PICKUP_POSE2D;
-        m_cubeScorePose2d = PresetPoses.AutoPoses.Blue.Top.CUBE_SCORE_POSE2D;
+        m_robotCubeScorePose2d = PresetPoses.AutoPoses.Blue.Top.ROBOT_CUBE_SCORE_POSE2D;
 
         m_cubePickupWaistRotationDegrees = PresetPoses.AutoPoses.Blue.Top.CUBE_PICKUP_WAIST_ROTATION_DEGREES;
         m_cubePickupRobotAbsoluteAngleDegrees = PresetPoses.AutoPoses.Blue.Top.CUBE_PICKUP_ROBOT_ABSOLUTE_ANGLE_DEGREES;
+
+        m_cubeScorePose2d = PresetPoses.AutoPoses.Blue.Top.CUBE_SCORE_POSE2D;
       }
       else {
         m_initalPose2d = PresetPoses.InitialPoses.Blue.BOTTOM_POSE2D;
         m_cubePickupPose2d = PresetPoses.AutoPoses.Blue.Bottom.CUBE_PICKUP_POSE2D;
-        m_cubeScorePose2d = PresetPoses.AutoPoses.Blue.Bottom.CUBE_SCORE_POSE2D;
+        m_robotCubeScorePose2d = PresetPoses.AutoPoses.Blue.Bottom.ROBOT_CUBE_SCORE_POSE2D;
 
         m_cubePickupWaistRotationDegrees = PresetPoses.AutoPoses.Blue.Bottom.CUBE_PICKUP_WAIST_ROTATION_DEGREES;
         m_cubePickupRobotAbsoluteAngleDegrees = PresetPoses.AutoPoses.Blue.Bottom.CUBE_PICKUP_ROBOT_ABSOLUTE_ANGLE_DEGREES;
+
+        m_cubeScorePose2d = PresetPoses.AutoPoses.Blue.Bottom.CUBE_SCORE_POSE2D;
       }
     }
     else {
       if (isTop) {
         m_initalPose2d = PresetPoses.InitialPoses.Red.TOP_POSE2D;
         m_cubePickupPose2d = PresetPoses.AutoPoses.Red.Top.CUBE_PICKUP_POSE2D;
-        m_cubeScorePose2d = PresetPoses.AutoPoses.Red.Top.CUBE_SCORE_POSE2D;
+        m_robotCubeScorePose2d = PresetPoses.AutoPoses.Red.Top.ROBOT_CUBE_SCORE_POSE2D;
 
         m_cubePickupWaistRotationDegrees = PresetPoses.AutoPoses.Red.Top.CUBE_PICKUP_WAIST_ROTATION_DEGREES;
         m_cubePickupRobotAbsoluteAngleDegrees = PresetPoses.AutoPoses.Red.Top.CUBE_PICKUP_ROBOT_ABSOLUTE_ANGLE_DEGREES;
+
+        m_cubeScorePose2d = PresetPoses.AutoPoses.Red.Top.CUBE_SCORE_POSE2D;
       }
       else {
         m_initalPose2d = PresetPoses.InitialPoses.Red.BOTTOM_POSE2D;
         m_cubePickupPose2d = PresetPoses.AutoPoses.Red.Bottom.CUBE_PICKUP_POSE2D;
-        m_cubeScorePose2d = PresetPoses.AutoPoses.Red.Bottom.CUBE_SCORE_POSE2D;
+        m_robotCubeScorePose2d = PresetPoses.AutoPoses.Red.Bottom.ROBOT_CUBE_SCORE_POSE2D;
 
         m_cubePickupWaistRotationDegrees = PresetPoses.AutoPoses.Red.Bottom.CUBE_PICKUP_WAIST_ROTATION_DEGREES;
         m_cubePickupRobotAbsoluteAngleDegrees = PresetPoses.AutoPoses.Red.Bottom.CUBE_PICKUP_ROBOT_ABSOLUTE_ANGLE_DEGREES;
+
+        m_cubeScorePose2d = PresetPoses.AutoPoses.Red.Bottom.CUBE_SCORE_POSE2D;
       }
     }
 
@@ -134,10 +144,11 @@ public class PickupAndScore extends SequentialCommandGroup {
 
       // Stow and drive
       Commands.deadline(
-        new DriveToAbsolutePosition(m_cubeScorePose2d),
-        new RotateWaistToFaceAbsolutePosition(m_cubeScorePose2d),
-        new SetArmExtension(Constants.Poses.ArmExtensions.RETRACTED),
-        new SetShoulderPosition(Constants.Poses.ShoulderAngles.STOW)
+        new DriveToAbsolutePosition(m_robotCubeScorePose2d),
+        new SetArmExtension(Constants.Poses.ArmExtensions.RETRACTED).andThen(
+          new RotateWaistToFaceAbsolutePosition(m_cubeScorePose2d)
+        ),
+        new SetShoulderPosition(Constants.Poses.ShoulderAngles.ROTATE)
       ),
 
       // Score
