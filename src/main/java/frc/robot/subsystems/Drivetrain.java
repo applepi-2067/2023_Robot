@@ -431,18 +431,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     _talon.setSelectedSensorPosition(0, Constants.Drivetrain.kPIDLoopIdx, Constants.Drivetrain.kTimeoutMs);
   }
 
-  // @Config
-  // private void configPIDGains(double kP, double kI, double kD, double kF) {
-  //   WPI_TalonFX[] motors = {m_leftMotor, m_leftMotorFollower, m_rightMotor, m_rightMotorFollower};
-  //   for (WPI_TalonFX motor : motors) {
-  //     motor.selectProfileSlot(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kPIDLoopIdx);
-  //     motor.config_kF(Constants.Drivetrain.kVelocitySlotIdx, kF, Constants.Drivetrain.kTimeoutMs);
-  //     motor.config_kP(Constants.Drivetrain.kVelocitySlotIdx, kP, Constants.Drivetrain.kTimeoutMs);
-  //     motor.config_kI(Constants.Drivetrain.kVelocitySlotIdx, kI, Constants.Drivetrain.kTimeoutMs);
-  //     motor.config_kD(Constants.Drivetrain.kVelocitySlotIdx, kD, Constants.Drivetrain.kTimeoutMs);
-  //   }
-  // }
-
   public void setMotorsCoast() {
     m_leftMotor.setNeutralMode(NeutralMode.Coast);
     m_leftMotorFollower.setNeutralMode(NeutralMode.Coast);
