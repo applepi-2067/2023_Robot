@@ -84,7 +84,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     m_rightMotorFollower.configFactoryDefault();
 
     // Configure current limits
-    double CONTINUOUS_CURRENT_LIMIT = 50;  // A
+    double CONTINUOUS_CURRENT_LIMIT = 40;  // A
     double TRIGGER_THRESHOLD_LIMIT = 60; // A
     double TRIGGER_THRESHOLD_TIME = 0.5; // s
     SupplyCurrentLimitConfiguration talonCurrentLimit = new SupplyCurrentLimitConfiguration(
