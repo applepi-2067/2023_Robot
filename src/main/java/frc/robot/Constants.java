@@ -11,13 +11,9 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import frc.robot.Robot.RobotSetupPosition;
 import frc.robot.commands.IK.IKCoordinate;
 import frc.robot.utils.Gains;
-import frc.robot.utils.ScoringPoses;
-import frc.robot.utils.Transforms;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -39,13 +35,37 @@ public final class Constants {
   }
 
   public static class ZeroingOffsets {
-    public static final double SHOULDER_FRONT_MINIMUM_ANGLE = -62.5;  //  Angle at which the sensor stops detecting the magnet
+    public static final double SHOULDER_FRONT_MINIMUM_ANGLE = -56;  //  Angle at which the sensor stops detecting the magnet
     public static final double WAIST_ZERO_SENSOR_OFFSET = 11.64;  // Angle from waist zero sensor to true zero
   }
 
   public static class Poses {
-    public static final double SHOULDER_STOW_ANGLE = -65.0;  // degrees
-    public static final double SHOULDER_ROTATE_ANGLE = -60.0;
+    public static class ShoulderAngles {
+      // Degrees.
+      public static final double STOW = -65.0;
+      public static final double ROTATE = -60.0;
+
+      public static final double MID_CUBE = -2.0;
+      public static final double MID_CONE = 7.0;
+
+      public static final double HIGH_CUBE = 8.0;
+      public static final double HIGH_CONE = 20.0;
+
+      public static final double PIECE_GRAB = 8.5;
+      public static final double GROUND_PICKUP = -55.0;
+  }
+
+    public static class ArmExtensions {
+      public static final double RETRACTED = 0.0;
+
+      public static final double MID = 0.36;
+      
+      public static final double HIGH = 0.78;
+
+      public static final double SAFE_ROTATION = 0.3;
+
+      public static final double GROUND_PICKUP = 0.25;
+    }
   }
 
   public static class CANDeviceIDs {
@@ -106,7 +126,7 @@ public final class Constants {
      */
     public static final Gains kPositionGains = new Gains(0.035, 0.0, 0.0, 0.0, 0.0, 1.0);
     // public static final Gains kPositionGains = new Gains(0.013, 0.0001, 0.0, 0.0, 200.0, 1.0);
-    public static final Gains kVelocityGains = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0); 
+    public static final Gains kVelocityGains = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0);
 
     // Maximum drivetrain velocity in meters per seconds.
     public static final double MAX_DRIVETRAIN_VELOCITY = 6.0;
@@ -157,7 +177,7 @@ public final class Constants {
   }
 
   public static final class Camera {
-    public static final double CAMERA_HYPOTENUSE_OFFSET = Units.inchesToMeters(6.5);
+    public static final double CAMERA_HYPOTENUSE_OFFSET = Units.inchesToMeters(7.0);
   }
 
   public static final class Field {
@@ -170,89 +190,6 @@ public final class Constants {
         System.out.println("Couldn't load April Tag Field Layout.");
         return null;
       }
-    }
-  }
-
-  public static final class ScoringInfo {
-    public static int m_initialAprilTagID;
-    public static ScoringPoses scoringPoses;
-    public static Pose2d initialPose2d;
-
-    public static void initScoringInfo(RobotSetupPosition position) {
-      boolean isBlue = DriverStation.getAlliance().equals(DriverStation.Alliance.Blue);
-
-      m_initialAprilTagID = getInitialAprilTagID(isBlue, position);
-      initialPose2d = getInitialPose2d(isBlue, position);
-
-      if (position != RobotSetupPosition.CENTER) {
-        scoringPoses = new ScoringPoses(isBlue, position == RobotSetupPosition.TOP);
-      }
-    }
-    
-    private static int getInitialAprilTagID(boolean isBlue, RobotSetupPosition position) {
-      if (isBlue) {
-        switch (position) {
-          case TOP:
-            return 6;
-          case BOTTOM:
-            return 8;
-          default:
-            return 7;
-        }
-      }
-
-      else {
-        switch (position) {
-          case TOP:
-            return 3;
-          case BOTTOM:
-            return 1;
-          default:
-            return 2;
-        }
-      }
-    }
-
-    public static final class ScoringOffsets {
-      public static final double ROBOT_PICKUP_PIECE_X_OFFSET = 5.323;
-      public static final double ROBOT_PICKUP_PIECE_Y_OFFSET = 0.156;
-
-      public static final double TOP_CUBE_SCORE_ROBOT_X_OFFSET = 0.74;
-      public static final double TOP_CUBE_SCORE_ROBOT_Y_OFFSET = 0.2;
-
-      public static final double TOP_CUBE_SCORE_X_OFFSET = Units.inchesToMeters(-27.0);
-    }
-
-    public static final class InitialRobotPositionOffsets {
-      public static final double X_OFFSET = Units.inchesToMeters(30.0);
-
-      public static final double Y_OFFSET_TOP_BOTTOM = Units.inchesToMeters(22.0);
-      public static final double Y_OFFSET_CENTER = 0.0;
-    }
-    
-    private static Pose2d getInitialPose2d(boolean isBlue, RobotSetupPosition position) {
-      int yCoeff;
-      if (isBlue) {
-        yCoeff = 1;
-      }
-      else {
-        yCoeff = -1;
-      }
-
-      double yOffset;
-      switch (position) {
-        case TOP:
-          yOffset = InitialRobotPositionOffsets.Y_OFFSET_TOP_BOTTOM;
-          break;
-        case BOTTOM:
-          yOffset = -1.0 * InitialRobotPositionOffsets.Y_OFFSET_TOP_BOTTOM;
-          break;
-        default:
-          yOffset = InitialRobotPositionOffsets.Y_OFFSET_CENTER;
-      }
-
-      Pose2d targetOffsetPose2d = new Pose2d(InitialRobotPositionOffsets.X_OFFSET, yOffset * yCoeff, Rotation2d.fromDegrees(180));
-      return Transforms.targetRelativePoseToAbsoluteFieldPose(m_initialAprilTagID, targetOffsetPose2d);
     }
   }
 }

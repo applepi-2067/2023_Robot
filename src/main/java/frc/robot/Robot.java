@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.sql.Driver;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -17,6 +19,7 @@ import frc.robot.commands.auto.ScorePreloadedPiece;
 import frc.robot.commands.auto.ZeroAll;
 import frc.robot.commands.lights.SetLightsColor;
 import frc.robot.subsystems.Lights;
+import frc.robot.utils.PresetPoses.AutoChoice;
 import io.github.oblarg.oblog.Logger;
 
 /**
@@ -29,36 +32,29 @@ import io.github.oblarg.oblog.Logger;
 public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
-  private RobotSetupPosition m_position;
-  private static SendableChooser<RobotSetupPosition> m_positionChooser;
+  private AutoChoice m_autoChoice;
+  private static SendableChooser<AutoChoice> m_autoChooser;
 
   private Command m_autoCommand;
 
   private Drivetrain m_drivetrain = Drivetrain.getInstance();
 
-  public enum RobotSetupPosition {
-    CENTER,
-    TOP,
-    BOTTOM,
-    ScorePreloadedPiece,
-    ZeroAll,
-    NONE
-  }
+  public Command createAuto(AutoChoice autoChoice) {
+    boolean isBlue = DriverStation.getAlliance().equals(DriverStation.Alliance.Blue);
 
-  public Command createAuto(RobotSetupPosition position) {
-    switch (position) {
+    switch (autoChoice) {
       case CENTER:
-        return new CenterStartRoutine();
+        return new CenterStartRoutine(isBlue);
       case TOP:
-        return new PickupAndScore();
+        return new PickupAndScore(isBlue, true);
       case BOTTOM:
-        return new PickupAndScore();
-      case ScorePreloadedPiece:
+        return new PickupAndScore(isBlue, false);
+      case SCORE_PRELOADED_PIECE:
         return new ScorePreloadedPiece();
-      case ZeroAll:
+      case ZERO_ALL:
         return new ZeroAll();
       default:
-        return new SetLightsColor(Lights.Color.YELLOW); // TODO: Default mobility auto?
+        return new SetLightsColor(Lights.Color.YELLOW);
     }
   }
 
@@ -72,8 +68,8 @@ public class Robot extends TimedRobot {
     // and put the autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    // Initialize Position Selector Choices
-    positionSelectInit();
+    // Initialize auto select choices.
+    autoSelectInit();
   }
 
   /**
@@ -113,17 +109,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    SmartDashboard.putData("Position Chooser", m_positionChooser);
-    m_position = (RobotSetupPosition) m_positionChooser.getSelected();
+    SmartDashboard.putData("Auto Chooser", m_autoChooser);
+    m_autoChoice = (AutoChoice) m_autoChooser.getSelected();
   }
 
-  public void positionSelectInit() {
-    m_positionChooser = new SendableChooser<RobotSetupPosition>();
-    m_positionChooser.setDefaultOption("ZeroAll", RobotSetupPosition.ZeroAll);
-    m_positionChooser.addOption("Top", RobotSetupPosition.TOP);
-    m_positionChooser.addOption("Bottom", RobotSetupPosition.BOTTOM);
-    m_positionChooser.addOption("Center", RobotSetupPosition.CENTER);
-    m_positionChooser.addOption("ScorePreLoadBackup", RobotSetupPosition.ScorePreloadedPiece);
+  public void autoSelectInit() {
+    m_autoChooser = new SendableChooser<AutoChoice>();
+    m_autoChooser.setDefaultOption("ZeroAll", AutoChoice.ZERO_ALL);
+    m_autoChooser.addOption("Top", AutoChoice.TOP);
+    m_autoChooser.addOption("Bottom", AutoChoice.BOTTOM);
+    m_autoChooser.addOption("Center", AutoChoice.CENTER);
+    m_autoChooser.addOption("ScorePreLoad", AutoChoice.SCORE_PRELOADED_PIECE);
   }
 
   /**
@@ -135,11 +131,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.setCoastEnabled(false);
 
     // Schedule the autonomous command
-    if (m_position != null) { // TODO: Schedule mobility auto?
-      Constants.ScoringInfo.initScoringInfo(m_position);
-      m_drivetrain.setOdometryPose2d(Constants.ScoringInfo.initialPose2d);
-
-      m_autoCommand = createAuto(m_position);
+    if (m_autoChoice != null) {
+      m_autoCommand = createAuto(m_autoChoice);
       m_autoCommand.schedule();
     }
   }

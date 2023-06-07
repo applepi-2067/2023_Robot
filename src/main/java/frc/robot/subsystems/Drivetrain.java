@@ -31,9 +31,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class Drivetrain extends SubsystemBase implements Loggable{
+public class Drivetrain extends SubsystemBase implements Loggable {
   /** Creates a new DriveTrain. */
   private static Drivetrain instance = null;
   private final WPI_TalonFX m_leftMotor = new WPI_TalonFX(Constants.CANDeviceIDs.DT_MOTOR_LEFT_1_ID);
@@ -56,6 +57,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   public static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
   public static final double DEGREES_PER_REV = 360.0;
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
+  
   public static final double WHEEL_BASE_METERS = Units.inchesToMeters(22.0); // distance between wheels (width) in meters
 
   private final DifferentialDrivePoseEstimator m_odometry;
@@ -125,6 +127,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     );
 
     SmartDashboard.putData("Field", m_field);
+    
   }
 
   @Override
@@ -138,7 +141,8 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     WheelSpeeds motorVelocities = DifferentialDrive.arcadeDriveIK(fwd, rot, true);
     double leftVelocity = motorVelocities.left * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY;
     double rightVelocity = motorVelocities.right * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY;
-
+    SmartDashboard.putNumber("Left motor velocity pre-command", leftVelocity);
+    SmartDashboard.putNumber("Right motor velocity pre-command", rightVelocity);
     setSetPointVelocity(leftVelocity, rightVelocity);
   }
 
@@ -174,7 +178,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_rightMotor.selectProfileSlot(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kPIDLoopIdx);
 
 
-    double averageForwardSpeed = (leftMotorVelocity_MetersPerSec + rightMotorVelocity_MetersPerSec) / 2;
+    double averageForwardSpeed = (leftMotorVelocity_MetersPerSec + rightMotorVelocity_MetersPerSec) / 2.0;
     double speedDiff = rightMotorVelocity_MetersPerSec - leftMotorVelocity_MetersPerSec;
 
     double averageForwardSpeedFiltered = m_forwardBackLimitered.calculate(averageForwardSpeed);
@@ -183,6 +187,9 @@ public class Drivetrain extends SubsystemBase implements Loggable{
 
     double filteredLeftMotorVelocity_MetersPerSec = averageForwardSpeedFiltered - speedDiffFiltered;
     double filteredRightMotorVelocity_MetersPerSec = averageForwardSpeedFiltered + speedDiffFiltered;
+
+    SmartDashboard.putNumber("Left motor velocity command", filteredLeftMotorVelocity_MetersPerSec);
+    SmartDashboard.putNumber("Right motor velocity command", filteredRightMotorVelocity_MetersPerSec);
 
     m_leftMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(filteredLeftMotorVelocity_MetersPerSec));
     m_rightMotor.set(TalonFXControlMode.Velocity, metersPerSecToTicksPer100ms(filteredRightMotorVelocity_MetersPerSec));
@@ -231,6 +238,14 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   @Log
   public double getRightMotorDistanceMeters() {
     return ticksToMeters(m_rightMotor.getSelectedSensorPosition());
+  }
+
+  
+
+  @Log (name="leftvelocity")
+  public double getLeftVelocity() {
+    return TicksPer100msToMetersPerSec(m_leftMotor.getSelectedSensorVelocity());
+    
   }
 
   /**
@@ -325,6 +340,10 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     return metersToTicks(setpoint) / 10.0;
   }
 
+  private double TicksPer100msToMetersPerSec(double setpoint) {
+    return ticksToMeters(setpoint) * 10.0;
+  }
+
   private void configMotionMagic(WPI_TalonFX _talon) {
 
     /* Configure Sensor Source for Primary PID */
@@ -408,7 +427,6 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     _talon.config_kI(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kVelocityGains.kI, Constants.Drivetrain.kTimeoutMs);
     _talon.config_kD(Constants.Drivetrain.kVelocitySlotIdx, Constants.Drivetrain.kVelocityGains.kD, Constants.Drivetrain.kTimeoutMs);
   
-
     /* Zero the sensor once on robot boot up */
     _talon.setSelectedSensorPosition(0, Constants.Drivetrain.kPIDLoopIdx, Constants.Drivetrain.kTimeoutMs);
   }
@@ -425,5 +443,10 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_leftMotorFollower.setNeutralMode(NeutralMode.Brake);
     m_rightMotor.setNeutralMode(NeutralMode.Brake);
     m_rightMotorFollower.setNeutralMode(NeutralMode.Brake);
+  }
+
+  @Log (name="Drivetrain Velocity (m/s)")
+  public double getVelocity() {
+    return TicksPer100msToMetersPerSec(m_leftMotor.getSelectedSensorVelocity());
   }
 }

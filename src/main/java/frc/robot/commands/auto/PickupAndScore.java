@@ -4,6 +4,7 @@
 
 package frc.robot.commands.auto;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -27,15 +28,70 @@ import frc.robot.commands.shoulder.ZeroShoulderPosition;
 import frc.robot.commands.waist.RotateWaistToFaceAbsolutePosition;
 import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.commands.waist.ZeroWaistPosition;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Lights;
-import frc.robot.utils.ScoringPoses;
+import frc.robot.utils.PresetPoses;
 
 //Auto routine to be used in the top of bottom scoring position, the routine will score the preloaded piece and leave the community
 public class PickupAndScore extends SequentialCommandGroup {
   /** Score preload, pick up cube, then score that one! */
 
-  public PickupAndScore() {
-    ScoringPoses scoringPoses = Constants.ScoringInfo.scoringPoses;
+  public PickupAndScore(boolean isBlue, boolean isTop) {
+    Pose2d m_initalPose2d;
+    Pose2d m_cubePickupPose2d;
+    Pose2d m_robotCubeScorePose2d;
+
+    double m_cubePickupWaistRotationDegrees;
+    double m_cubePickupRobotAbsoluteAngleDegrees;
+    
+    Pose2d m_cubeScorePose2d;
+
+    if (isBlue) {
+      if (isTop) {
+        m_initalPose2d = PresetPoses.InitialPoses.Blue.TOP_POSE2D;
+        m_cubePickupPose2d = PresetPoses.AutoPoses.Blue.Top.CUBE_PICKUP_POSE2D;
+        m_robotCubeScorePose2d = PresetPoses.AutoPoses.Blue.Top.ROBOT_CUBE_SCORE_POSE2D;
+
+        m_cubePickupWaistRotationDegrees = PresetPoses.AutoPoses.Blue.Top.CUBE_PICKUP_WAIST_ROTATION_DEGREES;
+        m_cubePickupRobotAbsoluteAngleDegrees = PresetPoses.AutoPoses.Blue.Top.CUBE_PICKUP_ROBOT_ABSOLUTE_ANGLE_DEGREES;
+
+        m_cubeScorePose2d = PresetPoses.AutoPoses.Blue.Top.CUBE_SCORE_POSE2D;
+      }
+      else {
+        m_initalPose2d = PresetPoses.InitialPoses.Blue.BOTTOM_POSE2D;
+        m_cubePickupPose2d = PresetPoses.AutoPoses.Blue.Bottom.CUBE_PICKUP_POSE2D;
+        m_robotCubeScorePose2d = PresetPoses.AutoPoses.Blue.Bottom.ROBOT_CUBE_SCORE_POSE2D;
+
+        m_cubePickupWaistRotationDegrees = PresetPoses.AutoPoses.Blue.Bottom.CUBE_PICKUP_WAIST_ROTATION_DEGREES;
+        m_cubePickupRobotAbsoluteAngleDegrees = PresetPoses.AutoPoses.Blue.Bottom.CUBE_PICKUP_ROBOT_ABSOLUTE_ANGLE_DEGREES;
+
+        m_cubeScorePose2d = PresetPoses.AutoPoses.Blue.Bottom.CUBE_SCORE_POSE2D;
+      }
+    }
+    else {
+      if (isTop) {
+        m_initalPose2d = PresetPoses.InitialPoses.Red.TOP_POSE2D;
+        m_cubePickupPose2d = PresetPoses.AutoPoses.Red.Top.CUBE_PICKUP_POSE2D;
+        m_robotCubeScorePose2d = PresetPoses.AutoPoses.Red.Top.ROBOT_CUBE_SCORE_POSE2D;
+
+        m_cubePickupWaistRotationDegrees = PresetPoses.AutoPoses.Red.Top.CUBE_PICKUP_WAIST_ROTATION_DEGREES;
+        m_cubePickupRobotAbsoluteAngleDegrees = PresetPoses.AutoPoses.Red.Top.CUBE_PICKUP_ROBOT_ABSOLUTE_ANGLE_DEGREES;
+
+        m_cubeScorePose2d = PresetPoses.AutoPoses.Red.Top.CUBE_SCORE_POSE2D;
+      }
+      else {
+        m_initalPose2d = PresetPoses.InitialPoses.Red.BOTTOM_POSE2D;
+        m_cubePickupPose2d = PresetPoses.AutoPoses.Red.Bottom.CUBE_PICKUP_POSE2D;
+        m_robotCubeScorePose2d = PresetPoses.AutoPoses.Red.Bottom.ROBOT_CUBE_SCORE_POSE2D;
+
+        m_cubePickupWaistRotationDegrees = PresetPoses.AutoPoses.Red.Bottom.CUBE_PICKUP_WAIST_ROTATION_DEGREES;
+        m_cubePickupRobotAbsoluteAngleDegrees = PresetPoses.AutoPoses.Red.Bottom.CUBE_PICKUP_ROBOT_ABSOLUTE_ANGLE_DEGREES;
+
+        m_cubeScorePose2d = PresetPoses.AutoPoses.Red.Bottom.CUBE_SCORE_POSE2D;
+      }
+    }
+
+    Drivetrain.getInstance().setOdometryPose2d(m_initalPose2d);
 
     addCommands(
       new DriveToPosition(0.0),
@@ -57,22 +113,26 @@ public class PickupAndScore extends SequentialCommandGroup {
 
       // Drive to in front of piece, rotate waist to 180 deg
       Commands.parallel(
-        new DriveToAbsolutePosition(scoringPoses.getRobotPickupPiecePose2d()),
-        new WaitCommand(0.5).andThen(new ZeroWaistPosition()).andThen(new SetWaistPosition(scoringPoses.getPickupWaistRotationDegrees())),
+        new DriveToAbsolutePosition(m_cubePickupPose2d),
+        new WaitCommand(0.5).andThen(new ZeroWaistPosition()).andThen(
+          new SetWaistPosition(m_cubePickupWaistRotationDegrees)
+        ),
         new SetArmExtension(0.0),
-        new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(-55.0))
+        new BlockUntilArmLessThan(Constants.Poses.ArmExtensions.SAFE_ROTATION).andThen(
+          new SetShoulderPosition(Constants.Poses.ShoulderAngles.STOW)
+        )
       ),
 
-      new RotateToAbsoluteAngle(scoringPoses.getRobotPickupPieceAbsoluteAngleDegrees()),
+      new RotateToAbsoluteAngle(m_cubePickupRobotAbsoluteAngleDegrees),
 
       // Pickup with 3 second timeout
       Commands.race(
         new WaitCommand(3),
         Commands.sequence(
           new ClawOpen(),
-          new SetShoulderPosition(-55.0),
+          new SetShoulderPosition(Constants.Poses.ShoulderAngles.GROUND_PICKUP),
           Commands.parallel(
-            new SetArmExtension(0.25),
+            new SetArmExtension(Constants.Poses.ArmExtensions.GROUND_PICKUP),
             new ClawSensorGrab(),
             new DriveAtVelocity(-1.0)
           ),
@@ -84,15 +144,16 @@ public class PickupAndScore extends SequentialCommandGroup {
 
       // Stow and drive
       Commands.deadline(
-        new DriveToAbsolutePosition(scoringPoses.getTopCubeScoreRobotPose2d()),
-        new RotateWaistToFaceAbsolutePosition(scoringPoses.getTopCubeScorePose2d()),
-        new SetArmExtension(0.0),
-        new SetShoulderPosition(10.0)
+        new DriveToAbsolutePosition(m_robotCubeScorePose2d),
+        new SetArmExtension(Constants.Poses.ArmExtensions.RETRACTED).andThen(
+          new RotateWaistToFaceAbsolutePosition(m_cubeScorePose2d)
+        ),
+        new SetShoulderPosition(Constants.Poses.ShoulderAngles.ROTATE)
       ),
 
       // Score
-      new SetShoulderPosition(8),
-      new SetArmExtension(0.730),
+      new SetShoulderPosition(Constants.Poses.ShoulderAngles.HIGH_CUBE),
+      new SetArmExtension(Constants.Poses.ArmExtensions.HIGH),
       new SetClawBeltSpeed(() -> {return -0.5;}),
       new ClawOpen(),
       Commands.parallel(
@@ -103,7 +164,9 @@ public class PickupAndScore extends SequentialCommandGroup {
       // Go back to stow position
       Commands.parallel(
         new SetArmExtension(0.0).andThen(new SetWaistPosition(0)),
-        new BlockUntilArmLessThan(0.40).andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE))
+        new BlockUntilArmLessThan(Constants.Poses.ArmExtensions.SAFE_ROTATION).andThen(
+          new SetShoulderPosition(Constants.Poses.ShoulderAngles.STOW)
+        )
       ),
       new SetClawBeltSpeed(() -> {return 0.0;})
     );

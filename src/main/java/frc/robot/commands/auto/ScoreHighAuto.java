@@ -4,10 +4,10 @@
 
 package frc.robot.commands.auto;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
 import frc.robot.commands.arm.SetArmExtension;
-import frc.robot.commands.shoulder.BlockUntilShoulderGreaterThan;
+import frc.robot.commands.claw.ClawOpen;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -17,8 +17,9 @@ public class ScoreHighAuto extends SequentialCommandGroup {
   /** Creates a new ScoreHighAuto. */
   public ScoreHighAuto() {
     addCommands(
-      new SetShoulderPosition(18.0),  // Forward is 20 deg  -- High scoring position
-      new SetArmExtension(0.77) // High scoring position
+      new SetShoulderPosition(Constants.Poses.ShoulderAngles.HIGH_CONE),
+      new SetArmExtension(Constants.Poses.ArmExtensions.HIGH),
+      new ClawOpen()
     );
   }
 }
