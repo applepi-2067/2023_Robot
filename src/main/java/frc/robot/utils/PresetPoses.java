@@ -42,7 +42,7 @@ public final class PresetPoses {
     public static final double BLUE_CUBE_PICKUP_X = 6.528;
     public static final double RED_CUBE_PICKUP_X = 10.025;
 
-    public static final double TOP_CUBE_PICKUP_Y = 4.561;
+    public static final double TOP_CUBE_PICKUP_Y = 4.682;
     public static final double TOP_ROBOT_CUBE_SCORE_Y = 4.411;
 
     public static final double CENTER_CUBE_PICKUP_Y = 2.155;
@@ -53,7 +53,7 @@ public final class PresetPoses {
     public static final double BLUE_CUBE_SCORE_X = 0.379;
     public static final double RED_CUBE_SCORE_X = 16.149;
 
-    public static final double TOP_CUBE_SCORE_Y = 4.398;
+    public static final double TOP_CUBE_SCORE_Y = 4.588;
     public static final double BOTTOM_CUBE_SCORE_Y = 1.09;
 
     public static final class Blue {
