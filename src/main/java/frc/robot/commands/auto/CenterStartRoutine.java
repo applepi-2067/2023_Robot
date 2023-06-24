@@ -49,13 +49,13 @@ public class CenterStartRoutine extends SequentialCommandGroup {
         new BlockUntilArmLessThan(0.3).andThen(
           Commands.parallel(
             new SetShoulderPosition(-65.0),
-            new DriveVelocityUntilDistance(-0.5, 4.0)
+            new DriveVelocityUntilDistance(-0.4, 4.0)
           )
         )
       ),
 
       // Drive forwards until we get on the charge station.
-      new DriveVelocityUntilDistance(0.6, 1.45),
+      new DriveVelocityUntilDistance(0.55, 1.45),
     
       Commands.parallel(
         new BalanceOnCharge(),
