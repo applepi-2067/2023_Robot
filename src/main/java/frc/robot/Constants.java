@@ -106,7 +106,7 @@ public final class Constants {
      */
     public static final Gains kPositionGains = new Gains(0.035, 0.0, 0.0, 0.0, 0.0, 1.0);
     // public static final Gains kPositionGains = new Gains(0.013, 0.0001, 0.0, 0.0, 200.0, 1.0);
-    public static final Gains kVelocityGains = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0); 
+    public static final Gains kVelocityGains = new Gains(0.1, 0.0, 0.0, 0.0479, 0.0, 1.0); 
 
     // Maximum drivetrain velocity in meters per seconds.
     public static final double MAX_DRIVETRAIN_VELOCITY = 6.0;
@@ -115,7 +115,7 @@ public final class Constants {
     public static final double DRIVETRAIN_CONTROLLER_DEADBAND = 0.03;
 
     public static final double MOTOR_ACCELERATION = 9.5;  // m/s^2
-    public static final double MOTOR_TURN_ACCELERATION = 8.0;  // m/s^2, speed differential of the wheels
+    public static final double MOTOR_TURN_ACCELERATION = 7.5;  // m/s^2, speed differential of the wheels
     public static final double MOTOR_ACCELERATION_AUTO = 3.0;  // m/s^2
   }
 
@@ -218,7 +218,7 @@ public final class Constants {
       public static final double ROBOT_PICKUP_PIECE_Y_OFFSET = 0.156;
 
       public static final double TOP_CUBE_SCORE_ROBOT_X_OFFSET = 0.74;
-      public static final double TOP_CUBE_SCORE_ROBOT_Y_OFFSET = 0.2;
+      public static final double TOP_CUBE_SCORE_ROBOT_Y_OFFSET = 0.25;
 
       public static final double TOP_CUBE_SCORE_X_OFFSET = Units.inchesToMeters(-27.0);
     }
