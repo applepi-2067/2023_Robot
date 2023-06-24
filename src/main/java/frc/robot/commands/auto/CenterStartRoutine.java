@@ -15,6 +15,7 @@ import frc.robot.commands.shoulder.ZeroShoulderPosition;
 import frc.robot.commands.waist.SetWaistPosition;
 import frc.robot.commands.waist.ZeroWaistPosition;
 import frc.robot.commands.claw.ClawClose;
+import frc.robot.commands.claw.ClawOpen;
 import frc.robot.commands.claw.SetClawBeltSpeed;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -37,6 +38,7 @@ public class CenterStartRoutine extends SequentialCommandGroup {
 
       // Score high auto.      
       new ScoreHighAuto(),
+      new ClawOpen(),
       new WaitCommand(0.1),
 
       Commands.parallel(
