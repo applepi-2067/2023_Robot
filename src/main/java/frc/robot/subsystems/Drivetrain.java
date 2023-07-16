@@ -57,6 +57,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   public static final double DEGREES_PER_REV = 360.0;
   public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
   public static final double WHEEL_BASE_METERS = Units.inchesToMeters(22.0); // distance between wheels (width) in meters
+  public static double MAX_VELOCITY = 1.3;
 
   private final DifferentialDrivePoseEstimator m_odometry;
   private Pose2d m_latestRobotPose2d = new Pose2d();
@@ -136,8 +137,8 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   // Move the robot forward with some rotation.
   public void arcadeDrive(double fwd, double rot) {
     WheelSpeeds motorVelocities = DifferentialDrive.arcadeDriveIK(fwd, rot, true);
-    double leftVelocity = motorVelocities.left * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY;
-    double rightVelocity = motorVelocities.right * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY;
+    double leftVelocity = motorVelocities.left * MAX_VELOCITY;
+    double rightVelocity = motorVelocities.right * MAX_VELOCITY;
 
     setSetPointVelocity(leftVelocity, rightVelocity);
   }
@@ -150,8 +151,8 @@ public class Drivetrain extends SubsystemBase implements Loggable{
    */
   public void tankDrive(double leftStickY, double rightStickY) {
     setSetPointVelocity(
-      leftStickY * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY,
-      rightStickY * Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY
+      leftStickY * MAX_VELOCITY,
+      rightStickY * MAX_VELOCITY
     );
   }
 
@@ -376,7 +377,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     /* Set acceleration and vcruise velocity - see documentation */
     // Constants stolen from team 2168's 2022 repo
     _talon.configMotionAcceleration((int) (metersPerSecToTicksPer100ms(Constants.Drivetrain.MOTOR_ACCELERATION_AUTO))); //(distance units per 100 ms) per second
-    _talon.configMotionCruiseVelocity((int) (metersPerSecToTicksPer100ms(Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY))); //distance units per 100 ms
+    _talon.configMotionCruiseVelocity((int) (metersPerSecToTicksPer100ms(MAX_VELOCITY))); //distance units per 100 ms
     _talon.configMotionSCurveStrength(8);
   
 
@@ -425,5 +426,15 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_leftMotorFollower.setNeutralMode(NeutralMode.Brake);
     m_rightMotor.setNeutralMode(NeutralMode.Brake);
     m_rightMotorFollower.setNeutralMode(NeutralMode.Brake);
+  }
+
+  public static double disableKiddieMode(boolean notKiddie){
+    if (notKiddie == true){
+      MAX_VELOCITY = 6.0;
+    }else{
+      MAX_VELOCITY = 1.3;
+    }
+
+    return MAX_VELOCITY;
   }
 }

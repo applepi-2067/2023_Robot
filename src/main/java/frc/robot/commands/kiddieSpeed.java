@@ -6,13 +6,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.Drivetrain;
 
 public class kiddieSpeed extends CommandBase {
   
-  Boolean speed;
+  Boolean notKid;
 
-  public kiddieSpeed(Boolean speed) {
-    
+  public kiddieSpeed(Boolean notKiddie) {
+    notKid = notKiddie;
   }
 
   // Called when the command is initially scheduled.
@@ -22,13 +23,12 @@ public class kiddieSpeed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY=6.0;
-  }
+    Drivetrain.disableKiddieMode(notKid);
+    }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Constants.Drivetrain.MAX_DRIVETRAIN_VELOCITY=1.3;
   }
 
   // Returns true when the command should end.
