@@ -24,6 +24,7 @@ import frc.robot.commands.shoulder.*;
 import frc.robot.commands.teleop_auto.GroundPickup;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
+import frc.robot.commands.kiddieSpeed;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.waist.ScoringWaistControl;
 
@@ -93,9 +94,8 @@ public class RobotContainer implements Loggable {
     // m_driverController.leftTrigger().onTrue(new SetLightsColor(Lights.Color.YELLOW));
     // m_driverController.y().onTrue(new SetLightsColor(Lights.Color.YELLOW));
 
-    m_driverController.rightBumper().onTrue(new ScoringWaistControl(2.0));
-    m_driverController.leftBumper().onTrue(new ScoringWaistControl(-2.0));
     m_driverController.back().onTrue(new StopDrivetrain());  // E-Stop the drivetrain when back button is pressed
+    m_driverController.rightTrigger().onTrue(new kiddieSpeed(true));
 
     /** Operator Controls */
     // Lights
@@ -117,8 +117,6 @@ public class RobotContainer implements Loggable {
       Commands.parallel(
         new SetArmExtension(0.0),
         new BlockUntilArmLessThan(0.2).andThen(new SetShoulderPosition(Constants.Poses.SHOULDER_STOW_ANGLE)))); // stowed/retracted position
-    m_operatorController.x().onTrue(new SetShoulderPosition(20).andThen(new SetArmExtension(0.780))); // High cone scoring position
-    m_operatorController.povDown().onTrue(new SetShoulderPosition(8).andThen(new SetArmExtension(0.780))); // High cube scoring position
     m_operatorController.b().onTrue(new SetShoulderPosition(7).andThen(new SetArmExtension(0.366))); // Mid cone scoring position
     m_operatorController.y().onTrue(new SetShoulderPosition(8.5).andThen(new SetArmExtension(0.0)).alongWith(new ClawSensorGrab()));  //Get Game Piece from human / feed station
     m_operatorController.povLeft().onTrue(new SetShoulderPosition(-2).andThen(new SetArmExtension(0.355))); // Mid cube scoring position
