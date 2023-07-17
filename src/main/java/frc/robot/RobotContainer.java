@@ -25,6 +25,7 @@ import frc.robot.commands.teleop_auto.GroundPickup;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.kiddieSpeed;
+import frc.robot.commands.kiddieSpeedReturn;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.waist.ScoringWaistControl;
 
@@ -95,7 +96,10 @@ public class RobotContainer implements Loggable {
     // m_driverController.y().onTrue(new SetLightsColor(Lights.Color.YELLOW));
 
     m_driverController.back().onTrue(new StopDrivetrain());  // E-Stop the drivetrain when back button is pressed
-    m_driverController.rightTrigger().onTrue(new kiddieSpeed(true));
+    /**m_driverController.rightTrigger().onTrue(new kiddieSpeed(true));
+    m_driverController.rightTrigger().onFalse(new kiddieSpeed(false));
+    m_driverController.rightTrigger().onFalse(new kiddieSpeedReturn(true));
+    m_driverController.rightTrigger().onTrue(new kiddieSpeedReturn(false));*/
 
     /** Operator Controls */
     // Lights
