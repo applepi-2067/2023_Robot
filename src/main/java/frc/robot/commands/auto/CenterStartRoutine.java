@@ -49,7 +49,7 @@ public class CenterStartRoutine extends SequentialCommandGroup {
         new BlockUntilArmLessThan(0.3).andThen(
           Commands.parallel(
             new SetShoulderPosition(-65.0),
-            new DriveVelocityUntilDistance(-0.4, 4.0)
+            new DriveVelocityUntilDistance(-0.3, 4.0)
           )
         )
       ),
